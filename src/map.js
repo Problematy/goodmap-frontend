@@ -105,12 +105,20 @@ function createCategorySection(section_header, section_elements){
   return result;
 }
 
+function getCategoryData(category_name, callback){
+  fetch("/api/category/" + category_name)
+    .then(res => res.json())
+    .then(callback)
+}
+
+
 function createFilterForm(categories_with_translations) {
   let form = document.createElement('form');
   categories_with_translations.map(
-    ([category_name, cat_translation]) => $.getJSON("/api/category/" + category_name, (types_in_category) => {
-      let sec = createCategorySection(cat_translation, types_in_category);
-      form.appendChild(reactDomWrapper(sec));
+    ([category_name, cat_translation]) => getCategoryData(category_name,
+       (types_in_category) => {
+        let sec = createCategorySection(cat_translation, types_in_category);
+        form.appendChild(reactDomWrapper(sec));
     }
     ));
   return form;
@@ -124,7 +132,6 @@ function prepareFilterBox(categories) {
   div.ondblclick = (ev) => {
     L.DomEvent.stopPropagation(ev)
   };
-
   div.appendChild(form);
   return div;
 };
