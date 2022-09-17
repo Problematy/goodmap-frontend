@@ -11,5 +11,5 @@ export function createCheckboxWithType(filter_type, field_name, translation, onc
     onClick: onclick
   });
 
-  return React.createElement("div", {className: "form-check"}, label, checkbox);
+  return React.createElement("div", {className: "form-check", key: field_name}, label, checkbox);
 }

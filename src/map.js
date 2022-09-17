@@ -6,6 +6,7 @@ import {createLanguageChooser} from './languages.js'
 
 import * as ReactDOMServer from 'react-dom/server';
 import ReactDOM from 'react-dom/client';
+import React from 'react'
 
 let mainMap        = createBasicMap();
 let markers        = L.markerClusterGroup();
@@ -22,6 +23,9 @@ function main() {
   $.getJSON("/api/categories", (categories) => {
     mainMap.addControl(createCommandBox(categories));
     refreshMap(categories);
+    let filter_form = createFilterForm(categories);
+    let filters_placeholder = ReactDOM.createRoot(document.getElementById('filtersome'));
+    filters_placeholder.render(filter_form);
   });
 
   $.getJSON("/api/languages", (languages) => {
@@ -29,7 +33,9 @@ function main() {
     let chooser = createLanguageChooser(languages);
     ReactDOM.createRoot(lang_list).render(chooser);
   });
+
 };
+
 
 function refreshMap(categories)
 {
@@ -58,13 +64,14 @@ function onLocationFound(e, map, locationMarker, circleMarker) {
 function createBasicMap() {
   let initPos = [51.1,17.05];
   let map = L.map('map').setView(initPos, 13);
+  map.zoomControl.setPosition('topright');
   let lMarker = createLocationMarker(initPos);
   let cMarker = L.circle(initPos, 2);
-  let layer = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  let mapBase = L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution: '&copy; <a href="https://openstreetmap.org/copyright">OpenStreetMap contributors</a>'
   });
-  map.addLayer(layer);
+  map.addLayer(mapBase);
   map.on('locationfound', (e) => {onLocationFound(e, map, lMarker, cMarker)});
   map.locate({setView: false, watch:true, maxZoom: 16});
   lMarker.addTo(map);
@@ -84,24 +91,37 @@ function getNewMarkers(cats){
 }
 
 function createCommandBox(categories) {
-  let command = L.control({position: 'topright'});
+  let command = L.control({position: 'topleft'});
   command.onAdd = prepareFilterBox.bind(null, categories);
   return command;
 }
 
-function prepareFilterBox(categories) {
-  let div = L.DomUtil.create('div', 'command');
-  div.className="container"
+function createCategorySection(section_header, section_elements){
+  let header = React.createElement("span", {textcontent: section_header}, section_header);
+  let checkboxes = section_elements.map(([field_name, translation]) => {
+    return createCheckboxWithType(section_header, field_name, translation);
+    });
+  let result = React.createElement("div", {}, header, checkboxes);
+  console.log(reactDomWrapper(result));
+  return result;
+}
+
+function createFilterForm(categories_with_translations) {
   let form = document.createElement('form');
-  categories.map(
-    ([x, cat_translation]) => $.getJSON("/api/category/" + x, (category_types) => {
-      let title = document.createElement("span");
-      title.textContent = cat_translation;
-      form.appendChild(title);
-      category_types.map(([field_name, translation]) => form.appendChild(createCheckboxWithTypeWrapper(x, field_name, translation, refreshMap.bind(null, cats))))
+  categories_with_translations.map(
+    ([category_name, cat_translation]) => $.getJSON("/api/category/" + category_name, (types_in_category) => {
+      let sec = createCategorySection(cat_translation, types_in_category);
+      form.appendChild(reactDomWrapper(sec));
     }
     ));
+  return form;
+}
 
+
+function prepareFilterBox(categories) {
+  let div = L.DomUtil.create('div', 'command');
+  div.className="container form-control input-sm"
+  let form = createFilterForm(categories)
   div.ondblclick = (ev) => {
     L.DomEvent.stopPropagation(ev)
   };
@@ -110,12 +130,17 @@ function prepareFilterBox(categories) {
   return div;
 };
 
-function createCheckboxWithTypeWrapper(x, field_name, translation, clickon) {
-  let result = createCheckboxWithType(x, field_name, translation, clickon);
+function reactDomWrapper(react_element){
   const tempDiv = document.createElement('div');
-  ReactDOM.createRoot(tempDiv).render(result);
+  ReactDOM.createRoot(tempDiv).render(react_element);
   return tempDiv;
 }
+
+function createCheckboxWithTypeWrapper(x, field_name, translation, clickon) {
+  let result = createCheckboxWithType(x, field_name, translation, clickon);
+  return reactDomWrapper(result);
+}
+
 
 function getSelectedCheckboxesOfCategory(filter_type){
   let selector = ".filter."+filter_type+":checked";
