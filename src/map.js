@@ -99,10 +99,9 @@ function createCommandBox(categories) {
 function createCategorySection(section_header, section_elements){
   let header = React.createElement("span", {textcontent: section_header}, section_header);
   let checkboxes = section_elements.map(([field_name, translation]) => {
-    return createCheckboxWithType(section_header, field_name, translation);
+    return createCheckboxWithType(section_header, field_name, translation, refreshMap.bind(null, cats));
     });
   let result = React.createElement("div", {}, header, checkboxes);
-  console.log(reactDomWrapper(result));
   return result;
 }
 
@@ -135,12 +134,6 @@ function reactDomWrapper(react_element){
   ReactDOM.createRoot(tempDiv).render(react_element);
   return tempDiv;
 }
-
-function createCheckboxWithTypeWrapper(x, field_name, translation, clickon) {
-  let result = createCheckboxWithType(x, field_name, translation, clickon);
-  return reactDomWrapper(result);
-}
-
 
 function getSelectedCheckboxesOfCategory(filter_type){
   let selector = ".filter."+filter_type+":checked";
