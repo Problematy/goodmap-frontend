@@ -12,15 +12,21 @@ let mainMap        = createBasicMap();
 let markers        = L.markerClusterGroup();
 let cats           = null;
 
-$.getJSON("/api/categories").then( categories => {
-  cats = categories
-  $( document ).ready(main);
-});
+fetch("/api/categories")
+  .then(res => res.json())
+  .then( categories => {
+    cats = categories;
+    main()
+  }
+);
 
 function main() {
   mainMap.addLayer(markers);
   getNewMarkers(cats);
-  $.getJSON("/api/categories", (categories) => {
+
+  fetch("/api/categories")
+    .then(res => res.json())
+    .then((categories) => {
     mainMap.addControl(createCommandBox(categories));
     refreshMap(categories);
     let filter_form = createFilterForm(categories);
@@ -28,7 +34,9 @@ function main() {
     filters_placeholder.render(filter_form);
   });
 
-  $.getJSON("/api/languages", (languages) => {
+  fetch("/api/languages")
+    .then(res => res.json())
+    .then( (languages) => {
     let lang_list = document.getElementById('lang-list');
     let chooser = createLanguageChooser(languages);
     ReactDOM.createRoot(lang_list).render(chooser);
@@ -84,9 +92,13 @@ function getNewMarkers(cats){
   let all_checkboxes = cats.map(([x, translation]) => getSelectedCheckboxesOfCategory(x));
   let filteros = all_checkboxes.filter(n => n).join('&');
   let url = ["/api/data", filteros].filter(n => n).join('?');
-  $.getJSON(url, (response) => {
-    response.map(x => L.marker(x.position).addTo(markeros).bindPopup(getFormattedData(x)));
-  });
+  fetch(url)
+    .then(res => res.json())
+    .then(
+      (response) => {
+        response.map(x => L.marker(x.position).addTo(markeros).bindPopup(getFormattedData(x)));
+      }
+    );
   return markeros;
 }
 
@@ -143,9 +155,8 @@ function reactDomWrapper(react_element){
 }
 
 function getSelectedCheckboxesOfCategory(filter_type){
-  let selector = ".filter."+filter_type+":checked";
-  let select = $(selector);
-  let checked_boxes_types = $(".filter."+filter_type+":checked").toArray();
-  let types = checked_boxes_types.map(x => filter_type + '=' + x.value).join('&');
+  let select = document.querySelectorAll(".filter."+filter_type+":checked");
+  let checked_boxes_types = document.querySelectorAll(".filter."+filter_type+":checked");
+  let types = Array.from(checked_boxes_types).map(x => filter_type + '=' + x.value).join('&');
   return types;
 }
