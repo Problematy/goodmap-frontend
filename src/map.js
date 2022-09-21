@@ -3,6 +3,8 @@ import 'leaflet.markercluster'
 import {getFormattedData} from './formatters.js'
 import {createCheckboxWithType} from './checkboxes.js'
 import {createLanguageChooser} from './languages.js'
+import {getcat} from './filter_menu.js'
+
 
 import * as ReactDOMServer from 'react-dom/server';
 import ReactDOM from 'react-dom/client';
@@ -12,10 +14,13 @@ let mainMap        = createBasicMap();
 let markers        = L.markerClusterGroup();
 let cats           = null;
 
+
 fetch("/api/categories")
   .then(res => res.json())
   .then( categories => {
     cats = categories;
+    let alls = getcat(cats);
+    console.log(alls);
     main()
   }
 );
