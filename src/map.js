@@ -1,6 +1,6 @@
 import L from 'leaflet'
 import 'leaflet.markercluster'
-import {getFormattedData} from './formatters.js'
+import {getFormattedData} from './popup_data.js'
 import {createFilterForm} from './filter_form.js'
 import {createLanguageChooser} from './languages.js'
 import {getCategoriesData} from './api_calls.js'
@@ -30,12 +30,11 @@ function main() {
   getCategoriesData().then(alls =>
   {
     const categories = alls.map(x=>x[0]);
-    const forma = createFilterForm(alls, refreshMap.bind(null, categories));
-    const form = reactDomWrapper(forma)
+    const form = createFilterForm(alls, refreshMap.bind(null, categories));
     mainMap.addControl(createCommandBox(form));
     refreshMap(categories);
     let filters_placeholder = ReactDOM.createRoot(document.getElementById('filtersome'));
-//    filters_placeholder.render(forma);
+//    filters_placeholder.render(form);
   });
 
   fetch("/api/languages")
@@ -116,15 +115,9 @@ function prepareFilterBox(form) {
   div.ondblclick = (ev) => {
     L.DomEvent.stopPropagation(ev)
   };
-  div.appendChild(form);
+  ReactDOM.createRoot(div).render(form);
   return div;
 };
-
-function reactDomWrapper(react_element){
-  const tempDiv = document.createElement('div');
-  ReactDOM.createRoot(tempDiv).render(react_element);
-  return tempDiv;
-}
 
 function getSelectedCheckboxesOfCategory(filter_type){
   let select = document.querySelectorAll(".filter."+filter_type+":checked");
