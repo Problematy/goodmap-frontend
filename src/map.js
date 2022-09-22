@@ -110,13 +110,6 @@ function createCommandBox(form) {
   return command;
 }
 
-function getCategoryData(category_name, callback){
-  fetch("/api/category/" + category_name)
-    .then(res => res.json())
-    .then(callback)
-}
-
-
 function prepareFilterBox(form) {
   let div = L.DomUtil.create('div', 'command');
   div.className="container form-control input-sm"

@@ -1,6 +1,6 @@
 async function getCategories(){
-  const categories = await fetch("/api/categories")
-  const cat_json = await categories.json()
+  const categories = await fetch("/api/categories");
+  const cat_json = await categories.json();
   return cat_json;
 }
 
