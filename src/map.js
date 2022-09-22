@@ -1,9 +1,9 @@
 import L from 'leaflet'
 import 'leaflet.markercluster'
-import {getFormattedData} from './formatters.js'
-import {createCheckboxWithType} from './checkboxes.js'
+import {createFilterForm2, getFormattedData} from './formatters.js'
+import {createCheckboxWithType} from './filtering.js'
 import {createLanguageChooser} from './languages.js'
-import {getcat} from './filter_menu.js'
+import {getCategoriesData} from './api_calls.js'
 
 
 import * as ReactDOMServer from 'react-dom/server';
@@ -19,9 +19,7 @@ fetch("/api/categories")
   .then(res => res.json())
   .then( categories => {
     cats = categories;
-    let alls = getcat(cats);
-    console.log(alls);
-    main()
+    main();
   }
 );
 
@@ -29,24 +27,34 @@ function main() {
   mainMap.addLayer(markers);
   getNewMarkers(cats);
 
-  fetch("/api/categories")
-    .then(res => res.json())
-    .then((categories) => {
-    mainMap.addControl(createCommandBox(categories));
+  getCategoriesData().then(alls =>
+  {
+    const categories = alls.map(x=>x[0]);
+    const forma = createFilterForm2(alls, refreshMap.bind(null, categories));
+    const form = reactDomWrapper(forma)
+    mainMap.addControl(createCommandBox(form));
     refreshMap(categories);
-    let filter_form = createFilterForm(categories);
     let filters_placeholder = ReactDOM.createRoot(document.getElementById('filtersome'));
-    filters_placeholder.render(filter_form);
+//    filters_placeholder.render(forma);
   });
+
+//  fetch("/api/categories")
+//    .then(res => res.json())
+//    .then((categories) => {
+
+//      refreshMap(categories);
+//      let filter_form = createFilterForm(categories);
+//      let filters_placeholder = ReactDOM.createRoot(document.getElementById('filtersome'));
+//      filters_placeholder.render(filter_form);
+//    });
 
   fetch("/api/languages")
     .then(res => res.json())
     .then( (languages) => {
-    let lang_list = document.getElementById('lang-list');
-    let chooser = createLanguageChooser(languages);
-    ReactDOM.createRoot(lang_list).render(chooser);
+      let lang_list = document.getElementById('lang-list');
+      let chooser = createLanguageChooser(languages);
+      ReactDOM.createRoot(lang_list).render(chooser);
   });
-
 };
 
 
@@ -107,9 +115,9 @@ function getNewMarkers(cats){
   return markeros;
 }
 
-function createCommandBox(categories) {
+function createCommandBox(form) {
   let command = L.control({position: 'topleft'});
-  command.onAdd = prepareFilterBox.bind(null, categories);
+  command.onAdd = prepareFilterBox.bind(null, form);
   return command;
 }
 
@@ -142,10 +150,9 @@ function createFilterForm(categories_with_translations) {
 }
 
 
-function prepareFilterBox(categories) {
+function prepareFilterBox(form) {
   let div = L.DomUtil.create('div', 'command');
   div.className="container form-control input-sm"
-  let form = createFilterForm(categories)
   div.ondblclick = (ev) => {
     L.DomEvent.stopPropagation(ev)
   };
@@ -163,5 +170,6 @@ function getSelectedCheckboxesOfCategory(filter_type){
   let select = document.querySelectorAll(".filter."+filter_type+":checked");
   let checked_boxes_types = document.querySelectorAll(".filter."+filter_type+":checked");
   let types = Array.from(checked_boxes_types).map(x => filter_type + '=' + x.value).join('&');
+  console.log(filter_type)
   return types;
 }

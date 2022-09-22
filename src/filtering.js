@@ -1,4 +1,5 @@
 import React from 'react';
+import {getCategoriesData} from './api_calls.js'
 
 export function createCheckboxWithType(filter_type, field_name, translation, onclick) {
   let label = React.createElement("label", {htmlFor: field_name}, translation);
@@ -23,22 +24,8 @@ function createCategorySection(section_header, section_elements){
   return result;
 }
 
-
-async function getCategoriesData(){
-  let categories = await fetch("/api/categories")
-  categories_content = categories.map( category_name =>
-    fetch("/api/category/" + category_name)
-    );
-  const results = await Promixe.all(categories_content)
-  return results;
-}
-
-
-
-
 function createFilterForm(categories_with_translations) {
   let form = document.createElement('form');
-  categories_data = getCategoriesData();
   categories_with_translations.map(
     ([category_name, cat_translation]) => getCategoryData(category_name,
        (types_in_category) => {
