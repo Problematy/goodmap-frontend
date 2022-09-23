@@ -31,10 +31,9 @@ function main() {
   {
     const categories = alls.map(x=>x[0]);
     const form = createFilterForm(alls, refreshMap.bind(null, categories));
-    mainMap.addControl(createCommandBox(form));
     refreshMap(categories);
-    let filters_placeholder = ReactDOM.createRoot(document.getElementById('filtersome'));
-//    filters_placeholder.render(form);
+    let filters_placeholder = ReactDOM.createRoot(document.getElementById('filter-form'));
+    filters_placeholder.render(form);
   });
 
   fetch("/api/languages")
@@ -102,22 +101,6 @@ function getNewMarkers(cats){
     );
   return markeros;
 }
-
-function createCommandBox(form) {
-  let command = L.control({position: 'topleft'});
-  command.onAdd = prepareFilterBox.bind(null, form);
-  return command;
-}
-
-function prepareFilterBox(form) {
-  let div = L.DomUtil.create('div', 'command');
-  div.className="container form-control input-sm"
-  div.ondblclick = (ev) => {
-    L.DomEvent.stopPropagation(ev)
-  };
-  ReactDOM.createRoot(div).render(form);
-  return div;
-};
 
 function getSelectedCheckboxesOfCategory(filter_type){
   let select = document.querySelectorAll(".filter."+filter_type+":checked");
