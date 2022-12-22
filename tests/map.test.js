@@ -18,7 +18,7 @@ toMatchInlineSnapshot(`
     <span
       textcontent="types"
     >
-
+       
       typy
     </span>
     <div
