@@ -4,6 +4,7 @@ import React from 'react';
 import Leaflet from 'leaflet';
 import 'leaflet.markercluster';
 
+
 import { httpService } from '../../services/http/httpService';
 import { FiltersForm } from '../FiltersForm/FiltersForm';
 import { MarkerPopup } from '../MarkerPopup/MarkerPopup';
@@ -27,7 +28,20 @@ function getSelectedCheckboxesOfCategory(filterType) {
     return types;
 }
 
-function getNewMarkers(categories) {
+async function createMarkersWithPopups(response) {
+    const markersCluster = Leaflet.markerClusterGroup();
+
+    for (const x of response) {
+        const popupContent = <MarkerPopup place={x} />;
+        Leaflet.marker(x.position)
+            .addTo(markersCluster)
+            .bindPopup(ReactDOMServer.renderToString(popupContent));
+    }
+
+    return markersCluster;
+}
+
+export function getNewMarkers(categories) {
     const markersCluster = Leaflet.markerClusterGroup();
     const allCheckboxes = categories.map(([categoryString]) =>
         getSelectedCheckboxesOfCategory(categoryString),
@@ -36,12 +50,9 @@ function getNewMarkers(categories) {
 
     httpService
         .getLocations(filtersUrlQueryString)
-        .then(response => {
-            response.map(x =>
-                Leaflet.marker(x.position)
-                    .addTo(markersCluster)
-                    .bindPopup(ReactDOMServer.renderToStaticMarkup(<MarkerPopup place={x} />)),
-            );
+        .then(response => createMarkersWithPopups(response))
+        .then(newMarkersCluster => {
+            markersCluster.addLayers(newMarkersCluster.getLayers());
         })
         .catch(error => console.error(error));
 
@@ -49,9 +60,10 @@ function getNewMarkers(categories) {
 }
 
 export const repaintMarkers = categories => {
-    mainMap.removeLayer(markers);
+    let oldMarkers = markers;
     markers = getNewMarkers(categories);
     mainMap.addLayer(markers);
+    mainMap.removeLayer(oldMarkers);
 };
 
 export const Map = async () => {
