@@ -2,7 +2,12 @@ import * as ReactDOMServer from 'react-dom/server';
 import ReactDOM from 'react-dom/client';
 import React from 'react';
 import Leaflet from 'leaflet';
+
+
 import 'leaflet.markercluster';
+
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import MarkerClusterGroup from "react-leaflet-markercluster";
 
 
 import { httpService } from '../../services/http/httpService';
@@ -29,6 +34,26 @@ function getSelectedCheckboxesOfCategory(filterType) {
 }
 
 async function createMarkersWithPopups(response) {
+  const markers = [];
+
+  for (const x of response) {
+    const popupContent = (
+      <Popup>
+        <MarkerPopup place={x} />
+      </Popup>
+    );
+
+    markers.push(
+      <Marker position={x.position} key={x.id}>
+        {popupContent}
+      </Marker>
+    );
+  }
+
+  return markers;
+}
+
+async function createMarkersWithPopupsOld(response) {
     const markersCluster = Leaflet.markerClusterGroup();
 
     for (const x of response) {
@@ -41,7 +66,7 @@ async function createMarkersWithPopups(response) {
     return markersCluster;
 }
 
-export function getNewMarkers(categories) {
+export function getNewMarkersOld(categories) {
     const markersCluster = Leaflet.markerClusterGroup();
     const allCheckboxes = categories.map(([categoryString]) =>
         getSelectedCheckboxesOfCategory(categoryString),
@@ -59,19 +84,37 @@ export function getNewMarkers(categories) {
     return markersCluster;
 }
 
+export function getNewMarkers(categories) {
+
+      let position = [51.505, -0.09];
+                return (
+                    <Marker position={position}>
+                        <Popup>
+                            <span>A pretty CSS3 popup.<br/>Easily customizable.</span>
+                        </Popup>
+                    </Marker>
+                    );
+
+
+}
+
+
 export const repaintMarkers = categories => {
     let oldMarkers = markers;
     markers = getNewMarkers(categories);
-    mainMap.addLayer(markers);
-    mainMap.removeLayer(oldMarkers);
+    mainMap = createBaseMap(markers);
+    const mapPlaceholder = ReactDOM.createRoot(document.getElementById('map'));
+
+    mapPlaceholder.render(mainMap);
+
 };
 
 export const Map = async () => {
     const categories = await httpService.getCategories();
-    mainMap = createBaseMap(onLocationFound);
+    mainMap =  createBaseMap(markers); //createBaseMap(onLocationFound);
 
-    mainMap.addLayer(markers);
-    getNewMarkers(categories);
+//    mainMap.addLayer(markers);
+//    getNewMarkers(categories);
 
     httpService.getCategoriesData().then(categoriesData => {
         const parsedCategoriesData = categoriesData.map(categoryData => categoryData[0]);

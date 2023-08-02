@@ -1,9 +1,14 @@
 import Leaflet from 'leaflet';
-import { UserLocationMarker } from './components/UserLocationMarker/UserLocationMarker';
+import { UserLocationMarker, locationIcon } from './components/UserLocationMarker/UserLocationMarker';
 import { mapConfig } from './map.config';
 import './components/LocationControl/LocationControl';
 
-export function createBaseMap(onLocationFound) {
+import React from 'react';
+import { useState, useEffect } from 'react';
+import { MapContainer, TileLayer, Circle, useMap } from 'react-leaflet';
+import { Marker, Popup, useMapEvents } from 'react-leaflet'
+
+export function createBaseMapOld(onLocationFound) {
     const map = Leaflet.map('map').setView(
         mapConfig.initialMapCoordinates,
         mapConfig.initialMapZoom,
@@ -29,4 +34,58 @@ export function createBaseMap(onLocationFound) {
     cMarker.addTo(map);
 
     return map;
+}
+
+function LocationMarker() {
+  const [position, setPosition] = useState(null);
+  const [positionAccuracy, setPositionAccuracy] = useState(null);
+  const map = useMap();
+
+  const startTrackingLocation = () => {
+    const watchId = map.locate({ watch: true }).on('locationfound', handleLocationFound);
+    return () => {
+      map.stopLocate();
+      watchId();
+    };
+  };
+
+  const handleLocationFound = (e) => {
+    setPosition(e.latlng);
+    setPositionAccuracy(e.accuracy);
+    map.flyTo(e.latlng, map.getZoom());
+  };
+
+  useEffect(() => {
+    const cleanup = startTrackingLocation();
+    return cleanup;
+  }, [map]);
+
+  return position === null ? null : (
+    <Marker position={position} icon={locationIcon}>
+      <Popup>You are here</Popup>
+      <Circle center={position} radius={positionAccuracy / 10} />
+    </Marker>
+  );
+}
+
+
+export function createBaseMap(markers) {
+    return (
+    <MapContainer
+        center={mapConfig.initialMapCoordinates}
+        zoom={mapConfig.initialMapZoom}
+        scrollWheelZoom={true}
+        style={{ height: '100%' }}
+    >
+        <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&amp;copy <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+            maxZoom={mapConfig.maxMapZoom}
+        />
+        <LocationMarker />
+
+        {markers}
+
+    </MapContainer>
+    );
 }
