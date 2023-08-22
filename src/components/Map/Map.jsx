@@ -17,6 +17,7 @@ import { createBaseMap } from './createBaseMap';
 
 let markers = Leaflet.markerClusterGroup();
 let mainMap = null;
+const mapPlaceholder = ReactDOM.createRoot(document.getElementById('map'));
 
 function onLocationFound(e, _map, locationMarker, circleMarker) {
     const radius = e.accuracy / 2;
@@ -84,38 +85,31 @@ export function getNewMarkersOld(categories) {
     return markersCluster;
 }
 
-export function getNewMarkers(categories) {
-
-      let position = [51.505, -0.09];
-                return (
-                    <Marker position={position}>
-                        <Popup>
-                            <span>A pretty CSS3 popup.<br/>Easily customizable.</span>
-                        </Popup>
-                    </Marker>
-                    );
-
-
+export async function getNewMarkers(categories) {
+    const allCheckboxes = categories.map(([categoryString]) =>
+        getSelectedCheckboxesOfCategory(categoryString),
+    );
+    const filtersUrlQueryString = allCheckboxes.filter(n => n).join('&');
+    const locations = await httpService.getLocations(filtersUrlQueryString);
+    return locations.map(location => (
+        <Marker position={location.position}>
+            <Popup>
+                <MarkerPopup place={location} />
+            </Popup>
+        </Marker>
+    ));
 }
 
 
-export const repaintMarkers = categories => {
+export const repaintMarkers = async categories => {
     let oldMarkers = markers;
-    markers = getNewMarkers(categories);
+    markers = await getNewMarkers(categories);
     mainMap = createBaseMap(markers);
-    const mapPlaceholder = ReactDOM.createRoot(document.getElementById('map'));
-
     mapPlaceholder.render(mainMap);
 
 };
 
 export const Map = async () => {
-    const categories = await httpService.getCategories();
-    mainMap =  createBaseMap(markers); //createBaseMap(onLocationFound);
-
-//    mainMap.addLayer(markers);
-//    getNewMarkers(categories);
-
     httpService.getCategoriesData().then(categoriesData => {
         const parsedCategoriesData = categoriesData.map(categoryData => categoryData[0]);
         const filtersPlaceholder = ReactDOM.createRoot(document.getElementById('filter-form'));

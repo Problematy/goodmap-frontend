@@ -7,6 +7,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Circle, useMap } from 'react-leaflet';
 import { Marker, Popup, useMapEvents } from 'react-leaflet'
+import MarkerClusterGroup from "react-leaflet-markercluster";
 
 export function createBaseMapOld(onLocationFound) {
     const map = Leaflet.map('map').setView(
@@ -82,9 +83,12 @@ export function createBaseMap(markers) {
             attribution='&amp;copy <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
             maxZoom={mapConfig.maxMapZoom}
         />
-        <LocationMarker />
 
         {markers}
+
+        <LocationMarker />
+
+
 
     </MapContainer>
     );
