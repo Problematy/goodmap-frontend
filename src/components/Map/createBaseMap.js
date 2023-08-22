@@ -7,7 +7,7 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Circle, useMap } from 'react-leaflet';
 import { Marker, Popup, useMapEvents } from 'react-leaflet'
-import MarkerClusterGroup from "react-leaflet-markercluster";
+import MarkerClusterGroup from "react-leaflet-cluster";
 
 export function createBaseMapOld(onLocationFound) {
     const map = Leaflet.map('map').setView(
@@ -70,26 +70,25 @@ function LocationMarker() {
 }
 
 
-export function createBaseMap(markers) {
-    return (
+export function MapComponent({ markers }) {
+  return (
     <MapContainer
-        center={mapConfig.initialMapCoordinates}
-        zoom={mapConfig.initialMapZoom}
-        scrollWheelZoom={true}
-        style={{ height: '100%' }}
+      center={mapConfig.initialMapCoordinates}
+      zoom={mapConfig.initialMapZoom}
+      scrollWheelZoom={true}
+      style={{ height: '100%' }}
     >
-        <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&amp;copy <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
-            maxZoom={mapConfig.maxMapZoom}
-        />
+      <TileLayer
+        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='&amp;copy <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+        maxZoom={mapConfig.maxMapZoom}
+      />
 
+      <MarkerClusterGroup>
         {markers}
+      </MarkerClusterGroup>
 
-        <LocationMarker />
-
-
-
+      <LocationMarker />
     </MapContainer>
-    );
+  );
 }

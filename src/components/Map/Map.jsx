@@ -7,13 +7,12 @@ import Leaflet from 'leaflet';
 import 'leaflet.markercluster';
 
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
-import MarkerClusterGroup from "react-leaflet-markercluster";
 
 
 import { httpService } from '../../services/http/httpService';
 import { FiltersForm } from '../FiltersForm/FiltersForm';
 import { MarkerPopup } from '../MarkerPopup/MarkerPopup';
-import { createBaseMap } from './createBaseMap';
+import { MapComponent } from './createBaseMap';
 
 let markers = Leaflet.markerClusterGroup();
 let mainMap = null;
@@ -101,13 +100,19 @@ export async function getNewMarkers(categories) {
 }
 
 
-export const repaintMarkers = async categories => {
-    let oldMarkers = markers;
-    markers = await getNewMarkers(categories);
-    mainMap = createBaseMap(markers);
-    mapPlaceholder.render(mainMap);
+export async function repaintMarkers(categories) {
+  try {
+    const newMarkers = await getNewMarkers(categories);
 
-};
+    const mainMap = (
+      <MapComponent markers={newMarkers} />
+    );
+
+    mapPlaceholder.render(mainMap);
+  } catch (error) {
+    console.error('Error repainting markers:', error);
+  }
+}
 
 export const Map = async () => {
     httpService.getCategoriesData().then(categoriesData => {
