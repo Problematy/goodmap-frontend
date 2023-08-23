@@ -1,6 +1,9 @@
 import React from 'react';
-import { useMap } from 'react-leaflet';
 import { useState, useEffect } from 'react';
+import { Marker, Popup } from 'react-leaflet'
+import { Circle, useMap } from 'react-leaflet';
+import { locationIcon } from '../UserLocationMarker/UserLocationMarker';
+
 
 import Leaflet from 'leaflet';
 

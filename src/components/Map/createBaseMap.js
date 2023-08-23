@@ -1,14 +1,10 @@
-import { UserLocationMarker, locationIcon } from './components/UserLocationMarker/UserLocationMarker';
 import { mapConfig } from './map.config';
 import { LocationMarker } from './components/LocationControl/LocationControl';
 
 import React from 'react';
 
-import { MapContainer, TileLayer, Circle, useMap } from 'react-leaflet';
-import { Marker, Popup, useMapEvents } from 'react-leaflet'
+import { MapContainer, TileLayer } from 'react-leaflet';
 import MarkerClusterGroup from "react-leaflet-cluster";
-
-
 
 export function MapComponent({ markers }) {
   return (
