@@ -1,10 +1,14 @@
 import { mapConfig } from './map.config';
-import { LocationMarker } from './components/LocationControl/LocationControl';
+import { LocationMarker, LocationControl } from './components/LocationControl/LocationControl';
 
 import React from 'react';
 
 import { MapContainer, TileLayer } from 'react-leaflet';
+import { createControlComponent } from '@react-leaflet/core';
 import MarkerClusterGroup from "react-leaflet-cluster";
+
+import Control from 'react-leaflet-custom-control'
+
 
 export function MapComponent({ markers }) {
   return (
@@ -24,7 +28,8 @@ export function MapComponent({ markers }) {
         {markers}
       </MarkerClusterGroup>
 
-      <LocationMarker />
+
+      <LocationControl />
     </MapContainer>
   );
 }

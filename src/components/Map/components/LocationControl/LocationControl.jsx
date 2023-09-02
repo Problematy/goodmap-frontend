@@ -1,21 +1,17 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { Marker, Popup } from 'react-leaflet'
-import { Circle, useMap } from 'react-leaflet';
-import { locationIcon } from '../UserLocationMarker/UserLocationMarker';
-
-
+import { Marker, Popup, Circle, useMap } from 'react-leaflet'
+import { Button } from '@mui/material'
+import MyLocationIcon from '@mui/icons-material/MyLocation';
 import Leaflet from 'leaflet';
+import Box from '@mui/material/Box';
+import Control from 'react-leaflet-custom-control'
 
 const LocationIcon = () => {
-    const icon = document.createElement('img');
-    icon.style.width = '22px';
-    icon.style.height = '22px';
-    icon.src =
-        'https://cdn3.iconfinder.com/data/icons/google-material-design-icons/48/ic_my_location_48px-512.png';
-
-    return icon;
+    return <MyLocationIcon sx={{color: "black", fontSize:22}} />
 };
+
+export const locationIcon = LocationIcon();
 
 Leaflet.Control.Button = Leaflet.Control.extend({
     options: {
@@ -78,4 +74,16 @@ export function LocationMarker() {
       <Circle center={position} radius={positionAccuracy / 10} />
     </Marker>
   );
+}
+
+export function LocationControl ({ onClick }){
+    return (
+        <Control prepend position="bottomright" >
+            <Button onClick={onClick}>
+                <Box sx={{ boxShadow: 1.3, border: 0.1, color: "black", padding: 0.5, background: "white"}}>
+                    <MyLocationIcon sx={{color: "black", fontSize:22}} />
+                </Box>
+            </Button>
+        </Control>
+    );
 }
