@@ -9,47 +9,36 @@ import L from 'leaflet';
 const LOCATION_UPDATE_INTERVAL = 5000;
 
 const LocationMarker = () => {
-  const [position, setPosition] = useState(null);
+  const [userPosition, setUserPosition] = useState(null);
   const map = useMap();
 
   const addLocationMarker = (latlng, accuracy) => {
-    setPosition(latlng);
+    setUserPosition(latlng);
   };
 
-  useEffect(() => {
-    const updateLocation = () => {
-      map.locate().on('locationfound', (e) => {
-        addLocationMarker(e.latlng, e.accuracy);
-      });
-    };
-
     const handleLocationFound = (e) => {
-      map.flyTo(e.latlng, map.getZoom());
+            addLocationMarker(e.latlng, e.accuracy);
+             map.flyTo(e.latlng, map.getZoom());
     };
 
     map.once('locationfound', handleLocationFound);
 
-    updateLocation();
+    map.locate({setView: false,
+                 maxZoom: 16,
+                 watch:true
+               });
 
-    const locationUpdateInterval = setInterval(updateLocation, LOCATION_UPDATE_INTERVAL);
-
-    return () => {
-      clearInterval(locationUpdateInterval);
-      map.off('locationfound', handleLocationFound);
-    };
-  }, [map]);
-
-  if (!position) {
+  if (!userPosition) {
     return null;
   }
 
-  const { lat, lng } = position;
-  const radius = position.accuracy / 2 || 0;
+  const { lat, lng } = userPosition;
+  const radius = userPosition.accuracy / 2 || 0;
 
   return (
     <>
       <CircleMarker center={[lat, lng]} radius={radius} />
-      <Marker position={position} icon={createLocationIcon()} />
+      <Marker position={userPosition} icon={createLocationIcon()} />
     </>
   );
 };
@@ -71,10 +60,9 @@ const LocationControl = () => {
   const map = useMap();
 
   const handleFlyToLocationClick = () => {
-    map.locate();
-    map.once('locationfound', (e) => {
-      map.flyTo(e.latlng, map.getZoom());
-    });
+    const currentPos = map.getCenter();
+    console.log(currentPos);
+    map.flyTo(currentPos, map.getZoom());
   };
 
   return (

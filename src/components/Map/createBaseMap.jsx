@@ -1,10 +1,8 @@
 import React from 'react';
 
 import { MapContainer, TileLayer } from 'react-leaflet';
-import { createControlComponent } from '@react-leaflet/core';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 
-import Control from 'react-leaflet-custom-control';
 import { LocationMarker, LocationControl } from './components/LocationControl/LocationControl';
 import { mapConfig } from './map.config';
 
