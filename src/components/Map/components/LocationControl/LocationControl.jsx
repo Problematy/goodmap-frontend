@@ -6,72 +6,60 @@ import MyLocationIcon from '@mui/icons-material/MyLocation';
 import Leaflet from 'leaflet';
 import Box from '@mui/material/Box';
 import Control from 'react-leaflet-custom-control'
+import ReactDOMServer from 'react-dom/server';
 
-const LocationIcon = () => {
-    return <MyLocationIcon sx={{color: "black", fontSize:22}} />
-};
 
-export const locationIcon = LocationIcon();
+import Icon from "leaflet"
 
-Leaflet.Control.Button = Leaflet.Control.extend({
-    options: {
-        position: 'bottomright',
-    },
+export const locationIconJSX = <MyLocationIcon sx={{color: "black", fontSize:22}} />
+const svglocationIcon = ReactDOMServer.renderToString(locationIconJSX);
 
-    onLocationFoundCallback: (coordinates, map) =>
-        map.flyTo([coordinates.coords.latitude, coordinates.coords.longitude], 15),
 
-    onAdd: function (map) {
-        const container = Leaflet.DomUtil.create('div', 'leaflet-bar leaflet-control');
-        const button = Leaflet.DomUtil.create('a', 'leaflet-control-button', container);
-        const locationIcon = LocationIcon();
-
-        container.title = 'Twoja lokalizacja';
-        button.appendChild(locationIcon);
-
-        Leaflet.DomEvent.disableClickPropagation(button);
-        Leaflet.DomEvent.on(button, 'click', () => {
-            navigator.geolocation.getCurrentPosition(coordinates =>
-                this.onLocationFoundCallback(coordinates, map),
-            );
-        });
-
-        return container;
-    },
-
-    onRemove: function () {},
+const locationIcon =L.divIcon({
+    html: svglocationIcon,
+    iconSize: [22, 22],
+    iconAnchor: [11, 11],
+    popupAnchor: [0, -11],
+    className: "location-icon"
 });
 
+function getUserLocation() {
+  return new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+}
 
 
 export function LocationMarker() {
   const [position, setPosition] = useState(null);
-  const [positionAccuracy, setPositionAccuracy] = useState(null);
+  const [bbox, setBbox] = useState([]);
+
   const map = useMap();
 
-  const startTrackingLocation = () => {
-    const watchId = map.locate({ watch: true }).on('locationfound', handleLocationFound);
-    return () => {
-      map.stopLocate();
-      watchId();
-    };
-  };
-
-  const handleLocationFound = (e) => {
-    setPosition(e.latlng);
-    setPositionAccuracy(e.accuracy);
-    map.flyTo(e.latlng, map.getZoom());
-  };
-
   useEffect(() => {
-    const cleanup = startTrackingLocation();
-    return cleanup;
+    const updateLocation = () => {
+      map.locate().on('locationfound', function (e) {
+        setPosition(e.latlng);
+        const radius = e.accuracy;
+        const circle = L.circle(e.latlng, radius);
+        circle.addTo(map);
+
+        setBbox(e.bounds.toBBoxString().split(','));
+        map.flyTo(e.latlng, map.getZoom());
+      });
+    };
+
+    updateLocation();
+
+    const locationUpdateInterval = setInterval(updateLocation, 5000);
+
+    return () => {
+      clearInterval(locationUpdateInterval);
+    };
   }, [map]);
 
   return position === null ? null : (
     <Marker position={position} icon={locationIcon}>
-      <Popup>You are here</Popup>
-      <Circle center={position} radius={positionAccuracy / 10} />
     </Marker>
   );
 }
@@ -81,7 +69,7 @@ export function LocationControl ({ onClick }){
         <Control prepend position="bottomright" >
             <Button onClick={onClick}>
                 <Box sx={{ boxShadow: 1.3, border: 0.1, color: "black", padding: 0.5, background: "white"}}>
-                    <MyLocationIcon sx={{color: "black", fontSize:22}} />
+                    {locationIconJSX}
                 </Box>
             </Button>
         </Control>

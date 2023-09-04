@@ -18,8 +18,7 @@ export const httpService = {
         );
     },
 
-    getLocations: async filtersUrlParams =>
-    {
+    getLocations: async filtersUrlParams => {
         const response = await fetch(`${DATA}?${filtersUrlParams}`, {
             method: 'GET',
             headers: {
