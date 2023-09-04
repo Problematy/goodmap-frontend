@@ -6,6 +6,8 @@ import Control from 'react-leaflet-custom-control';
 import ReactDOMServer from 'react-dom/server';
 import L from 'leaflet';
 
+const LOCATION_UPDATE_INTERVAL = 5000;
+
 const LocationMarker = () => {
   const [position, setPosition] = useState(null);
   const map = useMap();
@@ -16,7 +18,7 @@ const LocationMarker = () => {
 
   useEffect(() => {
     const updateLocation = () => {
-      map.locate().on('locationfound', function (e) {
+      map.locate().on('locationfound', (e) => {
         addLocationMarker(e.latlng, e.accuracy);
       });
     };
@@ -29,7 +31,7 @@ const LocationMarker = () => {
 
     updateLocation();
 
-    const locationUpdateInterval = setInterval(updateLocation, 5000);
+    const locationUpdateInterval = setInterval(updateLocation, LOCATION_UPDATE_INTERVAL);
 
     return () => {
       clearInterval(locationUpdateInterval);
@@ -47,28 +49,30 @@ const LocationMarker = () => {
   return (
     <>
       <CircleMarker center={[lat, lng]} radius={radius} />
-      <Marker position={position} icon={locationIcon} />
+      <Marker position={position} icon={createLocationIcon()} />
     </>
   );
 };
 
-const locationIconJSX = <MyLocationIcon sx={{ color: 'black', fontSize: 22 }} />;
-const svgLocationIcon = ReactDOMServer.renderToString(locationIconJSX);
+const createLocationIcon = () => {
+  const locationIconJSX = <MyLocationIcon sx={{ color: 'black', fontSize: 22 }} />;
+  const svgLocationIcon = ReactDOMServer.renderToString(locationIconJSX);
 
-const locationIcon = L.divIcon({
-  html: svgLocationIcon,
-  iconSize: [22, 22],
-  iconAnchor: [11, 11],
-  popupAnchor: [0, -11],
-  className: 'location-icon',
-});
+  return L.divIcon({
+    html: svgLocationIcon,
+    iconSize: [22, 22],
+    iconAnchor: [11, 11],
+    popupAnchor: [0, -11],
+    className: 'location-icon',
+  });
+};
 
 const LocationControl = () => {
   const map = useMap();
 
   const handleFlyToLocationClick = () => {
     map.locate();
-    map.once('locationfound', function (e) {
+    map.once('locationfound', (e) => {
       map.flyTo(e.latlng, map.getZoom());
     });
   };
@@ -77,7 +81,7 @@ const LocationControl = () => {
     <Control prepend position="bottomright">
       <Button onClick={handleFlyToLocationClick}>
         <Box sx={{ boxShadow: 1.3, border: 0.1, color: 'black', padding: 0.5, background: 'white' }}>
-          {locationIconJSX}
+          <MyLocationIcon sx={{ color: 'black', fontSize: 22 }} />
         </Box>
       </Button>
     </Control>
