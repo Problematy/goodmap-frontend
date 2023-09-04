@@ -8,6 +8,24 @@ import L from 'leaflet';
 
 const LOCATION_UPDATE_INTERVAL = 5000;
 
+const LocationControl = ({ userPosition }) => {
+  const map = useMap();
+
+  const handleFlyToLocationClick = () => {
+    map.flyTo(userPosition, map.getZoom());
+  };
+
+  return (
+    <Control prepend position="bottomright">
+      <Button onClick={handleFlyToLocationClick}>
+        <Box sx={{ boxShadow: 1.3, border: 0.1, color: 'black', padding: 0.5, background: 'white' }}>
+          <MyLocationIcon sx={{ color: 'black', fontSize: 22 }} />
+        </Box>
+      </Button>
+    </Control>
+  );
+};
+
 const LocationMarker = () => {
   const [userPosition, setUserPosition] = useState(null);
   const map = useMap();
@@ -37,6 +55,7 @@ const LocationMarker = () => {
 
   return (
     <>
+      <LocationControl userPosition={userPosition} />
       <CircleMarker center={[lat, lng]} radius={radius} />
       <Marker position={userPosition} icon={createLocationIcon()} />
     </>
@@ -56,24 +75,6 @@ const createLocationIcon = () => {
   });
 };
 
-const LocationControl = () => {
-  const map = useMap();
 
-  const handleFlyToLocationClick = () => {
-    const currentPos = map.getCenter();
-    console.log(currentPos);
-    map.flyTo(currentPos, map.getZoom());
-  };
-
-  return (
-    <Control prepend position="bottomright">
-      <Button onClick={handleFlyToLocationClick}>
-        <Box sx={{ boxShadow: 1.3, border: 0.1, color: 'black', padding: 0.5, background: 'white' }}>
-          <MyLocationIcon sx={{ color: 'black', fontSize: 22 }} />
-        </Box>
-      </Button>
-    </Control>
-  );
-};
 
 export { LocationMarker, LocationControl };

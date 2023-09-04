@@ -22,6 +22,6 @@ export const MapComponent = ({ markers }) => (
         <MarkerClusterGroup>{markers}</MarkerClusterGroup>
 
         <LocationMarker />
-        <LocationControl />
+
     </MapContainer>
 );
