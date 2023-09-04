@@ -4,20 +4,9 @@ import { Button, Box } from '@mui/material';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
 import Control from 'react-leaflet-custom-control';
 import ReactDOMServer from 'react-dom/server';
-import L from 'leaflet'; // Assuming 'leaflet' is your leaflet import, not 'Icon'.
+import L from 'leaflet';
 
-const locationIconJSX = <MyLocationIcon sx={{ color: 'black', fontSize: 22 }} />;
-const svgLocationIcon = ReactDOMServer.renderToString(locationIconJSX);
-
-const locationIcon = L.divIcon({
-  html: svgLocationIcon,
-  iconSize: [22, 22],
-  iconAnchor: [11, 11],
-  popupAnchor: [0, -11],
-  className: 'location-icon',
-});
-
-export function LocationMarker() {
+const LocationMarker = () => {
   const [position, setPosition] = useState(null);
   const map = useMap();
 
@@ -32,9 +21,11 @@ export function LocationMarker() {
       });
     };
 
-    map.once('locationfound', function (e) {
+    const handleLocationFound = (e) => {
       map.flyTo(e.latlng, map.getZoom());
-    });
+    };
+
+    map.once('locationfound', handleLocationFound);
 
     updateLocation();
 
@@ -42,6 +33,7 @@ export function LocationMarker() {
 
     return () => {
       clearInterval(locationUpdateInterval);
+      map.off('locationfound', handleLocationFound);
     };
   }, [map]);
 
@@ -58,9 +50,20 @@ export function LocationMarker() {
       <Marker position={position} icon={locationIcon} />
     </>
   );
-}
+};
 
-export function LocationControl() {
+const locationIconJSX = <MyLocationIcon sx={{ color: 'black', fontSize: 22 }} />;
+const svgLocationIcon = ReactDOMServer.renderToString(locationIconJSX);
+
+const locationIcon = L.divIcon({
+  html: svgLocationIcon,
+  iconSize: [22, 22],
+  iconAnchor: [11, 11],
+  popupAnchor: [0, -11],
+  className: 'location-icon',
+});
+
+const LocationControl = () => {
   const map = useMap();
 
   const handleFlyToLocationClick = () => {
@@ -79,4 +82,6 @@ export function LocationControl() {
       </Button>
     </Control>
   );
-}
+};
+
+export { LocationMarker, LocationControl };
