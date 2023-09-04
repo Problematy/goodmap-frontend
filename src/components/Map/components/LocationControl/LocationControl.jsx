@@ -1,6 +1,6 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
-import { Marker, Popup, Circle, useMap } from 'react-leaflet'
+import { Marker, Popup, Circle, CircleMarker, useMap } from 'react-leaflet'
 import { Button } from '@mui/material'
 import MyLocationIcon from '@mui/icons-material/MyLocation';
 import Leaflet from 'leaflet';
@@ -23,32 +23,27 @@ const locationIcon =L.divIcon({
     className: "location-icon"
 });
 
-function getUserLocation() {
-  return new Promise((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition(resolve, reject);
-  });
-}
-
 
 export function LocationMarker() {
   const [position, setPosition] = useState(null);
-  const [bbox, setBbox] = useState([]);
 
   const map = useMap();
+
+  const addLocationMarker = (latlng, accuracy) => {
+    setPosition(latlng);
+  };
 
   useEffect(() => {
     const updateLocation = () => {
       map.locate().on('locationfound', function (e) {
-        setPosition(e.latlng);
-        const radius = e.accuracy;
-        const circle = L.circle(e.latlng, radius);
-        circle.addTo(map);
-
-        setBbox(e.bounds.toBBoxString().split(','));
-        map.flyTo(e.latlng, map.getZoom());
+        addLocationMarker(e.latlng, e.accuracy);
       });
+
     };
 
+    map.once('locationfound', function (e) {
+      map.flyTo(e.latlng, map.getZoom());
+    });
     updateLocation();
 
     const locationUpdateInterval = setInterval(updateLocation, 5000);
@@ -58,20 +53,41 @@ export function LocationMarker() {
     };
   }, [map]);
 
-  return position === null ? null : (
-    <Marker position={position} icon={locationIcon}>
-    </Marker>
+  if (!position) {
+    return null;
+  }
+
+  const { lat, lng } = position;
+  const radius = position.accuracy / 2 || 0;
+
+
+
+  return (
+    <>
+      <CircleMarker center={[lat, lng]} radius={radius}>
+      </CircleMarker>
+      <Marker position={position} icon={locationIcon}></Marker>
+    </>
   );
 }
 
-export function LocationControl ({ onClick }){
-    return (
-        <Control prepend position="bottomright" >
-            <Button onClick={onClick}>
-                <Box sx={{ boxShadow: 1.3, border: 0.1, color: "black", padding: 0.5, background: "white"}}>
-                    {locationIconJSX}
-                </Box>
-            </Button>
-        </Control>
-    );
+export function LocationControl() {
+  const map = useMap();
+
+  const handleFlyToLocationClick = () => {
+    map.locate();
+    map.once('locationfound', function (e) {
+      map.flyTo(e.latlng, map.getZoom());
+    });
+  };
+
+  return (
+    <Control prepend position="bottomright">
+      <Button onClick={handleFlyToLocationClick}>
+        <Box sx={{ boxShadow: 1.3, border: 0.1, color: "black", padding: 0.5, background: "white" }}>
+          {locationIconJSX}
+        </Box>
+      </Button>
+    </Control>
+  );
 }
