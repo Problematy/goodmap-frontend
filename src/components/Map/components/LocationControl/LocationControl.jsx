@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import PropTypes from 'prop-types';
 import { Marker, CircleMarker, useMap } from 'react-leaflet';
 import { Button, Box } from '@mui/material';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
 import Control from 'react-leaflet-custom-control';
 import ReactDOMServer from 'react-dom/server';
 import L from 'leaflet';
-
-const LOCATION_UPDATE_INTERVAL = 5000;
 
 const LocationButton = ({ userPosition }) => {
     const map = useMap();
@@ -32,6 +31,19 @@ const LocationButton = ({ userPosition }) => {
             </Button>
         </Control>
     );
+};
+
+const createLocationIcon = () => {
+    const locationIconJSX = <MyLocationIcon sx={{ color: 'black', fontSize: 22 }} />;
+    const svgLocationIcon = ReactDOMServer.renderToString(locationIconJSX);
+
+    return L.divIcon({
+        html: svgLocationIcon,
+        iconSize: [22, 22],
+        iconAnchor: [11, 11],
+        popupAnchor: [0, -11],
+        className: 'location-icon',
+    });
 };
 
 const LocationControl = () => {
@@ -63,17 +75,13 @@ const LocationControl = () => {
     );
 };
 
-const createLocationIcon = () => {
-    const locationIconJSX = <MyLocationIcon sx={{ color: 'black', fontSize: 22 }} />;
-    const svgLocationIcon = ReactDOMServer.renderToString(locationIconJSX);
-
-    return L.divIcon({
-        html: svgLocationIcon,
-        iconSize: [22, 22],
-        iconAnchor: [11, 11],
-        popupAnchor: [0, -11],
-        className: 'location-icon',
-    });
-};
-
 export { LocationControl };
+
+const positionType = PropTypes.shape({
+    let: PropTypes.number.isRequired,
+    lang: PropTypes.number.isRequired,
+});
+
+LocationButton.propTypes = {
+    userPosition: positionType.isRequired,
+};
