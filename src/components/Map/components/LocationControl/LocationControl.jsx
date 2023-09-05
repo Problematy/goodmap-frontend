@@ -78,8 +78,8 @@ const LocationControl = () => {
 export { LocationControl };
 
 const positionType = PropTypes.shape({
-    let: PropTypes.number.isRequired,
-    lang: PropTypes.number.isRequired,
+    lat: PropTypes.number.isRequired,
+    lng: PropTypes.number.isRequired,
 });
 
 LocationButton.propTypes = {

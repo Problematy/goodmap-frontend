@@ -7,11 +7,6 @@ import MarkerClusterGroup from 'react-leaflet-cluster';
 import { LocationControl } from './components/LocationControl/LocationControl';
 import { mapConfig } from './map.config';
 
-const markerPropTypes = PropTypes.shape({
-    id: PropTypes.number.isRequired,
-    name: PropTypes.string.isRequired,
-});
-
 export const MapComponent = ({ markers }) => (
     <MapContainer
         center={mapConfig.initialMapCoordinates}
@@ -32,5 +27,11 @@ export const MapComponent = ({ markers }) => (
 );
 
 MapComponent.propTypes = {
-    markers: PropTypes.arrayOf(markerPropTypes).isRequired, // Use PropTypes.arrayOf() with the markerPropTypes
+    markers: PropTypes.arrayOf(
+        PropTypes.shape({
+            props: PropTypes.shape({
+                position: PropTypes.arrayOf(PropTypes.number),
+            }),
+        }),
+    ).isRequired,
 };

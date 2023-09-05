@@ -38,7 +38,6 @@ export async function getNewMarkers(categories) {
 export async function repaintMarkers(categories) {
     try {
         const newMarkers = await getNewMarkers(categories);
-
         const mainMap = <MapComponent markers={newMarkers} />;
 
         mapPlaceholder.render(mainMap);
