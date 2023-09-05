@@ -39,7 +39,6 @@ export async function repaintMarkers(categories) {
     try {
         const newMarkers = await getNewMarkers(categories);
         const mainMap = <MapComponent markers={newMarkers} />;
-
         mapPlaceholder.render(mainMap);
     } catch (error) {
         console.error('Error repainting markers:', error);
