@@ -1,9 +1,10 @@
 import React from 'react';
+import PropTypes from 'prop-types'; // Import PropTypes
 
 import { MapContainer, TileLayer } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 
-import { LocationMarker, LocationControl } from './components/LocationControl/LocationControl';
+import { LocationControl } from './components/LocationControl/LocationControl';
 import { mapConfig } from './map.config';
 
 export const MapComponent = ({ markers }) => (
@@ -21,7 +22,10 @@ export const MapComponent = ({ markers }) => (
 
         <MarkerClusterGroup>{markers}</MarkerClusterGroup>
 
-        <LocationMarker />
-
+        <LocationControl />
     </MapContainer>
 );
+
+MapComponent.propTypes = {
+    markers: PropTypes.array.isRequired,
+};

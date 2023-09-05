@@ -1,7 +1,7 @@
 import ReactDOM from 'react-dom/client';
 import React from 'react';
 
-import { Marker, Popup } from "react-leaflet";
+import { Marker, Popup } from 'react-leaflet';
 
 import { httpService } from '../../services/http/httpService';
 import { FiltersForm } from '../FiltersForm/FiltersForm';
@@ -10,7 +10,6 @@ import { MapComponent } from './createBaseMap';
 
 const mapPlaceholder = ReactDOM.createRoot(document.getElementById('map'));
 const filtersPlaceholder = ReactDOM.createRoot(document.getElementById('filter-form'));
-
 
 function getSelectedCheckboxesOfCategory(filterType) {
     const checkedBoxesTypes = document.querySelectorAll(`.filter.${filterType}:checked`);
@@ -28,26 +27,24 @@ export async function getNewMarkers(categories) {
     const filtersUrlQueryString = allCheckboxes.filter(n => n).join('&');
     const locations = await httpService.getLocations(filtersUrlQueryString);
     return locations.map(location => (
-        <Marker position={location.position} >
+        <Marker position={location.position}>
             <Popup>
-                <MarkerPopup place={location}/>
+                <MarkerPopup place={location} />
             </Popup>
         </Marker>
     ));
 }
 
 export async function repaintMarkers(categories) {
-  try {
-    const newMarkers = await getNewMarkers(categories);
+    try {
+        const newMarkers = await getNewMarkers(categories);
 
-    const mainMap = (
-      <MapComponent markers={newMarkers} />
-    );
+        const mainMap = <MapComponent markers={newMarkers} />;
 
-    mapPlaceholder.render(mainMap);
-  } catch (error) {
-    console.error('Error repainting markers:', error);
-  }
+        mapPlaceholder.render(mainMap);
+    } catch (error) {
+        console.error('Error repainting markers:', error);
+    }
 }
 
 export const Map = async () => {
