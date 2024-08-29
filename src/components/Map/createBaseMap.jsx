@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { MapContainer, TileLayer } from 'react-leaflet';
+import { MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import PropTypes from 'prop-types';
 import { LocationControl } from './components/LocationControl';
@@ -14,6 +14,7 @@ export const MapComponent = ({ markers }) => {
             zoom={mapConfig.initialMapZoom}
             scrollWheelZoom
             style={{ height: '100%' }}
+            zoomControl={false}
         >
             <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -24,6 +25,7 @@ export const MapComponent = ({ markers }) => {
                 {markers.map((marker, index) => React.cloneElement(marker, { key: index }))}
             </MarkerClusterGroup>
             <LocationControl setUserPosition={setUserPosition} />
+            <ZoomControl position="topright" />
         </MapContainer>
     );
 }
