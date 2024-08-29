@@ -20,7 +20,9 @@ export const MapComponent = ({ markers }) => {
             maxZoom={mapConfig.maxMapZoom}
         />
 
-        <MarkerClusterGroup>{markers}</MarkerClusterGroup>
+<MarkerClusterGroup>
+    {markers.map((marker, index) => React.cloneElement(marker, { key: index }))}
+</MarkerClusterGroup>
         <LocationButton userPosition={userPosition} />
         <LocationControl setUserPosition={setUserPosition} />
     </MapContainer>
