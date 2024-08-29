@@ -1,39 +1,13 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Marker, CircleMarker, useMap } from 'react-leaflet';
-import { Button, Box, CircularProgress, Typography } from '@mui/material';
+import { Typography } from '@mui/material';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
-import Control from 'react-leaflet-custom-control';
 import ReactDOMServer from 'react-dom/server';
 import L from 'leaflet';
 
-const LocationButton = ({ userPosition }) => {
-    const map = useMap();
+import { LocationButton } from './LocationButton';
 
-    const handleFlyToLocationClick = () => {
-        const zoomLevel = map.getZoom() < 16 ? 16 : map.getZoom();
-
-        map.flyTo(userPosition, zoomLevel);
-    };
-
-    return (
-        <Control prepend position="bottomright">
-            <Button onClick={handleFlyToLocationClick}>
-                <Box
-                    sx={{
-                        boxShadow: 1.3,
-                        border: 0.1,
-                        color: 'black',
-                        padding: 0.5,
-                        background: 'white',
-                    }}
-                >
-                    <MyLocationIcon sx={{ color: 'black', fontSize: 22 }} />
-                </Box>
-            </Button>
-        </Control>
-    );
-};
 
 const createLocationIcon = () => {
     const locationIconJSX = <MyLocationIcon sx={{ color: 'black', fontSize: 22 }} />;
@@ -50,7 +24,6 @@ const createLocationIcon = () => {
 
 const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
     const [userPosition, setUserPosition] = useState(null);
-    const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
     const map = useMap();
 
@@ -61,19 +34,9 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
         setLoading(false);
     };
 
-    const handleLocationError = () => {
-        setError('Location access was blocked by the user.');
-        setLoading(false);
-    };
-
     map.on('locationfound', handleLocationFound);
-    map.on('locationerror', handleLocationError);
 
     map.locate({ setView: false, maxZoom: 16, watch: true });
-
-    if (loading) {
-        return <CircularProgress />;
-    }
 
     if (error) {
         return <Typography variant="body1">{error}</Typography>;
@@ -95,16 +58,8 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
     );
 };
 
-const positionType = PropTypes.shape({
-    lat: PropTypes.number.isRequired,
-    lng: PropTypes.number.isRequired,
-});
 LocationControl.propTypes = {
     setUserPosition: PropTypes.func.isRequired,
 };
 
-LocationButton.propTypes = {
-    userPosition: positionType.isRequired,
-};
-
-export { LocationControl, LocationButton };
+export { LocationControl };

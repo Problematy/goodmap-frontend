@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import PropTypes from 'prop-types';
-import { LocationControl } from './components/LocationControl/LocationControl';
+import { LocationControl } from './components/LocationControl';
 import { mapConfig } from './map.config';
 
 export const MapComponent = ({ markers }) => {
