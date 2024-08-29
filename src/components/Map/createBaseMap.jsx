@@ -23,7 +23,6 @@ export const MapComponent = ({ markers }) => {
 <MarkerClusterGroup>
     {markers.map((marker, index) => React.cloneElement(marker, { key: index }))}
 </MarkerClusterGroup>
-        <LocationButton userPosition={userPosition} />
         <LocationControl setUserPosition={setUserPosition} />
     </MapContainer>
     }

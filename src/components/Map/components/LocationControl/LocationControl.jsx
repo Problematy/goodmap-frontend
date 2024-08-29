@@ -13,7 +13,6 @@ const LocationButton = ({ userPosition }) => {
     const handleFlyToLocationClick = () => {
         const zoomLevel = map.getZoom() < 16 ? 16 : map.getZoom();
 
-
         map.flyTo(userPosition, zoomLevel);
     };
 
@@ -91,11 +90,10 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
         <>
             <CircleMarker center={[lat, lng]} radius={radius} />
             <Marker position={userPosition} icon={createLocationIcon()} />
+            <LocationButton userPosition={userPosition} />
         </>
     );
 };
-
-
 
 const positionType = PropTypes.shape({
     lat: PropTypes.number.isRequired,
