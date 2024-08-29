@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Marker, CircleMarker, useMap } from 'react-leaflet';
-import { Button, Box } from '@mui/material';
+import { Button, Box, CircularProgress, Typography } from '@mui/material';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
 import Control from 'react-leaflet-custom-control';
 import ReactDOMServer from 'react-dom/server';
@@ -11,7 +11,10 @@ const LocationButton = ({ userPosition }) => {
     const map = useMap();
 
     const handleFlyToLocationClick = () => {
-        map.flyTo(userPosition, map.getZoom());
+        const zoomLevel = map.getZoom() < 16 ? 16 : map.getZoom();
+
+
+        map.flyTo(userPosition, zoomLevel);
     };
 
     return (
@@ -46,18 +49,36 @@ const createLocationIcon = () => {
     });
 };
 
-const LocationControl = () => {
+const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
     const [userPosition, setUserPosition] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
     const map = useMap();
 
     const handleLocationFound = e => {
         setUserPosition(e.latlng);
+        setUserPositionProp(e.latlng);
         map.flyTo(e.latlng, map.getZoom());
+        setLoading(false);
     };
 
-    map.once('locationfound', handleLocationFound);
+    const handleLocationError = () => {
+        setError('Location access was blocked by the user.');
+        setLoading(false);
+    };
+
+    map.on('locationfound', handleLocationFound);
+    map.on('locationerror', handleLocationError);
 
     map.locate({ setView: false, maxZoom: 16, watch: true });
+
+    if (loading) {
+        return <CircularProgress />;
+    }
+
+    if (error) {
+        return <Typography variant="body1">{error}</Typography>;
+    }
 
     if (!userPosition) {
         return null;
@@ -68,20 +89,24 @@ const LocationControl = () => {
 
     return (
         <>
-            <LocationButton userPosition={userPosition} />
             <CircleMarker center={[lat, lng]} radius={radius} />
             <Marker position={userPosition} icon={createLocationIcon()} />
         </>
     );
 };
 
-export { LocationControl };
+
 
 const positionType = PropTypes.shape({
     lat: PropTypes.number.isRequired,
     lng: PropTypes.number.isRequired,
 });
+LocationControl.propTypes = {
+    setUserPosition: PropTypes.func.isRequired,
+};
 
 LocationButton.propTypes = {
     userPosition: positionType.isRequired,
 };
+
+export { LocationControl, LocationButton };

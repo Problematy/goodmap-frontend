@@ -1,14 +1,14 @@
-import React from 'react';
-import PropTypes from 'prop-types';
 
+import React, { useState } from 'react';
 import { MapContainer, TileLayer } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
-
-import { LocationControl } from './components/LocationControl/LocationControl';
+import PropTypes from 'prop-types';
+import { LocationControl, LocationButton } from './components/LocationControl/LocationControl';
 import { mapConfig } from './map.config';
 
-export const MapComponent = ({ markers }) => (
-    <MapContainer
+export const MapComponent = ({ markers }) => {
+    const [userPosition, setUserPosition] = useState(null);
+    return <MapContainer
         center={mapConfig.initialMapCoordinates}
         zoom={mapConfig.initialMapZoom}
         scrollWheelZoom
@@ -21,10 +21,11 @@ export const MapComponent = ({ markers }) => (
         />
 
         <MarkerClusterGroup>{markers}</MarkerClusterGroup>
-
-        <LocationControl />
+        <LocationButton userPosition={userPosition} />
+        <LocationControl setUserPosition={setUserPosition} />
     </MapContainer>
-);
+    }
+
 
 MapComponent.propTypes = {
     markers: PropTypes.arrayOf(
