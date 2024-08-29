@@ -1,7 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
-import { MarkerPopup } from './MarkerPopup';
+import { MarkerPopup } from '../src/components/MarkerPopup/MarkerPopup';
 
 const correctMarkerData = {
     title: 'Most Grunwaldzki',
@@ -73,13 +73,21 @@ describe('should render marker popup correctly', () => {
             });
         });
 
-        describe('should trow error when complex data is incorrect', () => {
-            it('should throw error when data type is not given', () => {
-                expect(() =>
-                    render(<MarkerPopup place={incorrectComplexMarkerData} />),
-                ).toThrowError();
-            });
-        });
+      describe('should throw error when complex data is incorrect', () => {
+          it('should throw error when data type is not given', () => {
+
+            // consoleSpy is used to suppress console.error output, which is expected in this test
+
+            const consoleSpy = jest.spyOn(console, 'error');
+            consoleSpy.mockImplementation(() => {});
+
+              expect(() =>
+                  render(<MarkerPopup place={incorrectComplexMarkerData} />),
+              ).toThrow('Custom value must have type and value properties');
+
+              consoleSpy.mockRestore();
+          });
+      });
     });
 });
 
