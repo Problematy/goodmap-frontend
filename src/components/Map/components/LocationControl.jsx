@@ -24,27 +24,29 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
     const [userPosition, setUserPosition] = useState(null);
     const map = useMap();
 
-
     const handleLocationFound = e => {
         setUserPosition(e.latlng);
         setUserPositionProp(e.latlng);
         map.flyTo(e.latlng, map.getZoom());
     };
 
-const handleLocationError = (e) => {
-    if (e.code === 1) { // User denied Geolocation
-        alert('Location access was denied. Please enable it in your browser settings to use this feature.');
-    }
-};
-
-useEffect(() => {
-    map.on('locationfound', handleLocationFound);
-    map.on('locationerror', handleLocationError);
-    return () => {
-        map.off('locationfound', handleLocationFound);
-        map.off('locationerror', handleLocationError);
+    const handleLocationError = e => {
+        if (e.code === 1) {
+            // User denied Geolocation
+            alert(
+                'Location access was denied. Please enable it in your browser settings to use this feature.',
+            );
+        }
     };
-}, [map]);
+
+    useEffect(() => {
+        map.on('locationfound', handleLocationFound);
+        map.on('locationerror', handleLocationError);
+        return () => {
+            map.off('locationfound', handleLocationFound);
+            map.off('locationerror', handleLocationError);
+        };
+    }, [map]);
 
     map.locate({ setView: false, maxZoom: 16, watch: true });
 

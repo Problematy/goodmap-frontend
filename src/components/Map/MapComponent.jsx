@@ -5,9 +5,9 @@ import PropTypes from 'prop-types';
 import { LocationControl } from './components/LocationControl';
 import { mapConfig } from './map.config';
 
+// src/components/Map/MapComponent.jsx
 export const MapComponent = ({ markers }) => {
     const [, setUserPosition] = useState(null);
-
     return (
         <MapContainer
             center={mapConfig.initialMapCoordinates}
@@ -21,15 +21,12 @@ export const MapComponent = ({ markers }) => {
                 attribution='&amp;copy <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
                 maxZoom={mapConfig.maxMapZoom}
             />
-            <MarkerClusterGroup>
-                {markers.map(marker => React.cloneElement(marker, { key: marker.props.id }))};
-            </MarkerClusterGroup>
+            <MarkerClusterGroup>{markers}</MarkerClusterGroup>
             <LocationControl setUserPosition={setUserPosition} />
             <ZoomControl position="topright" />
         </MapContainer>
     );
 };
-
 MapComponent.propTypes = {
     markers: PropTypes.arrayOf(
         PropTypes.shape({
