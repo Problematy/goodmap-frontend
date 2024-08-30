@@ -37,14 +37,4 @@ const mockMarkers = [
         const markers = screen.queryAllByRole('marker');
         expect(markers).toHaveLength(0);
     });
-
-//     it('throws an error if markers prop is not provided', () => {
-//         jest.spyOn(console, 'error').mockImplementation(() => {});
-//         expect(() => render(<MapComponent />)).toThrow();
-//         jest.spyOn(console, 'error').mockRestore();
-//
-//     });
-
-// TODO - test if markers are rendered correctly
-
 });
