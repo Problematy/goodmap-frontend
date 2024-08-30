@@ -7,13 +7,10 @@ const isCustomValue = value => typeof value === 'object' && !(value instanceof A
 const mapDataToPopupContent = ([dataKey, value]) => {
     if (isCustomValue(value)) {
         const CustomDataComponent = mapCustomTypeToReactComponent(value);
-//         console.log("yes");
         return (
             <PopupDataRow key={dataKey} fieldName={dataKey} valueToDisplay={CustomDataComponent} />
         );
     }
-//     console.log("no")
-//     console.log(value);
     return (
         <PopupDataRow
             key={dataKey}
