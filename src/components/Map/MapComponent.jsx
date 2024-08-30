@@ -4,8 +4,6 @@ import MarkerClusterGroup from 'react-leaflet-cluster';
 import PropTypes from 'prop-types';
 import { LocationControl } from './components/LocationControl';
 import { mapConfig } from './map.config';
-import { Marker } from 'react-leaflet';
-
 
 export const MapComponent = ({ markers }) => {
     const [, setUserPosition] = useState(null);

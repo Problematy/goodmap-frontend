@@ -5,7 +5,7 @@ import Control from 'react-leaflet-custom-control';
 import { Button, Box } from '@mui/material';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
 
-const LocationButton = ({ userPosition }) => {
+const LocationButton = ({ userPosition = null }) => {
     const map = useMap();
 
     const handleFlyToLocationClick = () => {
