@@ -9,9 +9,12 @@ const LocationButton = ({ userPosition }) => {
     const map = useMap();
 
     const handleFlyToLocationClick = () => {
-        const zoomLevel = map.getZoom() < 16 ? 16 : map.getZoom();
-
-        map.flyTo(userPosition, zoomLevel);
+        if (!userPosition) {
+            map.locate({ setView: true, maxZoom: 16 });
+        } else {
+            const zoomLevel = map.getZoom() < 16 ? 16 : map.getZoom();
+            map.flyTo(userPosition, zoomLevel);
+        }
     };
 
     return (
@@ -39,7 +42,7 @@ const positionType = PropTypes.shape({
 });
 
 LocationButton.propTypes = {
-    userPosition: positionType.isRequired,
+    userPosition: positionType,
 };
 
 export { LocationButton };

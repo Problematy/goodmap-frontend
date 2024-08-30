@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Marker, CircleMarker, useMap } from 'react-leaflet';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
@@ -24,27 +24,42 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
     const [userPosition, setUserPosition] = useState(null);
     const map = useMap();
 
+
     const handleLocationFound = e => {
         setUserPosition(e.latlng);
         setUserPositionProp(e.latlng);
         map.flyTo(e.latlng, map.getZoom());
     };
 
+const handleLocationError = (e) => {
+    if (e.code === 1) { // User denied Geolocation
+        alert('Location access was denied. Please enable it in your browser settings to use this feature.');
+    }
+};
+
+useEffect(() => {
     map.on('locationfound', handleLocationFound);
+    map.on('locationerror', handleLocationError);
+    return () => {
+        map.off('locationfound', handleLocationFound);
+        map.off('locationerror', handleLocationError);
+    };
+}, [map]);
+
     map.locate({ setView: false, maxZoom: 16, watch: true });
 
-    if (!userPosition) {
-        return null;
-    }
-
-    const { lat, lng } = userPosition;
-    const radius = userPosition.accuracy / 2 || 0;
+    const { lat, lng } = userPosition || {};
+    const radius = (userPosition && userPosition.accuracy / 2) || 0;
 
     return (
         <>
-            <CircleMarker center={[lat, lng]} radius={radius} />
-            <Marker position={userPosition} icon={createLocationIcon()} />
-            <LocationButton userPosition={userPosition} />
+            {userPosition && (
+                <>
+                    <CircleMarker center={[lat, lng]} radius={radius} />
+                    <Marker position={userPosition} icon={createLocationIcon()} />
+                </>
+            )}
+            <LocationButton userPosition={userPosition} map={map} />
         </>
     );
 };
