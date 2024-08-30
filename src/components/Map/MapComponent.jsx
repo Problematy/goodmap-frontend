@@ -6,7 +6,7 @@ import { LocationControl } from './components/LocationControl';
 import { mapConfig } from './map.config';
 
 export const MapComponent = ({ markers }) => {
-    const [userPosition, setUserPosition] = useState(null);
+    const [, setUserPosition] = useState(null);
 
     return (
         <MapContainer

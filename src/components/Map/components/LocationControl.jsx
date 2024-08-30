@@ -1,7 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
 import { Marker, CircleMarker, useMap } from 'react-leaflet';
-import { Typography } from '@mui/material';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
 import ReactDOMServer from 'react-dom/server';
 import L from 'leaflet';
@@ -23,7 +22,6 @@ const createLocationIcon = () => {
 
 const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
     const [userPosition, setUserPosition] = useState(null);
-    const [error, setError] = useState(null);
     const map = useMap();
 
     const handleLocationFound = e => {
@@ -33,12 +31,7 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
     };
 
     map.on('locationfound', handleLocationFound);
-
     map.locate({ setView: false, maxZoom: 16, watch: true });
-
-    if (error) {
-        return <Typography variant="body1">{error}</Typography>;
-    }
 
     if (!userPosition) {
         return null;

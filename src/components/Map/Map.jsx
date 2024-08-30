@@ -41,6 +41,7 @@ export async function repaintMarkers(categories) {
         const mainMap = <MapComponent markers={newMarkers} />;
         mapPlaceholder.render(mainMap);
     } catch (error) {
+        // eslint-disable-next-line no-console
         console.error('Error repainting markers:', error);
     }
 }
