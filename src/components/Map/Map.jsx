@@ -6,7 +6,7 @@ import { Marker, Popup } from 'react-leaflet';
 import { httpService } from '../../services/http/httpService';
 import { FiltersForm } from '../FiltersForm/FiltersForm';
 import { MarkerPopup } from '../MarkerPopup/MarkerPopup';
-import { MapComponent } from './createBaseMap';
+import { MapComponent } from './MapComponent';
 
 const mapPlaceholder = ReactDOM.createRoot(document.getElementById('map'));
 const filtersPlaceholder = ReactDOM.createRoot(document.getElementById('filter-form'));

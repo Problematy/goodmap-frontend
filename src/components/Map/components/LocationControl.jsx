@@ -31,7 +31,6 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
         setUserPosition(e.latlng);
         setUserPositionProp(e.latlng);
         map.flyTo(e.latlng, map.getZoom());
-        setLoading(false);
     };
 
     map.on('locationfound', handleLocationFound);
