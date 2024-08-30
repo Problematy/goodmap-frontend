@@ -42,7 +42,7 @@ const positionType = PropTypes.shape({
 });
 
 LocationButton.propTypes = {
-    userPosition: positionType,
+    userPosition: positionType.isRequired,
 };
 
 export { LocationButton };
