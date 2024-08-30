@@ -4,6 +4,7 @@ import { Marker, CircleMarker, useMap } from 'react-leaflet';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
 import ReactDOMServer from 'react-dom/server';
 import L from 'leaflet';
+import { Snackbar } from '@mui/material';
 
 import { LocationButton } from './LocationButton';
 
@@ -22,6 +23,7 @@ const createLocationIcon = () => {
 
 const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
     const [userPosition, setUserPosition] = useState(null);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
     const map = useMap();
 
     const handleLocationFound = e => {
@@ -33,10 +35,16 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
     const handleLocationError = e => {
         if (e.code === 1) {
             // User denied Geolocation
-            alert(
-                'Location access was denied. Please enable it in your browser settings to use this feature.',
-            );
+            setSnackbarOpen(true);
         }
+    };
+
+    const handleSnackbarClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setSnackbarOpen(false);
     };
 
     useEffect(() => {
@@ -62,6 +70,12 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
                 </>
             )}
             <LocationButton userPosition={userPosition} map={map} />
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={6000}
+                onClose={handleSnackbarClose}
+                message="Location access was denied. Please enable it in your browser settings to use this feature."
+            />
         </>
     );
 };
