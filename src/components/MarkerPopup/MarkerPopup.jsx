@@ -11,27 +11,25 @@ const mapDataToPopupContent = ([dataKey, value]) => {
             <PopupDataRow key={dataKey} fieldName={dataKey} valueToDisplay={CustomDataComponent} />
         );
     }
-    return (
-        <PopupDataRow
-            key={dataKey}
-            fieldName={dataKey}
-            valueToDisplay={value}
-        />
-    );
+    return <PopupDataRow key={dataKey} fieldName={dataKey} valueToDisplay={value} />;
 };
 
-const PopupDataRow = ({ fieldName, valueToDisplay }) => {
- return (
+const PopupDataRow = ({ fieldName, valueToDisplay }) => (
     <p key={fieldName} className="m-0">
         <b>{fieldName}</b>
         {`: `}
         {getContentAsString(valueToDisplay)}
     </p>
-)};
+);
 
 PopupDataRow.propTypes = {
     fieldName: PropTypes.string.isRequired,
-    valueToDisplay: PropTypes.oneOfType([PropTypes.string, PropTypes.number, PropTypes.array, PropTypes.element]).isRequired,
+    valueToDisplay: PropTypes.oneOfType([
+        PropTypes.string,
+        PropTypes.number,
+        PropTypes.array,
+        PropTypes.element,
+    ]).isRequired,
 };
 
 export const MarkerPopup = ({ place }) => {

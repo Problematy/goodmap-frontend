@@ -8,7 +8,6 @@ import L from 'leaflet';
 
 import { LocationButton } from './LocationButton';
 
-
 const createLocationIcon = () => {
     const locationIconJSX = <MyLocationIcon sx={{ color: 'black', fontSize: 22 }} />;
     const svgLocationIcon = ReactDOMServer.renderToString(locationIconJSX);

@@ -22,13 +22,13 @@ export const MapComponent = ({ markers }) => {
                 maxZoom={mapConfig.maxMapZoom}
             />
             <MarkerClusterGroup>
-                {markers.map((marker, index) => React.cloneElement(marker, { key: index }))}
+                {markers.map(marker => React.cloneElement(marker, { key: marker.props.id }))};
             </MarkerClusterGroup>
             <LocationControl setUserPosition={setUserPosition} />
             <ZoomControl position="topright" />
         </MapContainer>
     );
-}
+};
 
 MapComponent.propTypes = {
     markers: PropTypes.arrayOf(
