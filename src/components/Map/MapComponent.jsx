@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import { LocationControl } from './components/LocationControl';
 import { mapConfig } from './map.config';
 
-// src/components/Map/MapComponent.jsx
 export const MapComponent = ({ markers }) => {
     const [, setUserPosition] = useState(null);
     return (
