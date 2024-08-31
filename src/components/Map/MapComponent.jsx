@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import PropTypes from 'prop-types';
 import { LocationControl } from './components/LocationControl';
+import { SuggestNewPointButton } from './components/SuggestNewPointButton';
 import { mapConfig } from './map.config';
 
 export const MapComponent = ({ markers }) => {
@@ -20,6 +21,7 @@ export const MapComponent = ({ markers }) => {
                 attribution='&amp;copy <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
                 maxZoom={mapConfig.maxMapZoom}
             />
+            <SuggestNewPointButton />
             <MarkerClusterGroup>{markers}</MarkerClusterGroup>
             <LocationControl setUserPosition={setUserPosition} />
             <ZoomControl position="topright" />
