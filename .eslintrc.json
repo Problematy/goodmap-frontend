@@ -23,6 +23,7 @@
         "class-methods-use-this": "off",
         "import/prefer-default-export": "off",
         "react/require-default-props": "off",
+        "indent": ["error", 4],
         "react/function-component-definition": [
             2,
             {

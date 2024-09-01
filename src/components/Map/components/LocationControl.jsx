@@ -31,6 +31,7 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
         setUserPosition(e.latlng);
         setUserPositionProp(e.latlng);
         map.flyTo(e.latlng, map.getZoom());
+        console.log('Location found:', e.latlng);
     };
 
     const handleLocationError = e => {
@@ -38,6 +39,8 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
             // User denied Geolocation
             setSnackbarOpen(true);
         }
+        console.error('Location error:', e);
+        map.stopLocate();
     };
 
     const handleSnackbarClose = (event, reason) => {
@@ -49,23 +52,24 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
 
     const handleFlyToLocationClick = () => {
         if (!userPosition) {
-            map.locate({ setView: true, maxZoom: 16 });
+            map.locate({ setView: true, maxZoom: 16, watch: false });
         } else {
             const zoomLevel = map.getZoom() < 16 ? 16 : map.getZoom();
             map.flyTo(userPosition, zoomLevel);
+            console.log('Flying to user location...');
         }
     };
 
     useEffect(() => {
         map.on('locationfound', handleLocationFound);
-        map.on('locationerror', handleLocationError);
+        map.once('locationerror', handleLocationError);
+        map.locate({ setView: false, maxZoom: 16, watch: true });
+
         return () => {
             map.off('locationfound', handleLocationFound);
             map.off('locationerror', handleLocationError);
         };
     }, [map]);
-
-    map.locate({ setView: false, maxZoom: 16, watch: true });
 
     const { lat, lng } = userPosition || {};
     const radius = (userPosition && userPosition.accuracy / 2) || 0;
@@ -87,7 +91,7 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
                 open={snackbarOpen}
                 autoHideDuration={4000}
                 onClose={handleSnackbarClose}
-                message="Geolocation is not supported by this browser."
+                message="Please enable location services to see your location on the map."
             />
             </Control>
         </>
