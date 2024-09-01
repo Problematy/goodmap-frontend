@@ -4,26 +4,7 @@ import Control from 'react-leaflet-custom-control';
 import { Button, Divider } from '@mui/material';
 import ZoomInIcon from '@mui/icons-material/ZoomIn'; // Zoom in icon
 import ZoomOutIcon from '@mui/icons-material/ZoomOut'; // Zoom out icon
-
-const zoomButtonStyle = {
-    width: '100px',
-    height: '50px',
-    minWidth: '100px',
-    borderRadius: '10%',
-    backgroundColor: window.SECONDARY_COLOR,
-    color: 'white',
-    fontSize: '30px',
-    textAlign: 'center',
-    cursor: 'pointer',
-    transition: 'background-color 0.2s ease-in-out',
-    border: 'none',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    padding: '0',
-    lineHeight: '1',
-    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
-};
+import { zoomButtonStyle } from '../../../styles/buttonStyle';
 
 export const CustomZoomControl = () => {
     const map = useMap();
