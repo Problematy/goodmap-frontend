@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import { LocationControl } from './components/LocationControl';
 import { SuggestNewPointButton } from './components/SuggestNewPointButton';
 import { mapConfig } from './map.config';
+import { CustomZoomControl } from './components/ZoomControl';
 
 export const MapComponent = ({ markers }) => {
     const [, setUserPosition] = useState(null);
@@ -24,7 +25,8 @@ export const MapComponent = ({ markers }) => {
             <SuggestNewPointButton />
             <MarkerClusterGroup>{markers}</MarkerClusterGroup>
             <LocationControl setUserPosition={setUserPosition} />
-            <ZoomControl position="topright" />
+            <CustomZoomControl position="topright"/>
+{/*             <ZoomControl position="topright" /> */}
         </MapContainer>
     );
 };
