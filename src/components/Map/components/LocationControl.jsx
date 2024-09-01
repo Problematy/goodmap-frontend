@@ -4,9 +4,10 @@ import { Marker, CircleMarker, useMap } from 'react-leaflet';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
 import ReactDOMServer from 'react-dom/server';
 import L from 'leaflet';
-import { Snackbar } from '@mui/material';
+import { Snackbar, Button } from '@mui/material';
+import { buttonStyle } from '../../../styles/buttonStyle';
+import Control from 'react-leaflet-custom-control';
 
-import { LocationButton } from './LocationButton';
 
 const createLocationIcon = () => {
     const locationIconJSX = <MyLocationIcon sx={{ color: 'black', fontSize: 22 }} />;
@@ -47,6 +48,15 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
         setSnackbarOpen(false);
     };
 
+    const handleFlyToLocationClick = () => {
+        if (!userPosition) {
+            map.locate({ setView: true, maxZoom: 16 });
+        } else {
+            const zoomLevel = map.getZoom() < 16 ? 16 : map.getZoom();
+            map.flyTo(userPosition, zoomLevel);
+        }
+    };
+
     useEffect(() => {
         map.on('locationfound', handleLocationFound);
         map.on('locationerror', handleLocationError);
@@ -69,7 +79,11 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
                     <Marker position={userPosition} icon={createLocationIcon()} />
                 </>
             )}
-            <LocationButton userPosition={userPosition} />
+            <Control prepend position="bottomright">
+                <Button onClick={handleFlyToLocationClick} style={buttonStyle} variant="contained">
+                    <MyLocationIcon style={{ color: 'white', fontSize: 24 }} />
+                </Button>
+            </Control>
             <Snackbar
                 open={snackbarOpen}
                 autoHideDuration={6000}
