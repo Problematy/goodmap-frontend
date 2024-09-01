@@ -5,7 +5,27 @@ import Control from 'react-leaflet-custom-control';
 import { Button, Box } from '@mui/material';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
 
-const LocationButton = ({ userPosition = null }) => {
+const buttonStyle = {
+    width: '50px',
+    height: '50px',
+    minWidth: '50px',
+    borderRadius: '50%',
+    backgroundColor: '#3d91e5',
+    color: 'white',
+    fontSize: '24px',
+    textAlign: 'center',
+    cursor: 'pointer',
+    transition: 'background-color 0.2s ease-in-out',
+    border: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    padding: '0',
+    lineHeight: '1',
+    boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
+};
+
+export const LocationButton = ({ userPosition = null }) => {
     const map = useMap();
 
     const handleFlyToLocationClick = () => {
@@ -19,18 +39,8 @@ const LocationButton = ({ userPosition = null }) => {
 
     return (
         <Control prepend position="bottomright">
-            <Button onClick={handleFlyToLocationClick}>
-                <Box
-                    sx={{
-                        boxShadow: 1.3,
-                        border: 0.1,
-                        color: 'black',
-                        padding: 0.5,
-                        background: 'white',
-                    }}
-                >
-                    <MyLocationIcon sx={{ color: 'black', fontSize: 22 }} />
-                </Box>
+            <Button onClick={handleFlyToLocationClick} style={buttonStyle} variant="contained">
+                <MyLocationIcon style={{ color: 'white', fontSize: 24 }} />
             </Button>
         </Control>
     );
@@ -44,5 +54,3 @@ const positionType = PropTypes.shape({
 LocationButton.propTypes = {
     userPosition: positionType,
 };
-
-export { LocationButton };

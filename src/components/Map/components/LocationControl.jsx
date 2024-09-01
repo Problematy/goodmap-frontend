@@ -69,7 +69,7 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
                     <Marker position={userPosition} icon={createLocationIcon()} />
                 </>
             )}
-            <LocationButton userPosition={userPosition} map={map} />
+            <LocationButton userPosition={userPosition} />
             <Snackbar
                 open={snackbarOpen}
                 autoHideDuration={6000}
@@ -79,6 +79,7 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
         </>
     );
 };
+
 
 LocationControl.propTypes = {
     setUserPosition: PropTypes.func.isRequired,
