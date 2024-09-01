@@ -25,8 +25,8 @@ export const MapComponent = ({ markers }) => {
             <SuggestNewPointButton />
             <MarkerClusterGroup>{markers}</MarkerClusterGroup>
             <LocationControl setUserPosition={setUserPosition} />
-            <CustomZoomControl position="topright"/>
-{/*             <ZoomControl position="topright" /> */}
+            <CustomZoomControl position="topright" />
+            {/*             <ZoomControl position="topright" /> */}
         </MapContainer>
     );
 };

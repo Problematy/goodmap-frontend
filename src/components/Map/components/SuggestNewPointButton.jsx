@@ -1,6 +1,15 @@
 import React, { useState } from 'react';
 import Modal from 'react-modal';
-import { Button, Box, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Snackbar } from '@mui/material';
+import {
+    Button,
+    Box,
+    Dialog,
+    DialogTitle,
+    DialogContent,
+    DialogActions,
+    TextField,
+    Snackbar,
+} from '@mui/material';
 import axios from 'axios';
 import Control from 'react-leaflet-custom-control';
 import AddIcon from '@mui/icons-material/Add';
@@ -18,7 +27,7 @@ export const SuggestNewPointButton = () => {
         setShowModal(false);
     };
 
-    const handleConfirm = async (event) => {
+    const handleConfirm = async event => {
         event.preventDefault();
         setShowModal(false);
         try {

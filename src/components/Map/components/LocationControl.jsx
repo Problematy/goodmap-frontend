@@ -8,7 +8,6 @@ import { Snackbar, Button } from '@mui/material';
 import { buttonStyle } from '../../../styles/buttonStyle';
 import Control from 'react-leaflet-custom-control';
 
-
 const createLocationIcon = () => {
     const locationIconJSX = <MyLocationIcon sx={{ color: 'black', fontSize: 22 }} />;
     const svgLocationIcon = ReactDOMServer.renderToString(locationIconJSX);
@@ -87,19 +86,16 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
                     <MyLocationIcon style={{ color: 'white', fontSize: 24 }} />
                 </Button>
 
-            <Snackbar
-                open={snackbarOpen}
-                autoHideDuration={4000}
-                onClose={handleSnackbarClose}
-                message="Please enable location services to see your location on the map."
-            />
+                <Snackbar
+                    open={snackbarOpen}
+                    autoHideDuration={4000}
+                    onClose={handleSnackbarClose}
+                    message="Please enable location services to see your location on the map."
+                />
             </Control>
         </>
-
     );
-
 };
-
 
 LocationControl.propTypes = {
     setUserPosition: PropTypes.func.isRequired,

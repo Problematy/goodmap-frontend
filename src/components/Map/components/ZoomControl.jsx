@@ -20,10 +20,18 @@ export const CustomZoomControl = () => {
     return (
         <Control prepend position="topright">
             <Button style={zoomButtonStyle} variant="contained">
-                <ZoomInIcon onClick={handleZoomIn} style={{ color: 'white', fontSize: 35, marginRight: '10px' }} /> {/* Zoom in icon with right margin */}
+                <ZoomInIcon
+                    onClick={handleZoomIn}
+                    style={{ color: 'white', fontSize: 35, marginRight: '10px' }}
+                />{' '}
+                {/* Zoom in icon with right margin */}
                 <Divider orientation="vertical" flexItem style={{ backgroundColor: 'white' }} />
-                <ZoomOutIcon onClick={handleZoomOut} style={{ color: 'white', fontSize: 35, marginLeft: '10px' }} /> {/* Zoom out icon with left margin */}
+                <ZoomOutIcon
+                    onClick={handleZoomOut}
+                    style={{ color: 'white', fontSize: 35, marginLeft: '10px' }}
+                />{' '}
+                {/* Zoom out icon with left margin */}
             </Button>
-         </Control>
+        </Control>
     );
 };
