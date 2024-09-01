@@ -44,7 +44,6 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
         if (reason === 'clickaway') {
             return;
         }
-
         setSnackbarOpen(false);
     };
 
@@ -83,15 +82,18 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
                 <Button onClick={handleFlyToLocationClick} style={buttonStyle} variant="contained">
                     <MyLocationIcon style={{ color: 'white', fontSize: 24 }} />
                 </Button>
-            </Control>
+
             <Snackbar
                 open={snackbarOpen}
-                autoHideDuration={6000}
+                autoHideDuration={4000}
                 onClose={handleSnackbarClose}
-                message="Location access was denied. Please enable it in your browser settings to use this feature."
+                message="Geolocation is not supported by this browser."
             />
+            </Control>
         </>
+
     );
+
 };
 
 
