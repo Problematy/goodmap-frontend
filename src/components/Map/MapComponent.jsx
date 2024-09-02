@@ -22,11 +22,10 @@ export const MapComponent = ({ markers }) => {
                 attribution='&amp;copy <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
                 maxZoom={mapConfig.maxMapZoom}
             />
-            <SuggestNewPointButton />
+            {process.env.NODE_ENV === 'development' && <SuggestNewPointButton />}
             <MarkerClusterGroup>{markers}</MarkerClusterGroup>
             <LocationControl setUserPosition={setUserPosition} />
             <CustomZoomControl position="topright" />
-            {/*             <ZoomControl position="topright" /> */}
         </MapContainer>
     );
 };
