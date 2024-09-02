@@ -26,19 +26,16 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const map = useMap();
 
-    const flyToUserLocation = () => {
-        const zoomLevel = map.getZoom() < 16 ? 16 : map.getZoom();
-        map.flyTo(userPosition, zoomLevel);
-        console.log('Flying to user location...');
+    const flyToLocation = (location, mapInstance) => {
+        const zoomLevel = mapInstance.getZoom() < 16 ? 16 : mapInstance.getZoom();
+        mapInstance.flyTo(location, zoomLevel);
+        console.log('Flying to location:', location);
     };
-
 
     const handleLocationFound = e => {
         setUserPosition(e.latlng);
         setUserPositionProp(e.latlng);
-        const zoomLevel = map.getZoom() < 16 ? 16 : map.getZoom();
-        map.flyTo(e.latlng, zoomLevel);
-        console.log('Location found:', e.latlng);
+        flyToLocation(e.latlng, map);
     };
 
     const handleLocationError = e => {
@@ -60,13 +57,9 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
 
     const handleFlyToLocationClick = () => {
         if (!userPosition) {
-//             setSnackbarOpen(true);
-            console.log('no user position');
             map.locate({ setView: false, maxZoom: 16, watch: true });
         } else {
-            const zoomLevel = map.getZoom() < 16 ? 16 : map.getZoom();
-            map.flyTo(userPosition, zoomLevel);
-            console.log('Flying to user location...');
+            flyToLocation(userPosition, map);
         }
     };
 
