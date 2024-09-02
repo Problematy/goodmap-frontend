@@ -59,16 +59,16 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
         }
     };
 
-    useEffect(() => {
-        map.on('locationfound', handleLocationFound);
-        map.once('locationerror', handleLocationError);
-        map.locate({ setView: false, maxZoom: 16, watch: true });
+      useEffect(() => {
+          map.on('locationfound', handleLocationFound);
+          map.once('locationerror', handleLocationError);
+          map.locate({ setView: false, maxZoom: 16, watch: true });
 
-        return () => {
-            map.off('locationfound', handleLocationFound);
-            map.off('locationerror', handleLocationError);
-        };
-    }, [map]);
+          return () => {
+              map.off('locationfound', handleLocationFound);
+              map.off('locationerror', handleLocationError);
+          };
+      }, [map]);
 
     const { lat, lng } = userPosition || {};
     const radius = (userPosition && userPosition.accuracy / 2) || 0;
