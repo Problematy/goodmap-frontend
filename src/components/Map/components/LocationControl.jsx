@@ -26,10 +26,18 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const map = useMap();
 
+    const flyToUserLocation = () => {
+        const zoomLevel = map.getZoom() < 16 ? 16 : map.getZoom();
+        map.flyTo(userPosition, zoomLevel);
+        console.log('Flying to user location...');
+    };
+
+
     const handleLocationFound = e => {
         setUserPosition(e.latlng);
         setUserPositionProp(e.latlng);
-        map.flyTo(e.latlng, map.getZoom());
+        const zoomLevel = map.getZoom() < 16 ? 16 : map.getZoom();
+        map.flyTo(e.latlng, zoomLevel);
         console.log('Location found:', e.latlng);
     };
 
@@ -37,6 +45,7 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
         if (e.code === 1) {
             // User denied Geolocation
             setSnackbarOpen(true);
+            setUserPosition(null);
         }
         console.error('Location error:', e);
         map.stopLocate();
@@ -51,7 +60,9 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
 
     const handleFlyToLocationClick = () => {
         if (!userPosition) {
-            map.locate({ setView: true, maxZoom: 16, watch: false });
+//             setSnackbarOpen(true);
+            console.log('no user position');
+            map.locate({ setView: false, maxZoom: 16, watch: true });
         } else {
             const zoomLevel = map.getZoom() < 16 ? 16 : map.getZoom();
             map.flyTo(userPosition, zoomLevel);
@@ -59,16 +70,17 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
         }
     };
 
-      useEffect(() => {
-          map.on('locationfound', handleLocationFound);
-          map.once('locationerror', handleLocationError);
-          map.locate({ setView: false, maxZoom: 16, watch: true });
+    useEffect(() => {
+        map.on('locationfound', handleLocationFound);
+        map.on('locationerror', handleLocationError);
+//         map.locate({ setView: false, maxZoom: 16, watch: true });
+        console.log('Location control mounted');
 
-          return () => {
-              map.off('locationfound', handleLocationFound);
-              map.off('locationerror', handleLocationError);
-          };
-      }, [map]);
+        return () => {
+            map.off('locationfound', handleLocationFound);
+            map.off('locationerror', handleLocationError);
+        };
+    }, [map]);
 
     const { lat, lng } = userPosition || {};
     const radius = (userPosition && userPosition.accuracy / 2) || 0;
