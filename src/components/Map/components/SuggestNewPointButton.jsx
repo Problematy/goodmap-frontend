@@ -1,8 +1,9 @@
 import React, { useState } from 'react';
-import { Button, Box, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Select, MenuItem, InputLabel, FormControl } from '@mui/material';
+import { Button, Box, Dialog, DialogTitle, DialogContent, DialogActions, TextField, Select, MenuItem, InputLabel, FormControl, Snackbar, IconButton } from '@mui/material';
 import { useMap } from 'react-leaflet';
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import AddIcon from '@mui/icons-material/Add';
+import RefreshIcon from '@mui/icons-material/Refresh';
 import Control from 'react-leaflet-custom-control';
 import axios from 'axios';
 import { buttonStyle } from '../../../styles/buttonStyle';
@@ -10,16 +11,45 @@ import { buttonStyle } from '../../../styles/buttonStyle';
 export const SuggestNewPointButton = () => {
     const map = useMap();
     const [showModal, setShowModal] = useState(false);
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [photo, setPhoto] = useState(null);
     const [organization, setOrganization] = useState('');
-    const userPosition = map.getCenter();
+    const [userPosition, setUserPosition] = useState(map.getCenter());
 
     const handleOpenModal = () => {
-        setShowModal(true);
+        if (!navigator.geolocation) {
+            setSnackbarOpen(true);
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            () => setShowModal(true),
+            () => setSnackbarOpen(true)
+        );
+    };
+
+    const handleLocateMe = () => {
+        if (!navigator.geolocation) {
+            setSnackbarOpen(true);
+            return;
+        }
+
+        navigator.geolocation.getCurrentPosition(
+            (position) => setUserPosition({ lat: position.coords.latitude, lng: position.coords.longitude }),
+            () => setSnackbarOpen(true)
+        );
     };
 
     const handleCloseModal = () => {
         setShowModal(false);
+    };
+
+    const handleSnackbarClose = (event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+
+        setSnackbarOpen(false);
     };
 
     const handlePhotoUpload = event => {
@@ -68,6 +98,9 @@ export const SuggestNewPointButton = () => {
                             fullWidth
                             margin="dense"
                         />
+                        <IconButton onClick={handleLocateMe}>
+                            <RefreshIcon />
+                        </IconButton>
                         <Button variant="contained" component="label">
                             <AddAPhotoIcon />
                             <input type="file" hidden onChange={handlePhotoUpload} />
@@ -95,6 +128,12 @@ export const SuggestNewPointButton = () => {
                     </DialogActions>
                 </form>
             </Dialog>
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={6000}
+                onClose={handleSnackbarClose}
+                message="Please enable location services to suggest a new point."
+            />
         </>
     );
 };
