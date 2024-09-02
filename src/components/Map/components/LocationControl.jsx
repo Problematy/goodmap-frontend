@@ -35,6 +35,7 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
     const handleLocationFound = e => {
         setUserPosition(e.latlng);
         setUserPositionProp(e.latlng);
+        console.log('Location found:', e.latlng);
         flyToLocation(e.latlng, map);
     };
 
@@ -56,9 +57,11 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
     };
 
     const handleFlyToLocationClick = () => {
+        map.locate({ setView: false, maxZoom: 16, watch: true });
         if (!userPosition) {
-            map.locate({ setView: false, maxZoom: 16, watch: true });
+            console.log('Locating user...');
         } else {
+            console.log('clicked...');
             flyToLocation(userPosition, map);
         }
     };
@@ -66,11 +69,10 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
     useEffect(() => {
         map.on('locationfound', handleLocationFound);
         map.on('locationerror', handleLocationError);
-//         map.locate({ setView: false, maxZoom: 16, watch: true });
         console.log('Location control mounted');
 
         return () => {
-            map.off('locationfound', handleLocationFound);
+//             map.off('locationfound', handleLocationFound);
             map.off('locationerror', handleLocationError);
         };
     }, [map]);
