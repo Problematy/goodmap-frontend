@@ -44,20 +44,20 @@ describe('SuggestNewPointButton', () => {
         });
     });
 
-//     it('displays error message when location services are not enabled', async () => {
-//         global.navigator.geolocation = {
-//             getCurrentPosition: jest.fn((success, error) => error()),
-//         };
+    it('displays error message when location services are not enabled', async () => {
+        global.navigator.geolocation = {
+            getCurrentPosition: jest.fn((success, error) => error()),
+        };
+
+        render(<SuggestNewPointButton />);
+
+        clickSuggestionsButton();
+
+        await waitFor(() => {
+            expect(screen.getByText('Please enable location services to suggest a new point.')).toBeInTheDocument();
+        });
+    });
 //
-//         render(<SuggestNewPointButton />);
-//
-//         clickSuggestionsButton();
-//
-//         await waitFor(() => {
-//             expect(screen.getByText('Please enable location services to suggest a new point.')).toBeInTheDocument();
-//         });
-//     });
-// //
 //     it('opens new point suggestion box when location services are enabled', async () => {
 //         global.navigator.geolocation = {
 //             getCurrentPosition: jest.fn((success) => success({ coords: { latitude: 0, longitude: 0 } })),
