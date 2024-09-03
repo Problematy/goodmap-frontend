@@ -22,9 +22,19 @@ import Control from 'react-leaflet-custom-control';
 import axios from 'axios';
 import { buttonStyle } from '../../../styles/buttonStyle';
 
+export const SuggestNewPointButtonRaw = () => {
+
+    return (
+            <>
+
+              </>
+              );
+};
+
+
 export const SuggestNewPointButton = () => {
     const map = useMap();
-    const [showModal, setShowModal] = useState(false);
+    const [showNewPointBox, setShowNewPointSuggestionBox] = useState(false);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [photo, setPhoto] = useState(null);
@@ -32,7 +42,7 @@ export const SuggestNewPointButton = () => {
     const [organization, setOrganization] = useState('');
     const [userPosition, setUserPosition] = useState(map.getCenter());
 
-    const handleOpenModal = () => {
+    const handleNewPointButton = () => {
         if (!navigator.geolocation) {
             setSnackbarMessage('Please enable location services to suggest a new point.');
             setSnackbarOpen(true);
@@ -40,7 +50,7 @@ export const SuggestNewPointButton = () => {
         }
 
         navigator.geolocation.getCurrentPosition(
-            () => setShowModal(true),
+            () => setShowNewPointSuggestionBox(true),
             () => {
                 setSnackbarMessage('Please enable location services to suggest a new point.');
                 setSnackbarOpen(true);
@@ -65,8 +75,8 @@ export const SuggestNewPointButton = () => {
         );
     };
 
-    const handleCloseModal = () => {
-        setShowModal(false);
+    const handleCloseNewPointBox = () => {
+        setShowNewPointSuggestionBox(false);
     };
 
     const handleSnackbarClose = (event, reason) => {
@@ -95,9 +105,9 @@ export const SuggestNewPointButton = () => {
         setOrganization(event.target.value);
     };
 
-    const handleConfirm = async event => {
+    const handleConfirmNewPoint = async event => {
         event.preventDefault();
-        setShowModal(false);
+        setShowNewPointSuggestionBox(false);
 
         const formData = new FormData();
         formData.append('position', JSON.stringify(userPosition));
@@ -116,15 +126,15 @@ export const SuggestNewPointButton = () => {
     };
 
     return (
-        <>
             <Control prepend position="bottomright">
-                <Button onClick={handleOpenModal} style={buttonStyle} variant="contained">
+            <>
+                <Button onClick={handleNewPointButton} style={buttonStyle} variant="contained">
                     <AddIcon style={{ color: 'white', fontSize: 24 }} />
                 </Button>
 
-                <Dialog open={showModal} onClose={handleCloseModal}>
+                <Dialog open={showNewPointBox} onClose={handleCloseNewPointBox}>
                     <DialogTitle>Suggest a New Point</DialogTitle>
-                    <form onSubmit={handleConfirm}>
+                    <form onSubmit={handleConfirmNewPoint}>
                         <DialogContent>
                             <Box display="flex" alignItems="center" gap={2}>
                                 <TextField
@@ -166,7 +176,7 @@ export const SuggestNewPointButton = () => {
                             <Button type="submit" variant="contained" color="primary">
                                 Submit
                             </Button>
-                            <Button onClick={handleCloseModal} variant="outlined" color="secondary">
+                            <Button onClick={handleCloseNewPointBox} variant="outlined" color="secondary">
                                 Cancel
                             </Button>
                         </DialogActions>
@@ -178,7 +188,6 @@ export const SuggestNewPointButton = () => {
                     onClose={handleSnackbarClose}
                     message={snackbarMessage}
                 />
-            </Control>
-        </>
+              </>            </Control>
     );
 };
