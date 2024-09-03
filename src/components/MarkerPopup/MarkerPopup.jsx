@@ -1,6 +1,7 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { getContentAsString, mapCustomTypeToReactComponent } from './mapCustomTypeToReactComponent';
+import { Marker, Popup } from 'react-leaflet';
 
 const isCustomValue = value => typeof value === 'object' && !(value instanceof Array);
 
@@ -32,17 +33,29 @@ PopupDataRow.propTypes = {
     ]).isRequired,
 };
 
+const MarkerContent = ({ place }) => {
+    const categoriesWithSubcategories = Object.entries(place.data);
+
+    return (
+          <div className="place-data m-0">
+              <p className="point-title m-0">
+                  <b>{place.title}</b>
+              </p>
+              <p className="point-subtitle mt-0 mb-2">{place.subtitle}</p>
+              {categoriesWithSubcategories.map(mapDataToPopupContent)}
+          </div>
+    );
+};
+
 export const MarkerPopup = ({ place }) => {
     const categoriesWithSubcategories = Object.entries(place.data);
 
     return (
-        <div className="place-data m-0">
-            <p className="point-title m-0">
-                <b>{place.title}</b>
-            </p>
-            <p className="point-subtitle mt-0 mb-2">{place.subtitle}</p>
-            {categoriesWithSubcategories.map(mapDataToPopupContent)}
-        </div>
+        <Marker position={place.position} key={place.metadata.UUID}>
+          <Popup>
+            <MarkerContent place={place} />
+          </Popup>
+        </Marker>
     );
 };
 
