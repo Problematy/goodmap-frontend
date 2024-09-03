@@ -5,6 +5,8 @@ import { httpService } from '../../services/http/httpService';
 import { FiltersForm } from '../FiltersForm/FiltersForm';
 import { MarkerPopup } from '../MarkerPopup/MarkerPopup';
 import { MapComponent } from './MapComponent';
+import { SuggestNewPointButton } from './components/SuggestNewPointButton';
+
 
 const mapPlaceholder = ReactDOM.createRoot(document.getElementById('map'));
 const filtersPlaceholder = ReactDOM.createRoot(document.getElementById('filter-form'));
@@ -30,7 +32,8 @@ export async function getNewMarkers(categories) {
 export async function repaintMarkers(categories) {
     try {
         const newMarkers = await getNewMarkers(categories);
-        const mainMap = <MapComponent markers={newMarkers} />;
+        const mainMap = < SuggestNewPointButton />;
+{/*         <MapComponent markers={newMarkers} />; */}
         mapPlaceholder.render(mainMap);
     } catch (error) {
         // eslint-disable-next-line no-console

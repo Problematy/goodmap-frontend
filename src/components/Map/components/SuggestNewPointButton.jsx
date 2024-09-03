@@ -138,7 +138,7 @@ export const SuggestNewPointButton = () => {
 
     return (
         <>
-            <Button onClick={handleNewPointButton} style={buttonStyle} variant="contained">
+            <Button onClick={handleNewPointButton} style={buttonStyle} variant="contained" data-testid="suggest-new-point">
                 <AddIcon style={{ color: 'white', fontSize: 24 }} />
             </Button>
 
