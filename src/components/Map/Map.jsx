@@ -24,9 +24,7 @@ export async function getNewMarkers(categories) {
     );
     const filtersUrlQueryString = allCheckboxes.filter(n => n).join('&');
     const locations = await httpService.getLocations(filtersUrlQueryString);
-    return locations.map(location => (
-        <MarkerPopup place={location} key={location.metadata.UUID}/>
-    ));
+    return locations.map(location => <MarkerPopup place={location} key={location.metadata.UUID} />);
 }
 
 export async function repaintMarkers(categories) {
