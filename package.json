@@ -15,7 +15,8 @@
         "coverage": "jest --coverage --config jest.config.js",
         "lint-fix": "eslint src/**/*.jsx tests/**/*.jsx --fix",
         "lint": "eslint src/**/*.jsx tests/**/*.jsx",
-        "prettier": "prettier --write \"src/**/*.jsx\" \"tests/**/*.jsx\""
+        "prettier-fix": "prettier --write \"src/**/*.jsx\" \"tests/**/*.jsx\"",
+        "prettier": "prettier --check \"src/**/*.jsx\" \"tests/**/*.jsx\""
     },
     "files": [
         "dist"

@@ -9,7 +9,8 @@ run:
 
 lint:
 	npm run lint
+	npm run prettier
 
 lint-fix:
 	npm run lint-fix
-	npm run prettier
+	npm run prettier-fix
