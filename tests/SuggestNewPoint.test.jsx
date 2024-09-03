@@ -28,18 +28,22 @@ import React from 'react';
 
 jest.mock('axios');
 
+const clickSuggestionsButton = () => {
+    fireEvent.click(screen.getByTestId('suggest-new-point'));
+};
+
 describe('SuggestNewPointButton', () => {
     it('displays error message when geolocation is not supported', async () => {
         global.navigator.geolocation = undefined;
 
         render(<SuggestNewPointButton />);
-        fireEvent.click(screen.getByTestId('suggest-new-point'));
+        clickSuggestionsButton();
 
         await waitFor(() => {
             expect(screen.getByText('Please enable location services to suggest a new point.')).toBeInTheDocument();
         });
     });
-//
+
 //     it('displays error message when location services are not enabled', async () => {
 //         global.navigator.geolocation = {
 //             getCurrentPosition: jest.fn((success, error) => error()),
@@ -47,13 +51,13 @@ describe('SuggestNewPointButton', () => {
 //
 //         render(<SuggestNewPointButton />);
 //
-//         fireEvent.click(screen.getByRole('button', { name: /add/i }));
+//         clickSuggestionsButton();
 //
 //         await waitFor(() => {
 //             expect(screen.getByText('Please enable location services to suggest a new point.')).toBeInTheDocument();
 //         });
 //     });
-//
+// //
 //     it('opens new point suggestion box when location services are enabled', async () => {
 //         global.navigator.geolocation = {
 //             getCurrentPosition: jest.fn((success) => success({ coords: { latitude: 0, longitude: 0 } })),
@@ -61,7 +65,7 @@ describe('SuggestNewPointButton', () => {
 //
 //         render(<SuggestNewPointButton />);
 //
-//         fireEvent.click(screen.getByRole('button', { name: /add/i }));
+//         clickSuggestionsButton();
 //
 //         await waitFor(() => {
 //             expect(screen.getByRole('dialog')).toBeInTheDocument();
@@ -75,7 +79,7 @@ describe('SuggestNewPointButton', () => {
 //
 //         render(<SuggestNewPointButton />);
 //
-//         fireEvent.click(screen.getByRole('button', { name: /add/i }));
+//         clickSuggestionsButton();
 //
 //         await waitFor(() => {
 //             fireEvent.change(screen.getByLabelText(/add a photo icon/i), {
@@ -98,7 +102,7 @@ describe('SuggestNewPointButton', () => {
 //
 //         render(<SuggestNewPointButton />);
 //
-//         fireEvent.click(screen.getByRole('button', { name: /add/i }));
+//         clickSuggestionsButton();
 //
 //         await waitFor(() => {
 //             fireEvent.change(screen.getByLabelText(/add a photo icon/i), {
