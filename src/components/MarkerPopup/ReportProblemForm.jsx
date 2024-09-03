@@ -42,27 +42,27 @@ export const ReportProblemForm = ({ placeId }) => {
     const [problem, setProblem] = useState('');
     const [problemType, setProblemType] = useState('');
 
+    const fetchCsrfToken = async () => {
+        const response = await fetch('/api/generate-csrf-token');
+        const data = await response.json();
+        return data.csrf_token;
+    };
+
     const handleSubmit = async event => {
         event.preventDefault();
-        console.log('Submitting report for place:', placeId, 'with problem:', problemType === 'other' ? problem : problemType)
+        const csrfToken = await fetchCsrfToken();
 
         const response = await fetch('/api/report-location', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
+                'X-CSRFToken': csrfToken,
             },
             body: JSON.stringify({
                 id: placeId,
                 description: problemType === 'other' ? problem : problemType,
             }),
         });
-
-        if (response.ok) {
-            // TODO add snackbar with success message
-        } else {
-            // TODO add snackbar with failing to report problem
-            console.log('Failed to report problem');
-        }
     };
 
     return (
