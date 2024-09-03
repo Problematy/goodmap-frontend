@@ -1,7 +1,7 @@
 import React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen } from '@testing-library/react';
-import { MarkerPopup } from '../src/components/MarkerPopup/MarkerPopup';
+import { MarkerContent } from '../src/components/MarkerPopup/MarkerPopup';
 
 const correctMarkerData = {
     title: 'Most Grunwaldzki',
@@ -18,6 +18,9 @@ const correctMarkerData = {
         },
         unknownDataType: { type: 'unknown', value: 'example value for unknown data type' },
     },
+    metadata: {
+        UUID: '21231',
+    },
 };
 
 const incorrectComplexMarkerData = {
@@ -33,7 +36,7 @@ const dataKeys = Object.keys(correctMarkerData.data);
 
 describe('should render marker popup correctly', () => {
     beforeEach(() => {
-        render(<MarkerPopup place={correctMarkerData} />);
+        render(<MarkerContent place={correctMarkerData} />);
     });
 
     it('should render marker popup name', () => {
@@ -83,7 +86,7 @@ describe('should render marker popup correctly', () => {
                 const consoleSpy = jest.spyOn(console, 'error');
                 consoleSpy.mockImplementation(() => {});
 
-                expect(() => render(<MarkerPopup place={incorrectComplexMarkerData} />)).toThrow(
+                expect(() => render(<MarkerContent place={incorrectComplexMarkerData} />)).toThrow(
                     'Custom value must have type and value properties',
                 );
 
