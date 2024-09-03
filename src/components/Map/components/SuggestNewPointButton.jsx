@@ -23,24 +23,16 @@ import axios from 'axios';
 import { buttonStyle } from '../../../styles/buttonStyle';
 
 export const SuggestNewPointButtonRaw = () => {
-
-    return (
-            <>
-
-              </>
-              );
-};
-
-
-export const SuggestNewPointButton = () => {
     const map = useMap();
+    const [userPosition, setUserPosition] = useState(map.getCenter());
+
+
     const [showNewPointBox, setShowNewPointSuggestionBox] = useState(false);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
     const [photo, setPhoto] = useState(null);
     const [photoURL, setPhotoURL] = useState(null);
     const [organization, setOrganization] = useState('');
-    const [userPosition, setUserPosition] = useState(map.getCenter());
 
     const handleNewPointButton = () => {
         if (!navigator.geolocation) {
@@ -126,68 +118,80 @@ export const SuggestNewPointButton = () => {
     };
 
     return (
-            <Control prepend position="bottomright">
-            <>
-                <Button onClick={handleNewPointButton} style={buttonStyle} variant="contained">
-                    <AddIcon style={{ color: 'white', fontSize: 24 }} />
-                </Button>
+        <>
+            <Button onClick={handleNewPointButton} style={buttonStyle} variant="contained">
+                <AddIcon style={{ color: 'white', fontSize: 24 }} />
+            </Button>
 
-                <Dialog open={showNewPointBox} onClose={handleCloseNewPointBox}>
-                    <DialogTitle>Suggest a New Point</DialogTitle>
-                    <form onSubmit={handleConfirmNewPoint}>
-                        <DialogContent>
-                            <Box display="flex" alignItems="center" gap={2}>
-                                <TextField
-                                    label="Your Position"
-                                    value={`${userPosition.lat}, ${userPosition.lng}`}
-                                    disabled
-                                    fullWidth
-                                    margin="dense"
-                                />
-                                <IconButton onClick={handleLocateMe}>
-                                    <RefreshIcon />
-                                </IconButton>
-                            </Box>
-                            <Button variant="contained" component="label">
-                                <AddAPhotoIcon />
-                                <input type="file" hidden onChange={handlePhotoUpload} />
-                            </Button>
-                            {photoURL && (
-                                <img
-                                    src={photoURL}
-                                    alt="Selected"
-                                    style={{ width: '100%', height: 'auto' }}
-                                />
-                            )}
-                            <FormControl fullWidth margin="dense">
-                                <InputLabel id="organization-label">Organization</InputLabel>
-                                <Select
-                                    labelId="organization-label"
-                                    value={organization}
-                                    onChange={handleOrganizationChange}
-                                >
-                                    <MenuItem value="pck">PCK</MenuItem>
-                                    <MenuItem value="fundacja_usmiech">Fundacja Usmiech</MenuItem>
-                                    <MenuItem value="other">Other</MenuItem>
-                                </Select>
-                            </FormControl>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button type="submit" variant="contained" color="primary">
-                                Submit
-                            </Button>
-                            <Button onClick={handleCloseNewPointBox} variant="outlined" color="secondary">
-                                Cancel
-                            </Button>
-                        </DialogActions>
-                    </form>
-                </Dialog>
-                <Snackbar
-                    open={snackbarOpen}
-                    autoHideDuration={6000}
-                    onClose={handleSnackbarClose}
-                    message={snackbarMessage}
-                />
-              </>            </Control>
+            <Dialog open={showNewPointBox} onClose={handleCloseNewPointBox}>
+                <DialogTitle>Suggest a New Point</DialogTitle>
+                <form onSubmit={handleConfirmNewPoint}>
+                    <DialogContent>
+                        <Box display="flex" alignItems="center" gap={2}>
+                            <TextField
+                                label="Your Position"
+                                value={`${userPosition.lat}, ${userPosition.lng}`}
+                                disabled
+                                fullWidth
+                                margin="dense"
+                            />
+                            <IconButton onClick={handleLocateMe}>
+                                <RefreshIcon />
+                            </IconButton>
+                        </Box>
+                        <Button variant="contained" component="label">
+                            <AddAPhotoIcon />
+                            <input type="file" hidden onChange={handlePhotoUpload} />
+                        </Button>
+                        {photoURL && (
+                            <img
+                                src={photoURL}
+                                alt="Selected"
+                                style={{ width: '100%', height: 'auto' }}
+                            />
+                        )}
+                        <FormControl fullWidth margin="dense">
+                            <InputLabel id="organization-label">Organization</InputLabel>
+                            <Select
+                                labelId="organization-label"
+                                value={organization}
+                                onChange={handleOrganizationChange}
+                            >
+                                <MenuItem value="pck">PCK</MenuItem>
+                                <MenuItem value="fundacja_usmiech">Fundacja Usmiech</MenuItem>
+                                <MenuItem value="other">Other</MenuItem>
+                            </Select>
+                        </FormControl>
+                    </DialogContent>
+                    <DialogActions>
+                        <Button type="submit" variant="contained" color="primary">
+                            Submit
+                        </Button>
+                        <Button
+                            onClick={handleCloseNewPointBox}
+                            variant="outlined"
+                            color="secondary"
+                        >
+                            Cancel
+                        </Button>
+                    </DialogActions>
+                </form>
+            </Dialog>
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={6000}
+                onClose={handleSnackbarClose}
+                message={snackbarMessage}
+            />
+        </>
+    );
+};
+
+export const SuggestNewPointButton = () => {
+
+    return (
+        <Control prepend position="bottomright">
+            <SuggestNewPointButtonRaw />
+        </Control>
     );
 };
