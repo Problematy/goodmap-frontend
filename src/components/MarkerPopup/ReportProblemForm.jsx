@@ -26,7 +26,7 @@ const Input = styled.input`
 
 const SubmitButton = styled.input`
     padding: 10px;
-    background-color: #007BFF;
+    background-color: #007bff;
     color: white;
     border: none;
     border-radius: 5px;
@@ -94,5 +94,5 @@ export const ReportProblemForm = ({ placeId }) => {
 };
 
 ReportProblemForm.propTypes = {
-  placeId: PropTypes.string.isRequired
+    placeId: PropTypes.string.isRequired,
 };
