@@ -11,7 +11,7 @@ const commonStyle = {
     padding: '0',
     lineHeight: '1',
     boxShadow: '0px 4px 6px rgba(0, 0, 0, 0.1)',
-}
+};
 
 const mapButton = {
     ...commonStyle,

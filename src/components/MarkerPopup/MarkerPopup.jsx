@@ -100,11 +100,18 @@ export const MarkerPopup = ({ place }) => {
         <Marker position={place.position} key={place.metadata.UUID}>
             <Popup>
                 <MarkerContent place={place} />
-                <a href={`geo:${place.position[0]},${place.position[1]}`} >
-                  <p style={{...buttonStyleSmall, justifyContent: 'center', display: 'flex', alignItems: 'center'}}>
-                      <ExploreIcon style={{ color: 'white', marginRight: '10px' }} />
-                      <span>Navigate me</span>
-                  </p>
+                <a href={`geo:${place.position[0]},${place.position[1]}`}>
+                    <p
+                        style={{
+                            ...buttonStyleSmall,
+                            justifyContent: 'center',
+                            display: 'flex',
+                            alignItems: 'center',
+                        }}
+                    >
+                        <ExploreIcon style={{ color: 'white', marginRight: '10px' }} />
+                        <span>Navigate me</span>
+                    </p>
                 </a>
                 <p onClick={toggleForm} style={{ cursor: 'pointer', textAlign: 'right' }}>
                     Report problem
