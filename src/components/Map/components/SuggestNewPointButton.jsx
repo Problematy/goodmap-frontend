@@ -14,17 +14,37 @@ import {
     Snackbar,
     IconButton,
 } from '@mui/material';
-import { useMap } from 'react-leaflet';
+
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import AddIcon from '@mui/icons-material/Add';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import Control from 'react-leaflet-custom-control';
 import axios from 'axios';
 import { buttonStyle } from '../../../styles/buttonStyle';
+import { useEffect } from 'react';
 
 export const SuggestNewPointButton = () => {
-    const map = useMap();
-    const [userPosition, setUserPosition] = useState(map.getCenter()); // TODO - get user position without leaflet map
+    const [userPosition, setUserPosition] = useState({ lat: null, lng: null });
+
+    useEffect(() => {
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                    setUserPosition({
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude,
+                    });
+                },
+                () => {
+                    setSnackbarMessage('Please enable location services to suggest a new point.');
+                    setSnackbarOpen(true);
+                },
+            );
+        } else {
+            setSnackbarMessage('Geolocation is not supported by this browser.');
+            setSnackbarOpen(true);
+        }
+    }, []);
 
     const [showNewPointBox, setShowNewPointSuggestionBox] = useState(false);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
