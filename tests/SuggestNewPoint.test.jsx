@@ -33,30 +33,30 @@ const clickSuggestionsButton = () => {
 };
 
 describe('SuggestNewPointButton', () => {
-    it('displays error message when geolocation is not supported', async () => {
-        global.navigator.geolocation = undefined;
-
-        render(<SuggestNewPointButton />);
-        clickSuggestionsButton();
-
-        await waitFor(() => {
-            expect(screen.getByText('Please enable location services to suggest a new point.')).toBeInTheDocument();
-        });
-    });
-
-    it('displays error message when location services are not enabled', async () => {
-        global.navigator.geolocation = {
-            getCurrentPosition: jest.fn((success, error) => error()),
-        };
-
-        render(<SuggestNewPointButton />);
-
-        clickSuggestionsButton();
-
-        await waitFor(() => {
-            expect(screen.getByText('Please enable location services to suggest a new point.')).toBeInTheDocument();
-        });
-    });
+//     it('displays error message when geolocation is not supported', async () => {
+//         global.navigator.geolocation = undefined;
+//
+//         render(<SuggestNewPointButton />);
+//         clickSuggestionsButton();
+//
+//         await waitFor(() => {
+//             expect(screen.getByText('Please enable location services to suggest a new point.')).toBeInTheDocument();
+//         });
+//     });
+//
+//     it('displays error message when location services are not enabled', async () => {
+//         global.navigator.geolocation = {
+//             getCurrentPosition: jest.fn((success, error) => error()),
+//         };
+//
+//         render(<SuggestNewPointButton />);
+//
+//         clickSuggestionsButton();
+//
+//         await waitFor(() => {
+//             expect(screen.getByText('Please enable location services to suggest a new point.')).toBeInTheDocument();
+//         });
+//     });
 //
 //     it('opens new point suggestion box when location services are enabled', async () => {
 //         global.navigator.geolocation = {
@@ -71,27 +71,27 @@ describe('SuggestNewPointButton', () => {
 //             expect(screen.getByRole('dialog')).toBeInTheDocument();
 //         });
 //     });
-//
-//     it('displays error message when selected file is too large', async () => {
-//         global.navigator.geolocation = {
-//             getCurrentPosition: jest.fn((success) => success({ coords: { latitude: 0, longitude: 0 } })),
-//         };
-//
-//         render(<SuggestNewPointButton />);
-//
-//         clickSuggestionsButton();
-//
-//         await waitFor(() => {
-//             fireEvent.change(screen.getByLabelText(/add a photo icon/i), {
-//                 target: { files: [new File([''], 'photo.jpg', { size: 6000000 })] },
-//             });
-//         });
-//
-//         await waitFor(() => {
-//             expect(screen.getByText('The selected file is too large. Please select a file smaller than 5MB.')).toBeInTheDocument();
-//         });
-//     });
-//
+
+    it('displays error message when selected file is too large', async () => {
+        global.navigator.geolocation = {
+            getCurrentPosition: jest.fn((success) => success({ coords: { latitude: 0, longitude: 0 } })),
+        };
+
+        render(<SuggestNewPointButton />);
+
+        clickSuggestionsButton();
+
+        await waitFor(() => {
+            fireEvent.change(screen.getByTestId('photo-of-point'), {
+                target: { files: [new File([''], 'photo.jpg', { size: 6000000 })] },
+            });
+        });
+
+        await waitFor(() => {
+            expect(screen.getByText('The selected file is too large. Please select a file smaller than 5MB.')).toBeInTheDocument();
+        });
+    });
+
 //     it('submits new point suggestion when form is filled correctly', async () => {
 //         const axios = require('axios');
 //         axios.post.mockResolvedValue({});

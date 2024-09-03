@@ -158,7 +158,7 @@ export const SuggestNewPointButton = () => {
                                 <RefreshIcon />
                             </IconButton>
                         </Box>
-                        <Button variant="contained" component="label">
+                        <Button variant="contained" component="label" data-testid="photo-of-point">
                             <AddAPhotoIcon />
                             <input type="file" hidden onChange={handlePhotoUpload} />
                         </Button>
