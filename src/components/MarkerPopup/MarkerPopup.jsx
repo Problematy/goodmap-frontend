@@ -9,10 +9,7 @@ import { ReportProblemForm } from './ReportProblemForm';
 const isCustomValue = value => typeof value === 'object' && !(value instanceof Array);
 
 const mapDataToPopupContent = ([dataKey, rawValue]) => {
-    let value = rawValue;
-    if (isCustomValue(rawValue)) {
-        value = mapCustomTypeToReactComponent(rawValue);
-    }
+    let value = isCustomValue(rawValue) ? mapCustomTypeToReactComponent(rawValue) : rawValue;
     return <PopupDataRow key={dataKey} fieldName={dataKey} valueToDisplay={value} />;
 };
 
