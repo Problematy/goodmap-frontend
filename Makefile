@@ -14,3 +14,6 @@ lint:
 lint-fix:
 	npm run lint-fix
 	npm run prettier-fix
+
+coverage:
+	npm run coverage
