@@ -157,9 +157,10 @@ export const SuggestNewPointButtonRaw = () => {
                                 value={organization}
                                 onChange={handleOrganizationChange}
                             >
-                                <MenuItem value="pck">PCK</MenuItem>
-                                <MenuItem value="fundacja_usmiech">Fundacja Usmiech</MenuItem>
-                                <MenuItem value="other">Other</MenuItem>
+                            // TODO - fetch organizations from the backend
+                                <MenuItem value="org-1">PCK</MenuItem>
+                                <MenuItem value="org2">Fundacja Usmiech</MenuItem>
+                                <MenuItem value="org-3">Other</MenuItem>
                             </Select>
                         </FormControl>
                     </DialogContent>
