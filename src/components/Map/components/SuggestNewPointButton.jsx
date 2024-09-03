@@ -22,10 +22,9 @@ import Control from 'react-leaflet-custom-control';
 import axios from 'axios';
 import { buttonStyle } from '../../../styles/buttonStyle';
 
-export const SuggestNewPointButtonRaw = () => {
+export const SuggestNewPointButton = () => {
     const map = useMap();
-    const [userPosition, setUserPosition] = useState(map.getCenter());
-
+    const [userPosition, setUserPosition] = useState(map.getCenter()); // TODO - get user position without leaflet map
 
     const [showNewPointBox, setShowNewPointSuggestionBox] = useState(false);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -157,7 +156,7 @@ export const SuggestNewPointButtonRaw = () => {
                                 value={organization}
                                 onChange={handleOrganizationChange}
                             >
-                            // TODO - fetch organizations from the backend
+                                // TODO - fetch organizations from the backend
                                 <MenuItem value="org-1">PCK</MenuItem>
                                 <MenuItem value="org2">Fundacja Usmiech</MenuItem>
                                 <MenuItem value="org-3">Other</MenuItem>
@@ -185,14 +184,5 @@ export const SuggestNewPointButtonRaw = () => {
                 message={snackbarMessage}
             />
         </>
-    );
-};
-
-export const SuggestNewPointButton = () => {
-
-    return (
-        <Control prepend position="bottomright">
-            <SuggestNewPointButtonRaw />
-        </Control>
     );
 };

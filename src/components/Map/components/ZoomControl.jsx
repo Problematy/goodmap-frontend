@@ -24,13 +24,11 @@ export const CustomZoomControl = () => {
                     onClick={handleZoomIn}
                     style={{ color: 'white', fontSize: 35, marginRight: '10px' }}
                 />{' '}
-                {/* Zoom in icon with right margin */}
                 <Divider orientation="vertical" flexItem style={{ backgroundColor: 'white' }} />
                 <ZoomOutIcon
                     onClick={handleZoomOut}
                     style={{ color: 'white', fontSize: 35, marginLeft: '10px' }}
                 />{' '}
-                {/* Zoom out icon with left margin */}
             </Button>
         </Control>
     );
