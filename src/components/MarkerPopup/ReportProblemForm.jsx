@@ -1,4 +1,42 @@
 import React, { useState } from 'react';
+import styled from 'styled-components';
+import PropTypes from 'prop-types';
+
+const Form = styled.form`
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+`;
+
+const Label = styled.label`
+    display: flex;
+    flex-direction: column;
+    font-size: 1rem;
+`;
+
+const Select = styled.select`
+    padding: 5px;
+    font-size: 1rem;
+`;
+
+const Input = styled.input`
+    padding: 5px;
+    font-size: 1rem;
+`;
+
+const SubmitButton = styled.input`
+    padding: 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+
+    &:hover {
+        background-color: #0056b3;
+    }
+`;
 
 export const ReportProblemForm = ({ placeId }) => {
     const [problem, setProblem] = useState('');
@@ -6,6 +44,7 @@ export const ReportProblemForm = ({ placeId }) => {
 
     const handleSubmit = async event => {
         event.preventDefault();
+        console.log('Submitting report for place:', placeId, 'with problem:', problemType === 'other' ? problem : problemType)
 
         const response = await fetch('/api/report-location', {
             method: 'POST',
@@ -27,29 +66,33 @@ export const ReportProblemForm = ({ placeId }) => {
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <label>
+        <Form onSubmit={handleSubmit}>
+            <Label>
                 Problem:
-                <select value={problemType} onChange={e => setProblemType(e.target.value)}>
+                <Select value={problemType} onChange={e => setProblemType(e.target.value)}>
                     <option value="">--Please choose an option--</option>
                     <option value="this point is not here">This point is not here</option>
                     <option value="it's overloaded">It's overloaded</option>
                     <option value="it's broken">It's broken</option>
                     <option value="other">Other</option>
-                </select>
-            </label>
+                </Select>
+            </Label>
             {problemType === 'other' && (
-                <label>
+                <Label>
                     Please describe:
-                    <input
+                    <Input
                         type="text"
                         name="problem"
                         value={problem}
                         onChange={e => setProblem(e.target.value)}
                     />
-                </label>
+                </Label>
             )}
-            <input type="submit" value="Submit" />
-        </form>
+            <SubmitButton type="submit" value="Submit" />
+        </Form>
     );
+};
+
+ReportProblemForm.propTypes = {
+  placeId: PropTypes.string.isRequired
 };

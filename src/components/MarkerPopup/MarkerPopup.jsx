@@ -61,7 +61,7 @@ export const MarkerContent = ({ place }) => {
             <p onClick={toggleForm} style={{ cursor: 'pointer', textAlign: 'right', color: 'red' }}>
                 report an problem
             </p>
-            {showForm && <ReportProblemForm />}
+            {showForm && <ReportProblemForm placeId={place.metadata.UUID} />}
         </>
     );
 };
