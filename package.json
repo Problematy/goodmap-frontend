@@ -1,6 +1,6 @@
 {
     "name": "@problematy/goodmap",
-    "version": "0.2.1",
+    "version": "0.2.2",
     "engines": {
         "node": ">=16.0.0"
     },
