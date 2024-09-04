@@ -1,6 +1,7 @@
 # x.x.x
-- Feature: Added button for suggesting new points
+- Feature: Suggesting new points button
 
 # 0.2.1
 - Fix: Locate Me button works
-- Feature: Add a new button to locate the user on the map
+- Feature: Navigate to point button
+- Feature: Report issue with a point
