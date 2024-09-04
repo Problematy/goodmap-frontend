@@ -44,7 +44,7 @@ export const MarkerContent = ({ place }) => {
                 <p className="point-subtitle mt-0 mb-2">{place.subtitle}</p>
                 {categoriesWithSubcategories.map(mapDataToPopupContent)}
             </div>
-            <a href={`geo:${place.position[0]},${place.position[1]}`}>
+            <a href={`geo:${place.position[0]},${place.position[1]}?q=${place.position[0]},${place.position[1]}(${place.title})`}>
                 <p
                     style={{
                         ...buttonStyleSmall,
