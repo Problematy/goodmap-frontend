@@ -1,3 +1,4 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import PropTypes from 'prop-types';
@@ -45,27 +46,28 @@ export const ReportProblemForm = ({ placeId }) => {
     const [responseMessage, setResponseMessage] = useState('');
 
     const fetchCsrfToken = async () => {
-        const response = await fetch('/api/generate-csrf-token');
-        const data = await response.json();
-        return data.csrf_token;
+        const response = await axios.get('/api/generate-csrf-token');
+        return response.data.csrf_token;
     };
 
     const handleSubmit = async event => {
         event.preventDefault();
         const csrfToken = await fetchCsrfToken();
 
-        const response = await fetch('/api/report-location', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-                'X-CSRFToken': csrfToken,
-            },
-            body: JSON.stringify({
+        const response = await axios.post(
+            '/api/report-location',
+            {
                 id: placeId,
                 description: problemType === 'other' ? problem : problemType,
-            }),
-        });
-        const responseData = await response.json();
+            },
+            {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRFToken': csrfToken,
+                },
+            },
+        );
+        const responseData = response.data;
         setResponseMessage(responseData.message);
         setIsSubmitted(true);
     };
