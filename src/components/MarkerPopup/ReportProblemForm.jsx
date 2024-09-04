@@ -41,6 +41,8 @@ const SubmitButton = styled.input`
 export const ReportProblemForm = ({ placeId }) => {
     const [problem, setProblem] = useState('');
     const [problemType, setProblemType] = useState('');
+    const [isSubmitted, setIsSubmitted] = useState(false);
+    const [responseMessage, setResponseMessage] = useState('');
 
     const fetchCsrfToken = async () => {
         const response = await fetch('/api/generate-csrf-token');
@@ -63,7 +65,14 @@ export const ReportProblemForm = ({ placeId }) => {
                 description: problemType === 'other' ? problem : problemType,
             }),
         });
+        const responseData = await response.json();
+        setResponseMessage(responseData.message);
+        setIsSubmitted(true);
     };
+
+    if (isSubmitted) {
+        return <p>{responseMessage}</p>;
+    }
 
     return (
         <Form onSubmit={handleSubmit}>
