@@ -145,7 +145,12 @@ export const SuggestNewPointButton = () => {
 
     return (
         <>
-            <Button onClick={handleNewPointButton} style={buttonStyle} variant="contained" data-testid="suggest-new-point">
+            <Button
+                onClick={handleNewPointButton}
+                style={buttonStyle}
+                variant="contained"
+                data-testid="suggest-new-point"
+            >
                 <AddIcon style={{ color: 'white', fontSize: 24 }} />
             </Button>
 
@@ -167,7 +172,12 @@ export const SuggestNewPointButton = () => {
                         </Box>
                         <Button variant="contained" component="label">
                             <AddAPhotoIcon />
-                            <input type="file" hidden onChange={handlePhotoUpload} data-testid="photo-of-point" />
+                            <input
+                                type="file"
+                                hidden
+                                onChange={handlePhotoUpload}
+                                data-testid="photo-of-point"
+                            />
                         </Button>
                         {photoURL && (
                             <img
