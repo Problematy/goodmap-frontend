@@ -182,6 +182,7 @@ export const SuggestNewPointButton = () => {
                                 labelId="organization-label"
                                 value={organization}
                                 onChange={handleOrganizationChange}
+                                data-testid="organization-select"
                             >
                                 {organizations.map(org => (
                                     <MenuItem key={org.id} value={org.id}>
