@@ -136,6 +136,13 @@ export const SuggestNewPointButton = () => {
         }
     };
 
+    // TODO - fetch organizations from the backend
+    const organizations = [
+        { id: 'org-1', name: 'ORG 1' },
+        { id: 'org-2', name: 'ORG 2' },
+        { id: 'org-3', name: 'ORG 3' },
+    ];
+
     return (
         <>
             <Button onClick={handleNewPointButton} style={buttonStyle} variant="contained" data-testid="suggest-new-point">
@@ -158,9 +165,9 @@ export const SuggestNewPointButton = () => {
                                 <RefreshIcon />
                             </IconButton>
                         </Box>
-                        <Button variant="contained" component="label" data-testid="photo-of-point">
+                        <Button variant="contained" component="label">
                             <AddAPhotoIcon />
-                            <input type="file" hidden onChange={handlePhotoUpload} />
+                            <input type="file" hidden onChange={handlePhotoUpload} data-testid="photo-of-point" />
                         </Button>
                         {photoURL && (
                             <img
@@ -176,10 +183,11 @@ export const SuggestNewPointButton = () => {
                                 value={organization}
                                 onChange={handleOrganizationChange}
                             >
-                                // TODO - fetch organizations from the backend
-                                <MenuItem value="org-1">PCK</MenuItem>
-                                <MenuItem value="org2">Fundacja Usmiech</MenuItem>
-                                <MenuItem value="org-3">Other</MenuItem>
+                                {organizations.map(org => (
+                                    <MenuItem key={org.id} value={org.id}>
+                                        {org.name}
+                                    </MenuItem>
+                                ))}
                             </Select>
                         </FormControl>
                     </DialogContent>
