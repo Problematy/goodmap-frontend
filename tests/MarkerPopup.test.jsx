@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { render, screen } from '@testing-library/react';
+import { render, screen, queryByAttribute } from '@testing-library/react';
 import { MarkerContent } from '../src/components/MarkerPopup/MarkerPopup';
 
 const correctMarkerData = {
@@ -33,6 +33,7 @@ const incorrectComplexMarkerData = {
 };
 
 const dataKeys = Object.keys(correctMarkerData.data);
+const getById = queryByAttribute.bind(null, 'id');
 
 describe('should render marker popup correctly', () => {
     beforeEach(() => {
@@ -50,16 +51,16 @@ describe('should render marker popup correctly', () => {
     describe('should render data', () => {
         it('should render data keys', () => {
             dataKeys.forEach(key => {
-                expect(screen.getByText(key)).toBeInTheDocument();
+                expect(screen.getByText(`${ key }:`)).toBeInTheDocument();
             });
         });
 
         it('should render data with primitive value', () => {
-            expect(screen.getByText(/: 112\.5/i)).toBeInTheDocument();
+            expect(screen.getByText(/112\.5/i)).toBeInTheDocument();
         });
 
         it('should render data with array value', () => {
-            expect(screen.getByText(/: pedestrians, cars/i)).toBeInTheDocument();
+            expect(screen.getByText(/pedestrians, cars/i)).toBeInTheDocument();
         });
 
         describe('should render complex data', () => {
@@ -75,7 +76,7 @@ describe('should render marker popup correctly', () => {
 
             it('should render unknown data type as text', () => {
                 expect(
-                    screen.getByText(/: example value for unknown data type/i),
+                    screen.getByText(/example value for unknown data type/i),
                 ).toBeInTheDocument();
             });
         });
