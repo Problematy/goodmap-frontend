@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { render, screen, queryByAttribute } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { MarkerContent } from '../src/components/MarkerPopup/MarkerPopup';
 
 const correctMarkerData = {
@@ -33,7 +33,6 @@ const incorrectComplexMarkerData = {
 };
 
 const dataKeys = Object.keys(correctMarkerData.data);
-const getById = queryByAttribute.bind(null, 'id');
 
 describe('should render marker popup correctly', () => {
     beforeEach(() => {
