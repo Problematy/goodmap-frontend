@@ -50,7 +50,7 @@ describe('should render marker popup correctly', () => {
     describe('should render data', () => {
         it('should render data keys', () => {
             dataKeys.forEach(key => {
-                expect(screen.getByText(`${ key }:`)).toBeInTheDocument();
+                expect(screen.getByText(`${key}:`)).toBeInTheDocument();
             });
         });
 
