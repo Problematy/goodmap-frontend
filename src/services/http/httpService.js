@@ -1,4 +1,5 @@
 import { CATEGORIES, CATEGORY, DATA, LANGUAGES, SEARCH_ADDRESS } from './endpoints';
+import {getSelectedCheckboxesOfCategory} from '../../components/Map/Map'
 
 export const httpService = {
     getCategories: () => fetch(CATEGORIES).then(response => response.json()),
@@ -20,6 +21,17 @@ export const httpService = {
 
     getLocations: async filtersUrlParams => {
         const response = await fetch(`${DATA}?${filtersUrlParams}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        return response.json();
+    },
+
+    getLocationsWithLatLon: async (lat, lon, allCheckboxes) => {
+        const filtersUrlParams = allCheckboxes.filter(n => n).join('&');
+        const response = await fetch(`${DATA}?${filtersUrlParams}&lat=${lat}&lon=${lon}&limit=10`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

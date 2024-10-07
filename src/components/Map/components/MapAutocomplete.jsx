@@ -6,7 +6,7 @@ import Autocomplete from '../../common/Autocomplete';
 const MapAutocomplete = () => {
     const map = useMap();
 
-    const onPick = (pick) => {
+    const onPick = pick => {
         map.flyTo([pick.lat, pick.lon], 13);
     };
 
