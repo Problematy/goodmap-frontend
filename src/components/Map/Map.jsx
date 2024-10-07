@@ -5,8 +5,8 @@ import { FiltersForm } from '../FiltersForm/FiltersForm';
 import { MarkerPopup } from '../MarkerPopup/MarkerPopup';
 import { MapComponent } from './MapComponent';
 
-const mapPlaceholder = ReactDOM.createRoot(document.getElementById('map'));
-const filtersPlaceholder = ReactDOM.createRoot(document.getElementById('filter-form'));
+const mapPlaceholder = document.getElementById('map') ? ReactDOM.createRoot(document.getElementById('map')) : null;
+const filtersPlaceholder = document.getElementById('filter-form') ? ReactDOM.createRoot(document.getElementById('filter-form')) : null;
 
 export function getSelectedCheckboxesOfCategory(filterType) {
     const checkedBoxesTypes = document.querySelectorAll(`.filter.${filterType}:checked`);
