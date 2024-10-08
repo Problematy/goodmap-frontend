@@ -5,8 +5,8 @@ import MyLocationIcon from '@mui/icons-material/MyLocation';
 import ReactDOMServer from 'react-dom/server';
 import L from 'leaflet';
 import { Snackbar, Button } from '@mui/material';
-import { buttonStyle } from '../../../styles/buttonStyle';
 import Control from 'react-leaflet-custom-control';
+import { buttonStyle } from '../../../styles/buttonStyle';
 
 const createLocationIcon = () => {
     const locationIconJSX = <MyLocationIcon sx={{ color: 'black', fontSize: 22 }} />;
@@ -34,7 +34,6 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
     const handleLocationFound = e => {
         setUserPosition(e.latlng);
         setUserPositionProp(e.latlng);
-        flyToLocation(e.latlng, map);
     };
 
     const handleLocationError = e => {
@@ -54,21 +53,27 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
     };
 
     const handleFlyToLocationClick = () => {
-        map.locate({ setView: false, maxZoom: 16, watch: true });
         if (userPosition) {
             flyToLocation(userPosition, map);
         }
     };
 
     useEffect(() => {
-        map.on('locationfound', handleLocationFound);
-        map.on('locationerror', handleLocationError);
-
-        return () => {
-            map.off('locationfound', handleLocationFound);
-            map.off('locationerror', handleLocationError);
-        };
-    }, [map]);
+        if ('geolocation' in navigator) {
+            navigator.geolocation.getCurrentPosition(
+                position => {
+                    const lat = position.coords.latitude;
+                    const lng = position.coords.longitude;
+                    handleLocationFound({ latlng: { lat, lng } });
+                },
+                () => {
+                    handleLocationError({ code: 1 });
+                },
+            );
+        } else {
+            handleLocationError({ code: 1 });
+        }
+    }, [navigator]);
 
     const { lat, lng } = userPosition || {};
     const radius = (userPosition && userPosition.accuracy / 2) || 0;
