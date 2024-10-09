@@ -2,7 +2,7 @@
 - Feature: Suggesting new points button
 
 # 0.3.0
-- Changed api between backend and frontend
+- Aligned with goodmap 0.4.0 API
 
 # 0.2.3
 - Fix: Disabled the navigate me button on desktop (it was not working) 
