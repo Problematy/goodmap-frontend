@@ -9,7 +9,6 @@
 - Fixed pin formatting
 - Rendering submitButton only when problemType is selected
 
-
 # 0.2.3
 - Fix: Disabled the navigate me button on desktop (it was not working)
 
