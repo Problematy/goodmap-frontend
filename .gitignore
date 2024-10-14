@@ -3,6 +3,6 @@ dist
 .npmrc
 coverage
 
-# IDE-specific folders
+# IDE-specific directories
 .vscode
 .idea
