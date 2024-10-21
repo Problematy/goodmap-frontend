@@ -1,4 +1,5 @@
 import React from 'react';
+import { MarkerCTAButtonStyle } from '../../styles/buttonStyle';
 
 export const getContentAsString = data => (Array.isArray(data) ? data.join(', ') : data);
 
@@ -16,7 +17,17 @@ export const mapCustomTypeToReactComponent = customValue => {
                     {valueToDisplay}
                 </a>
             );
+        case 'CTA':
+            return (
+                <button
+                    onClick={() => alert('Button clicked!')}
+                    style={MarkerCTAButtonStyle}
+                    variant="contained"
+                >
+                    CTA
+                </button>
+            );
         default:
-            return getContentAsString(valueToDisplay);
+            return getContentAsString("xdd");
     }
 };
