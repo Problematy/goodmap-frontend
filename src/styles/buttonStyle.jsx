@@ -24,10 +24,10 @@ const mapButton = {
 
 export const buttonStyle = { ...mapButton };
 
-export const MarkerCTAButtonStyle = { 
+export const MarkerCTAButtonStyle = {
     ...buttonStyle,
-    borderRadius: '10%'
-}
+    borderRadius: '10%',
+};
 
 export const buttonStyleSmall = {
     ...commonStyle,

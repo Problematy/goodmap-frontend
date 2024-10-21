@@ -28,6 +28,6 @@ export const mapCustomTypeToReactComponent = customValue => {
                 </button>
             );
         default:
-            return getContentAsString("xdd");
+            return getContentAsString(valueToDisplay);
     }
 };
