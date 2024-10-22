@@ -18,13 +18,16 @@ export const mapCustomTypeToReactComponent = customValue => {
                 </a>
             );
         case 'CTA':
+            const handleRedirect = () => {
+                window.open(customValue.value, '_blank'); // Replace with your URL
+              };
             return (
                 <button
-                    onClick={() => alert('Button clicked!')}
+                    onClick={handleRedirect}
                     style={MarkerCTAButtonStyle}
                     variant="contained"
                 >
-                    CTA
+                    {valueToDisplay}
                 </button>
             );
         default:
