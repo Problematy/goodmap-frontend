@@ -25,8 +25,12 @@ const mapButton = {
 export const buttonStyle = { ...mapButton };
 
 export const MarkerCTAButtonStyle = {
-    ...buttonStyle,
-    borderRadius: '10%',
+    ...commonStyle,
+    fontSize: '18px',
+    width: '100%',
+    height: '40px',
+    minWidth: '50px',
+    borderRadius: '8px',
 };
 
 export const buttonStyleSmall = {
