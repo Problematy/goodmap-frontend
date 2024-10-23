@@ -29,14 +29,25 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
     const map = useMap();
 
     const flyToLocation = (location, mapInstance) => {
+        console.log("now we will fly to location");
         const zoomLevel = mapInstance.getZoom() < 16 ? 16 : mapInstance.getZoom();
         mapInstance.flyTo(location, zoomLevel);
     };
 
+    // what should happen, when user's location changes (event)
     const handleLocationFound = e => {
+        console.log("user location changed");
         setUserPosition(e.latlng);
         setUserPositionProp(e.latlng);
-        flyToLocation(e.latlng, map);
+        // flyToLocation(e.latlng, map);
+        //
+        // ^ This change solves the bug, since now flyToLocation
+        // happens only, when the button is clicked.
+        // However, now we have another bug: you have to click the button
+        // twice, before you actually get taken to your position.
+        // This is because the click handler installs the map.locate function,
+        // which starts producing locationfound events. Before it is installed,
+        // the userPosition value is null, so flyToLocation won't happen.
     };
 
     const handleLocationError = e => {
@@ -55,8 +66,11 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
         setSnackbarOpen(false);
     };
 
+    // what should happen when user clicks "locate me" button
     const handleFlyToLocationClick = () => {
+        console.log("'locate me' button clicked");
         map.locate({ setView: false, maxZoom: 16, watch: true });
+        console.log(`userPosition = ${userPosition}`);
         if (userPosition) {
             flyToLocation(userPosition, map);
         }
