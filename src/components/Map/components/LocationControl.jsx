@@ -29,17 +29,14 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
     const map = useMap();
 
     const flyToLocation = (location, mapInstance) => {
-        console.log("now we will fly to location");
         const zoomLevel = mapInstance.getZoom() < 16 ? 16 : mapInstance.getZoom();
         mapInstance.flyTo(location, zoomLevel);
     };
 
-    // what should happen, when user's location changes (event)
     const handleLocationFound = e => {
-        console.log("user location changed");
         setUserPosition(e.latlng);
         setUserPositionProp(e.latlng);
-      };
+    };
 
     const handleLocationError = e => {
         if (e.code === 1) {
@@ -57,18 +54,11 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
         setSnackbarOpen(false);
     };
 
-    // what should happen when user clicks "locate me" button
     const handleFlyToLocationClick = () => {
-        console.log("'locate me' button clicked");
         map.locate({ setView: false, maxZoom: 16, watch: true });
-        map.once('locationfound', (e) => {
-            console.log("user location changed after click");
+        map.once('locationfound', e => {
             flyToLocation(e.latlng, map);
-            // This is the right way to do it.
-            // When the button is clicked, wait for this event and
-            // flyToLocation, once.
-            // Note: pass e.latlng directly. The setter is asynchronous as well.
-        })
+        });
     };
 
     useEffect(() => {
