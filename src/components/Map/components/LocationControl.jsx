@@ -39,16 +39,7 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
         console.log("user location changed");
         setUserPosition(e.latlng);
         setUserPositionProp(e.latlng);
-        // flyToLocation(e.latlng, map);
-        //
-        // ^ This change solves the bug, since now flyToLocation
-        // happens only, when the button is clicked.
-        // However, now we have another bug: you have to click the button
-        // twice, before you actually get taken to your position.
-        // This is because the click handler installs the map.locate function,
-        // which starts producing locationfound events. Before it is installed,
-        // the userPosition value is null, so flyToLocation won't happen.
-    };
+      };
 
     const handleLocationError = e => {
         if (e.code === 1) {
@@ -70,10 +61,14 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
     const handleFlyToLocationClick = () => {
         console.log("'locate me' button clicked");
         map.locate({ setView: false, maxZoom: 16, watch: true });
-        console.log(`userPosition = ${userPosition}`);
-        if (userPosition) {
-            flyToLocation(userPosition, map);
-        }
+        map.once('locationfound', (e) => {
+            console.log("user location changed after click");
+            flyToLocation(e.latlng, map);
+            // This is the right way to do it.
+            // When the button is clicked, wait for this event and
+            // flyToLocation, once.
+            // Note: pass e.latlng directly. The setter is asynchronous as well.
+        })
     };
 
     useEffect(() => {
