@@ -19,7 +19,7 @@ export const mapCustomTypeToReactComponent = customValue => {
             );
         case 'CTA':
             const handleRedirect = () => {
-                window.open(customValue.value, '_self');
+                window.open(customValue.value, '_blank');
             };
             return (
                 <button onClick={handleRedirect} style={MarkerCTAButtonStyle} variant="contained">

@@ -35,7 +35,7 @@ describe('CTA', () => {
 
         fireEvent.click(button);
 
-        expect(mockOpen).toHaveBeenCalledWith('https://www.example.com', '_self');
+        expect(mockOpen).toHaveBeenCalledWith('https://www.example.com', '_blank');
 
         mockOpen.mockRestore();
     });
