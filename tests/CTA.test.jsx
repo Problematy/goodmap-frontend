@@ -31,7 +31,7 @@ describe('CTA', () => {
 
         const { getByText } = render(<MarkerContent place={correctMarkerData} />);
 
-        const button = getByText('Oddaj przez example.org!');
+        const button = getByText('Visit example.org!');
 
         fireEvent.click(button);
 
