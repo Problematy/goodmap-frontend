@@ -16,7 +16,7 @@ const correctMarkerData = {
             {
                 type: 'CTA',
                 value: 'https://www.example.com',
-                displayValue: 'Oddaj przez example.org!',
+                displayValue: 'Visit example.org!',
             },
         ],
     ],
