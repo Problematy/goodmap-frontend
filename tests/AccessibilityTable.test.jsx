@@ -5,10 +5,10 @@ import AccessibilityTable from '../src/components/Map/components/AccessibilityTa
 
 const examplePlaces = [
     {
-        data: {
-            accessible_by: ['pedestrians', 'cars'],
-            type_of_place: 'big bridge',
-        },
+        data: [
+            ['accessible_by', ['pedestrians', 'cars']],
+            ['type_of_place', 'big bridge'],
+        ],
         metadata: {
             UUID: 'hidden',
         },
@@ -17,10 +17,10 @@ const examplePlaces = [
         title: 'Grunwaldzki',
     },
     {
-        data: {
-            accessible_by: ['bikes', 'pedestrians'],
-            type_of_place: 'small bridge',
-        },
+        data: [
+            ['accessible_by', ['bikes', 'pedestrians']],
+            ['type_of_place', 'small bridge'],
+        ],
         metadata: {
             UUID: 'dattarro',
         },
@@ -42,7 +42,7 @@ describe('should accessibility table work correctly', () => {
                 allCheckboxes={['', '']}
                 userPosition={{ latlng: { lat, lng } }}
                 setIsAccessibilityTableOpen={() => {}}
-            />,
+            />
         );
     });
 
@@ -61,7 +61,7 @@ describe('should accessibility table work correctly', () => {
             expect(grunwaldzkiRow).toBeInTheDocument();
 
             expect(zwierzynieckaRow.compareDocumentPosition(grunwaldzkiRow)).toBe(
-                Node.DOCUMENT_POSITION_PRECEDING,
+                Node.DOCUMENT_POSITION_PRECEDING
             );
         });
     });

@@ -28,40 +28,53 @@ const AccessibilityTable = ({ userPosition, setIsAccessibilityTableOpen, allChec
     }, [allCheckboxes, userPosition]);
 
     useEffect(() => {
-        const uniqueHeadersSet = new Set();
-        if (!data) {
-            return;
-        }
-        uniqueHeadersSet.add(t('title'));
-        data.forEach(place => {
-            Object.keys(place.data).forEach(key => uniqueHeadersSet.add(key));
-        });
-        const uniqueNumberedKeys = {};
-        Array.from(uniqueHeadersSet).forEach((key, index) => {
-            uniqueNumberedKeys[key] = index;
-        });
-        const orderedKeysArray = Object.keys(uniqueNumberedKeys).sort(
-            (a, b) => uniqueNumberedKeys[a] - uniqueNumberedKeys[b],
-        );
-        setHeaders(orderedKeysArray);
-
-        const rowsLocal = [];
-        data.forEach(place => {
-            const row = [];
-            row.push(place.title);
-            for (let i = 1; i < orderedKeysArray.length; i += 1) {
-                let key = orderedKeysArray[i];
-                const rowData = place.data[key];
-                if (Array.isArray(rowData)) {
-                    let str = rowData.join(', ');
-                    row.push(str);
-                    continue;
-                }
-                row.push(place.data[key]);
+        try {
+            const uniqueHeadersSet = new Set();
+            if (!data) {
+                return;
             }
-            rowsLocal.push(row);
-        });
-        setRows(rowsLocal);
+            uniqueHeadersSet.add(t('title'));
+            data.forEach(place => {
+                place.data.forEach((item => {
+                    uniqueHeadersSet.add(item[0]);
+                }));
+            });
+            const uniqueNumberedKeys = {};
+            Array.from(uniqueHeadersSet).forEach((key, index) => {
+                uniqueNumberedKeys[key] = index;
+            });
+            const orderedKeysArray = Object.keys(uniqueNumberedKeys).sort(
+                (a, b) => uniqueNumberedKeys[a] - uniqueNumberedKeys[b],
+            );
+            setHeaders(orderedKeysArray);
+
+            const rowsLocal = [];
+
+            const getArr = (placeItem, key) => {
+                const item = placeItem.find(it => it[0] === key);
+                return item;
+            }
+
+            data.forEach(it => {
+                const row = [];
+                const place = it.data;
+                row.push(it.title);
+                for (let i = 1; i < orderedKeysArray.length; i += 1) {
+                    const key = orderedKeysArray[ i ];
+                    const value = getArr(place, key)[1];
+                    if (Array.isArray(value)) {
+                        const str = value.join(', ');
+                        row.push(str);
+                        continue;
+                    }
+                    row.push(value);
+                }
+                rowsLocal.push(row);
+            });
+            setRows(rowsLocal);
+        } catch (error) {
+            console.log('AccessibilityTable: ', error);
+        }
     }, [data]);
 
     return (
