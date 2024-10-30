@@ -108,7 +108,7 @@ export const MarkerContent = ({ place }) => {
             {isMobile && <NavigateMeButton place={place} />}
 
             <p onClick={toggleForm} style={{ cursor: 'pointer', textAlign: 'right', color: 'red' }}>
-                { t('ReportIssueButton') }
+                {t('ReportIssueButton')}
             </p>
             {showForm && <ReportProblemForm placeId={place.metadata.UUID} />}
         </>
