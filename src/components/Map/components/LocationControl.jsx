@@ -55,9 +55,10 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
     };
 
     const handleFlyToLocationClick = () => {
-        if (userPosition) {
-            flyToLocation(userPosition, map);
-        }
+        map.locate({ setView: false, maxZoom: 16, watch: true });
+        map.once('locationfound', e => {
+            flyToLocation(e.latlng, map);
+        });
     };
 
     useEffect(() => {
