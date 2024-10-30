@@ -35,9 +35,9 @@ const AccessibilityTable = ({ userPosition, setIsAccessibilityTableOpen, allChec
             }
             uniqueHeadersSet.add(t('title'));
             data.forEach(place => {
-                place.data.forEach((item => {
+                place.data.forEach(item => {
                     uniqueHeadersSet.add(item[0]);
-                }));
+                });
             });
             const uniqueNumberedKeys = {};
             Array.from(uniqueHeadersSet).forEach((key, index) => {
@@ -53,14 +53,14 @@ const AccessibilityTable = ({ userPosition, setIsAccessibilityTableOpen, allChec
             const getArr = (placeItem, key) => {
                 const item = placeItem.find(it => it[0] === key);
                 return item;
-            }
+            };
 
             data.forEach(it => {
                 const row = [];
                 const place = it.data;
                 row.push(it.title);
                 for (let i = 1; i < orderedKeysArray.length; i += 1) {
-                    const key = orderedKeysArray[ i ];
+                    const key = orderedKeysArray[i];
                     const value = getArr(place, key)[1];
                     if (Array.isArray(value)) {
                         const str = value.join(', ');

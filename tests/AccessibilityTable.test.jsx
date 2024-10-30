@@ -42,7 +42,7 @@ describe('should accessibility table work correctly', () => {
                 allCheckboxes={['', '']}
                 userPosition={{ latlng: { lat, lng } }}
                 setIsAccessibilityTableOpen={() => {}}
-            />
+            />,
         );
     });
 
@@ -61,7 +61,7 @@ describe('should accessibility table work correctly', () => {
             expect(grunwaldzkiRow).toBeInTheDocument();
 
             expect(zwierzynieckaRow.compareDocumentPosition(grunwaldzkiRow)).toBe(
-                Node.DOCUMENT_POSITION_PRECEDING
+                Node.DOCUMENT_POSITION_PRECEDING,
             );
         });
     });
