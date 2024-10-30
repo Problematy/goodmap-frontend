@@ -1,5 +1,7 @@
 {
     "search": "Szukaj",
+    "navigateMe": "Nawiguj mnie",
+    "title": "Nazwa",
     "centerButtonAriaLabel": "Ikona celu lokalizacji, używana do określenia lokalizacji na mapie.",
     "ReportIssueButton": "zgłoś problem",
     "reportChooseOption": "Wybierz opcję",

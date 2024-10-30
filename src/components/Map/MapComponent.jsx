@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import PropTypes from 'prop-types';
@@ -8,9 +8,26 @@ import { mapConfig } from './map.config';
 import { CustomZoomControl } from './components/ZoomControl';
 import Control from 'react-leaflet-custom-control';
 import MapAutocomplete from './components/MapAutocomplete';
+import NavigateMeButton from './components/NavigateMeButton';
+import AccessibilityTable from './components/AccessibilityTable';
 
-export const MapComponent = ({ markers }) => {
-    const [, setUserPosition] = useState(null);
+export const MapComponent = ({ markers, categories, allCheckboxes }) => {
+    const [userPosition, setUserPosition] = useState(null);
+    const [isAccessibilityTableOpen, setIsAccessibilityTableOpen] = useState(false);
+
+    const handleNavigateMeButtonClick = () => {
+        setIsAccessibilityTableOpen(!isAccessibilityTableOpen);
+    };
+
+    if (isAccessibilityTableOpen) {
+        return (
+            <AccessibilityTable
+                userPosition={userPosition}
+                setIsAccessibilityTableOpen={setIsAccessibilityTableOpen}
+                allCheckboxes={allCheckboxes}
+            />
+        );
+    }
 
     return (
         <MapContainer
@@ -34,6 +51,7 @@ export const MapComponent = ({ markers }) => {
             <LocationControl setUserPosition={setUserPosition} />
             <CustomZoomControl position="topright" />
             <MapAutocomplete />
+            {userPosition && <NavigateMeButton onClick={handleNavigateMeButtonClick} />}
         </MapContainer>
     );
 };
