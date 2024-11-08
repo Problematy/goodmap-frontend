@@ -8,6 +8,8 @@ import { buttonStyleSmall } from '../../styles/buttonStyle';
 import { ReportProblemForm } from './ReportProblemForm';
 import { useTranslation } from 'react-i18next';
 
+import { Dialog, DialogContent } from '@mui/material';
+
 const isCustomValue = value => typeof value === 'object' && !(value instanceof Array);
 
 const PopupValue = ({ valueToDisplay }) => {
@@ -55,6 +57,7 @@ export const MarkerContent = ({ place }) => {
     const CTACategories = place.data.filter(([category]) => category === 'CTA');
     const [showForm, setShowForm] = useState(false);
     const toggleForm = () => setShowForm(!showForm);
+    console.log(isMobile);
     return (
         <>
             <div className="place-data m-0">
@@ -121,13 +124,67 @@ export const MarkerContent = ({ place }) => {
     );
 };
 
-export const MarkerPopup = ({ place }) => (
-    <Marker position={place.position} key={place.metadata.UUID}>
-        <Popup>
-            <MarkerContent place={place} />
-        </Popup>
-    </Marker>
-);
+// export const MarkerPopup = ({ place }) => (
+//     <Marker position={place.position} key={place.metadata.UUID}>
+//         <Popup>
+//             <MarkerContent place={place} />
+//         </Popup>
+//     </Marker>
+// );
+
+export const MarkerPopup = ({ place }) => {
+    const [open, setOpen] = useState(false);
+    const isMobile = false; // isMobile;
+
+    const handleClickOpen = () => {
+        if (isMobile) {
+            console.log('clicked');
+            setOpen(true);
+        }
+    };
+
+    const handleClose = () => {
+        setOpen(false);
+    };
+
+    return (
+        <>
+            <Marker position={place.position} key={place.metadata.UUID} eventHandlers={{ click: handleClickOpen }}>
+                {!isMobile && (
+                    <Popup>
+                        <MarkerContent place={place} />
+                    </Popup>
+                )}
+            </Marker>
+
+
+            {isMobile && (
+                <Dialog open={open} onClose={handleClose} fullWidth
+                    fullWidth
+                    maxWidth="md"
+                    style={{
+                        position: 'fixed',
+                        bottom: 0,
+                        margin: 0,
+                    }}
+                    PaperProps={{
+                        style: {
+                            position: 'fixed',
+                            bottom: 0,
+                            margin: 0,
+                            width: '100%',
+                            maxHeight: '50%',
+                        },
+                    }}
+                >
+                    <DialogContent>
+                        <MarkerContent place={place} />
+                    </DialogContent>
+                </Dialog>
+            )}
+        </>
+    );
+};
 
 MarkerPopup.propTypes = {
     place: PropTypes.shape({
