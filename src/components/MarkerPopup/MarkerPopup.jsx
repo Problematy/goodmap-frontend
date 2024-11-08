@@ -149,7 +149,11 @@ export const MarkerPopup = ({ place }) => {
 
     return (
         <>
-            <Marker position={place.position} key={place.metadata.UUID} eventHandlers={{ click: handleClickOpen }}>
+            <Marker
+                position={place.position}
+                key={place.metadata.UUID}
+                eventHandlers={{ click: handleClickOpen }}
+            >
                 {!isMobile && (
                     <Popup>
                         <MarkerContent place={place} />
@@ -157,9 +161,11 @@ export const MarkerPopup = ({ place }) => {
                 )}
             </Marker>
 
-
             {isMobile && (
-                <Dialog open={open} onClose={handleClose} fullWidth
+                <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    fullWidth
                     fullWidth
                     maxWidth="md"
                     style={{
