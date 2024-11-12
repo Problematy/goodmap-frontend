@@ -141,7 +141,7 @@ export const MarkerPopup = ({ place }) => {
         if (isMobile) {
             const offset = 0.003;
             const newLat = place.position[0] - offset;
-            map.flyTo([newLat, place.position[1]], map.getZoom(), {easeLinearity: 1.45});
+            map.panTo([newLat, place.position[1]], {duration: 0.5});
             console.log('clicked');
             setOpen(true);
         }
