@@ -145,7 +145,6 @@ export const MarkerPopup = ({ place }) => {
             position={place.position}
             eventHandlers={{
                 click: () => {
-                    console.log(place.id);
                     setIsClicked(true);
                 },
             }}
