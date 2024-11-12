@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Marker, Popup } from 'react-leaflet';
 import ExploreIcon from '@mui/icons-material/Explore';
@@ -7,6 +7,7 @@ import { getContentAsString, mapCustomTypeToReactComponent } from './mapCustomTy
 import { buttonStyleSmall } from '../../styles/buttonStyle';
 import { ReportProblemForm } from './ReportProblemForm';
 import { useTranslation } from 'react-i18next';
+import { httpService } from '../../services/http/httpService';
 
 const isCustomValue = value => typeof value === 'object' && !(value instanceof Array);
 
@@ -49,12 +50,29 @@ const NavigateMeButton = ({ place }) => (
     </a>
 );
 
-export const MarkerContent = ({ place }) => {
+const MarkerContent = ({ place_id }) => {
     const { t } = useTranslation();
-    const categoriesWithSubcategories = place.data.filter(([category]) => !(category === 'CTA'));
-    const CTACategories = place.data.filter(([category]) => category === 'CTA');
+    const [place, setPlace] = useState(null);
     const [showForm, setShowForm] = useState(false);
+
+    useEffect(() => {
+        const fetchPlace = async () => {
+            const fetchedPlace = await httpService.getLocation(place_id);
+            setPlace(fetchedPlace);
+        };
+        fetchPlace();
+    }, [place_id]);
+
     const toggleForm = () => setShowForm(!showForm);
+
+    if (!place) {
+        return <p>Loading...</p>;
+    }
+
+    // TODO CTA should not be any special case. It is just different format, like website is.
+    const categoriesWithSubcategories = place.data.filter(([category]) => category !== 'CTA');
+    const CTACategories = place.data.filter(([category]) => category === 'CTA');
+
     return (
         <>
             <div className="place-data m-0">
@@ -80,12 +98,11 @@ export const MarkerContent = ({ place }) => {
                     }}
                 >
                     {categoriesWithSubcategories.map(([category, value]) => (
-                        <>
-                            <p key={`${category}-label`} className="m-0" style={{ margin: 0 }}>
+                        <React.Fragment key={category}>
+                            <p className="m-0" style={{ margin: 0 }}>
                                 {`${category}:`}
                             </p>
                             <div
-                                key={`${category}-value`}
                                 style={{
                                     overflowWrap: 'break-word',
                                     wordBreak: 'break-word',
@@ -94,7 +111,7 @@ export const MarkerContent = ({ place }) => {
                             >
                                 <PopupValue valueToDisplay={value} />
                             </div>
-                        </>
+                        </React.Fragment>
                     ))}
                 </div>
                 <div
@@ -112,7 +129,6 @@ export const MarkerContent = ({ place }) => {
                 </div>
             </div>
             {isMobile && <NavigateMeButton place={place} />}
-
             <p onClick={toggleForm} style={{ cursor: 'pointer', textAlign: 'right', color: 'red' }}>
                 {t('ReportIssueButton')}
             </p>
@@ -121,18 +137,29 @@ export const MarkerContent = ({ place }) => {
     );
 };
 
-export const MarkerPopup = ({ place }) => (
-    <Marker position={place.position} key={place.metadata.UUID}>
-        <Popup>
-            <MarkerContent place={place} />
-        </Popup>
-    </Marker>
-);
+export const MarkerPopup = ({ place }) => {
+    const [isClicked, setIsClicked] = useState(false);
+
+    return (
+        <Marker
+            position={place.position}
+            eventHandlers={{
+                click: () => {
+                    console.log(place.id);
+                    setIsClicked(true);
+                },
+            }}
+        >
+            <Popup>
+                {isClicked && <MarkerContent place_id={place.UUID} />}
+            </Popup>
+        </Marker>
+    );
+};
 
 MarkerPopup.propTypes = {
     place: PropTypes.shape({
-        title: PropTypes.string.isRequired,
-        subtitle: PropTypes.string.isRequired,
-        data: PropTypes.shape({}).isRequired,
+         position: PropTypes.arrayOf(PropTypes.number).isRequired,
+         UUID: PropTypes.string.isRequired
     }).isRequired,
 };

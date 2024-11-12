@@ -1,4 +1,4 @@
-import { CATEGORIES, CATEGORY, DATA, LANGUAGES, SEARCH_ADDRESS } from './endpoints';
+import { CATEGORIES, CATEGORY, DATA, LANGUAGES, LOCATION, LOCATIONS, SEARCH_ADDRESS } from './endpoints';
 
 export const httpService = {
     getCategories: () => fetch(CATEGORIES).then(response => response.json()),
@@ -19,7 +19,23 @@ export const httpService = {
     },
 
     getLocations: async filtersUrlParams => {
-        const response = await fetch(`${DATA}?${filtersUrlParams}`, {
+      const USE_LAZY_LOADING = true;
+      let ENDPOINT = LOCATIONS;
+      if (USE_LAZY_LOADING) {
+        ENDPOINT = LOCATIONS;
+      };
+
+        const response = await fetch(`${ENDPOINT}?${filtersUrlParams}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        return response.json();
+    },
+
+    getLocation: async locationId => {
+      const response = await fetch(`${LOCATION}/${locationId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -42,4 +58,5 @@ export const httpService = {
 
         return fetch(`${SEARCH_ADDRESS}?${queryString}`).then(response => response.json());
     },
+
 };
