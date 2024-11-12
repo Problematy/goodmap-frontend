@@ -81,7 +81,7 @@ export const MarkerContent = ({ place }) => {
                         rowGap: '5px',
                         margin: '10px 25px',
                         alignItems: 'start',
-                        fontSize: 12
+                        fontSize: 12,
                     }}
                 >
                     {categoriesWithSubcategories.map(([category, value]) => (
@@ -142,7 +142,7 @@ export const MarkerPopup = ({ place }) => {
         if (isMobile) {
             const offset = 0.003;
             const newLat = place.position[0] - offset;
-            map.panTo([newLat, place.position[1]], {duration: 0.5});
+            map.panTo([newLat, place.position[1]], { duration: 0.5 });
             console.log('clicked');
             setOpen(true);
         }
