@@ -81,6 +81,7 @@ export const MarkerContent = ({ place }) => {
                         rowGap: '5px',
                         margin: '10px 25px',
                         alignItems: 'start',
+                        fontSize: 12
                     }}
                 >
                     {categoriesWithSubcategories.map(([category, value]) => (
