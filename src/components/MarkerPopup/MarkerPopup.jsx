@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import PropTypes from 'prop-types';
-import { Marker, Popup } from 'react-leaflet';
+import { Marker, Popup, useMap } from 'react-leaflet';
 import ExploreIcon from '@mui/icons-material/Explore';
 import { isMobile } from 'react-device-detect';
 import { getContentAsString, mapCustomTypeToReactComponent } from './mapCustomTypeToReactComponent';
@@ -8,7 +8,8 @@ import { buttonStyleSmall } from '../../styles/buttonStyle';
 import { ReportProblemForm } from './ReportProblemForm';
 import { useTranslation } from 'react-i18next';
 
-import { Dialog, DialogContent } from '@mui/material';
+import { Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
 
 const isCustomValue = value => typeof value === 'object' && !(value instanceof Array);
 
@@ -134,9 +135,13 @@ export const MarkerContent = ({ place }) => {
 
 export const MarkerPopup = ({ place }) => {
     const [open, setOpen] = useState(false);
+    const map = useMap();
 
     const handleClickOpen = () => {
         if (isMobile) {
+            const offset = 0.003;
+            const newLat = place.position[0] - offset;
+            map.flyTo([newLat, place.position[1]], map.getZoom(), {easeLinearity: 1.45});
             console.log('clicked');
             setOpen(true);
         }
@@ -181,6 +186,15 @@ export const MarkerPopup = ({ place }) => {
                         },
                     }}
                 >
+                    <DialogTitle>
+                        <IconButton
+                            aria-label="close"
+                            onClick={handleClose}
+                            style={{ position: 'absolute', right: 8, top: 8 }}
+                        >
+                            <CloseIcon />
+                        </IconButton>
+                    </DialogTitle>
                     <DialogContent>
                         <MarkerContent place={place} />
                     </DialogContent>
