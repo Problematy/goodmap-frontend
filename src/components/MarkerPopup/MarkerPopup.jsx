@@ -134,7 +134,6 @@ export const MarkerContent = ({ place }) => {
 
 export const MarkerPopup = ({ place }) => {
     const [open, setOpen] = useState(false);
-    const isMobile = false; // isMobile;
 
     const handleClickOpen = () => {
         if (isMobile) {
@@ -165,7 +164,6 @@ export const MarkerPopup = ({ place }) => {
                 <Dialog
                     open={open}
                     onClose={handleClose}
-                    fullWidth
                     fullWidth
                     maxWidth="md"
                     style={{
