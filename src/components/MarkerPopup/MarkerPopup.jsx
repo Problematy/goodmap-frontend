@@ -66,7 +66,7 @@ const MarkerContent = ({ place_id }) => {
     const toggleForm = () => setShowForm(!showForm);
 
     if (!place) {
-        return <p>Loading...</p>;
+        return <Popup><p>Loading...</p></Popup>;
     }
 
     // TODO CTA should not be any special case. It is just different format, like website is.
@@ -74,7 +74,7 @@ const MarkerContent = ({ place_id }) => {
     const CTACategories = place.data.filter(([category]) => category === 'CTA');
 
     return (
-        <>
+        <Popup>
             <div className="place-data m-0">
                 <div style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>
                     <p className="point-title m-0" style={{ fontSize: 14, fontWeight: 'bold' }}>
@@ -133,7 +133,7 @@ const MarkerContent = ({ place_id }) => {
                 {t('ReportIssueButton')}
             </p>
             {showForm && <ReportProblemForm placeId={place.metadata.UUID} />}
-        </>
+        </Popup>
     );
 };
 
@@ -149,9 +149,9 @@ export const MarkerPopup = ({ place }) => {
                 },
             }}
         >
-            <Popup>
-                {isClicked && <MarkerContent place_id={place.UUID} />}
-            </Popup>
+
+        <MarkerContent place_id={place.UUID} />
+
         </Marker>
     );
 };
