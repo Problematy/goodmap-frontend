@@ -156,7 +156,6 @@ export const MarkerPopup = ({ place }) => {
 
     const handleMarkerClick = () => {
         setIsClicked(true);
-        console.log('clicked');
     };
 
     return (
