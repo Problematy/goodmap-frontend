@@ -8,8 +8,14 @@ import { buttonStyleSmall } from '../../styles/buttonStyle';
 import { ReportProblemForm } from './ReportProblemForm';
 import { useTranslation } from 'react-i18next';
 import { httpService } from '../../services/http/httpService';
+import styled from 'styled-components';
 
 const isCustomValue = value => typeof value === 'object' && !(value instanceof Array);
+
+const StyledMarkerPopup = styled(Popup)`
+    min-width: 300px;
+`;
+
 
 const PopupValue = ({ valueToDisplay }) => {
     const value = isCustomValue(valueToDisplay)
@@ -50,33 +56,18 @@ const NavigateMeButton = ({ place }) => (
     </a>
 );
 
-const MarkerContent = ({ place_id }) => {
+
+// TODO Replace with MarkerContentWrapper after /api/data endpoint is removed from backend
+const MarkerContent = ({ place }) => {
     const { t } = useTranslation();
-    const [place, setPlace] = useState(null);
     const [showForm, setShowForm] = useState(false);
-
-    useEffect(() => {
-        const fetchPlace = async () => {
-            const fetchedPlace = await httpService.getLocation(place_id);
-            setPlace(fetchedPlace);
-        };
-        fetchPlace();
-    }, [place_id]);
-
-
-
     const toggleForm = () => setShowForm(!showForm);
-
-    if (!place) {
-        return <Popup><p>Loading...</p></Popup>;
-    }
-
     // TODO CTA should not be any special case. It is just different format, like website is.
     const categoriesWithSubcategories = place.data.filter(([category]) => category !== 'CTA');
     const CTACategories = place.data.filter(([category]) => category === 'CTA');
 
     return (
-        <Popup>
+        <React.Fragment>
             <div className="place-data m-0">
                 <div style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>
                     <p className="point-title m-0" style={{ fontSize: 14, fontWeight: 'bold' }}>
@@ -135,32 +126,56 @@ const MarkerContent = ({ place_id }) => {
                 {t('ReportIssueButton')}
             </p>
             {showForm && <ReportProblemForm placeId={place.metadata.UUID} />}
-        </Popup>
+        </React.Fragment>
     );
 };
 
+const MarkerContentWrapper = ({ theplace }) => {
+    if (!window.USE_LAZY_LOADING) {
+        return <MarkerContent place={theplace} />;
+    }
+
+    const [place, setPlace] = useState(null);
+    useEffect(() => {
+        const fetchPlace = async () => {
+            const fetchedPlace = await httpService.getLocation(theplace.UUID);
+            setPlace(fetchedPlace);
+        };
+        fetchPlace();
+    }, [theplace.UUID]);
+
+    if (!place) {
+        return <p>Loading...</p>;
+    }
+    return <MarkerContent place={place} />;
+}
+
+
 export const MarkerPopup = ({ place }) => {
     const [isClicked, setIsClicked] = useState(false);
+
+    const handleMarkerClick = () => {
+        setIsClicked(true);
+        console.log('clicked');
+    };
 
     return (
         <Marker
             position={place.position}
             eventHandlers={{
-                click: () => {
-                    setIsClicked(true);
-                },
+                click: handleMarkerClick,
             }}
         >
-
-        <MarkerContent place_id={place.UUID} />
-
+            <StyledMarkerPopup>
+              {isClicked && <MarkerContentWrapper theplace={place} />}
+            </StyledMarkerPopup>
         </Marker>
     );
 };
 
+
 MarkerPopup.propTypes = {
     place: PropTypes.shape({
          position: PropTypes.arrayOf(PropTypes.number).isRequired,
-         UUID: PropTypes.string.isRequired
     }).isRequired,
 };
