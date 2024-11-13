@@ -63,6 +63,8 @@ const MarkerContent = ({ place_id }) => {
         fetchPlace();
     }, [place_id]);
 
+
+
     const toggleForm = () => setShowForm(!showForm);
 
     if (!place) {

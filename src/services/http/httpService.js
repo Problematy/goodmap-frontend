@@ -19,19 +19,14 @@ export const httpService = {
     },
 
     getLocations: async filtersUrlParams => {
-      const USE_LAZY_LOADING = true;
-      let ENDPOINT = LOCATIONS;
-      if (USE_LAZY_LOADING) {
-        ENDPOINT = LOCATIONS;
-      };
-
-        const response = await fetch(`${ENDPOINT}?${filtersUrlParams}`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        return response.json();
+      const ENDPOINT = window.USE_LAZY_LOADING ? LOCATIONS : DATA;
+      const response = await fetch(`${ENDPOINT}?${filtersUrlParams}`, {
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+      });
+      return response.json();
     },
 
     getLocation: async locationId => {
