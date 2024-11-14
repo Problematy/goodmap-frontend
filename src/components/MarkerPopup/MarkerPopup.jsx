@@ -58,7 +58,6 @@ export const MarkerContent = ({ place }) => {
     const CTACategories = place.data.filter(([category]) => category === 'CTA');
     const [showForm, setShowForm] = useState(false);
     const toggleForm = () => setShowForm(!showForm);
-    console.log(isMobile);
     return (
         <>
             <div className="place-data m-0">
