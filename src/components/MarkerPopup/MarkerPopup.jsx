@@ -151,55 +151,67 @@ export const MarkerPopup = ({ place }) => {
         setOpen(false);
     };
 
+    let contentForDeviceType;
+    let eventHandlersForDeviceType;
+
+    if (isMobile) {
+        eventHandlersForDeviceType = { click: handleClickOpen }
+
+        contentForDeviceType = (
+            <Dialog
+                open={open}
+                onClose={handleClose}
+                fullWidth
+                maxWidth="md"
+                style={{
+                    position: 'fixed',
+                    bottom: 0,
+                    margin: 0,
+                }}
+                PaperProps={{
+                    style: {
+                        position: 'fixed',
+                        bottom: 0,
+                        margin: 0,
+                        width: '100%',
+                        maxHeight: '50%',
+                    },
+                }}
+            >
+                <DialogTitle>
+                    <IconButton
+                        aria-label="close"
+                        onClick={handleClose}
+                        style={{ position: 'absolute', right: 8, top: 8 }}
+                    >
+                        <CloseIcon />
+                    </IconButton>
+                </DialogTitle>
+                <DialogContent>
+                    <MarkerContent place={place} />
+                </DialogContent>
+            </Dialog>
+        )
+    } else {
+        eventHandlersForDeviceType = null;
+
+        contentForDeviceType = (
+            <Popup>
+                <MarkerContent place={place} />
+            </Popup>
+        )
+    }
+
     return (
         <>
             <Marker
                 position={place.position}
                 key={place.metadata.UUID}
-                eventHandlers={{ click: handleClickOpen }}
+                eventHandlers={eventHandlersForDeviceType}
             >
-                {!isMobile && (
-                    <Popup>
-                        <MarkerContent place={place} />
-                    </Popup>
-                )}
-            </Marker>
+            {contentForDeviceType}
+        </Marker >
 
-            {isMobile && (
-                <Dialog
-                    open={open}
-                    onClose={handleClose}
-                    fullWidth
-                    maxWidth="md"
-                    style={{
-                        position: 'fixed',
-                        bottom: 0,
-                        margin: 0,
-                    }}
-                    PaperProps={{
-                        style: {
-                            position: 'fixed',
-                            bottom: 0,
-                            margin: 0,
-                            width: '100%',
-                            maxHeight: '50%',
-                        },
-                    }}
-                >
-                    <DialogTitle>
-                        <IconButton
-                            aria-label="close"
-                            onClick={handleClose}
-                            style={{ position: 'absolute', right: 8, top: 8 }}
-                        >
-                            <CloseIcon />
-                        </IconButton>
-                    </DialogTitle>
-                    <DialogContent>
-                        <MarkerContent place={place} />
-                    </DialogContent>
-                </Dialog>
-            )}
         </>
     );
 };
