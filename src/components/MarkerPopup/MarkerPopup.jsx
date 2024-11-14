@@ -150,13 +150,6 @@ const MarkerContentWrapper = ({ theplace }) => {
     return <MarkerContent place={place} />;
 }
 
-const PopupContent = ({ place }) => {
-    return (
-        <StyledMarkerPopup>
-            <MarkerContentWrapper theplace={place} />
-        </StyledMarkerPopup>
-    );
-};
 
 export const MarkerPopup = ({ place }) => {
     const [isClicked, setIsClicked] = useState(false);
@@ -173,7 +166,7 @@ export const MarkerPopup = ({ place }) => {
             }}
         >
 
-         {isClicked && <PopupContent theplace={place} />}
+        {isClicked && <StyledMarkerPopup><MarkerContentWrapper theplace={place} /></StyledMarkerPopup>}
 
         </Marker>
     );
