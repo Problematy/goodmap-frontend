@@ -150,7 +150,7 @@ export const MarkerPopup = ({ place }) => {
     let eventHandlersForDeviceType;
 
     if (isMobile) {
-        eventHandlersForDeviceType = { click: handleClickOpen }
+        eventHandlersForDeviceType = { click: handleClickOpen };
 
         contentForDeviceType = (
             <Dialog
@@ -186,7 +186,7 @@ export const MarkerPopup = ({ place }) => {
                     <MarkerContent place={place} />
                 </DialogContent>
             </Dialog>
-        )
+        );
     } else {
         eventHandlersForDeviceType = null;
 
@@ -194,7 +194,7 @@ export const MarkerPopup = ({ place }) => {
             <Popup>
                 <MarkerContent place={place} />
             </Popup>
-        )
+        );
     }
 
     return (
@@ -204,9 +204,8 @@ export const MarkerPopup = ({ place }) => {
                 key={place.metadata.UUID}
                 eventHandlers={eventHandlersForDeviceType}
             >
-            {contentForDeviceType}
-        </Marker >
-
+                {contentForDeviceType}
+            </Marker>
         </>
     );
 };
