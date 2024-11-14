@@ -125,14 +125,9 @@ export const MarkerContent = ({ place }) => {
     );
 };
 
-// export const MarkerPopup = ({ place }) => (
-//     <Marker position={place.position} key={place.metadata.UUID}>
-//         <Popup>
-//             <MarkerContent place={place} />
-//         </Popup>
-//     </Marker>
-// );
+// TODO Rename MarkerPopup because it is not a popup for mobile
 
+// Maybe something like MarkerForDeviceType
 export const MarkerPopup = ({ place }) => {
     const [open, setOpen] = useState(false);
     const map = useMap();
