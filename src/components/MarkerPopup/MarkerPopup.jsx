@@ -46,7 +46,7 @@ const MobileMarker = ({ place }) => {
 
     return (
         <MobilePopup isOpen={open} onCloseHandler={handleClose}>
-            <MarkerContentWrapper theplace={place} isMobileVariable={true} />
+            <MarkerContentWrapper theplace={place} />
         </MobilePopup>
     );
 };

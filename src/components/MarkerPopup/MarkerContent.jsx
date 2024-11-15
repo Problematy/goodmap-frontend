@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import ExploreIcon from '@mui/icons-material/Explore';
 import { useTranslation } from 'react-i18next';
-
+import { isMobile } from 'react-device-detect';
 import { buttonStyleSmall } from '../../styles/buttonStyle';
 import { getContentAsString, mapCustomTypeToReactComponent } from './mapCustomTypeToReactComponent';
 import { ReportProblemForm } from './ReportProblemForm';
@@ -68,7 +68,7 @@ const NavigateMeButton = ({ place }) => (
 //     );
 // };
 
-export const MarkerContent = ({ place, isMobileVariable }) => {
+export const MarkerContent = ({ place }) => {
     const { t } = useTranslation();
     const categoriesWithSubcategories = place.data.filter(([category]) => !(category === 'CTA'));
     const CTACategories = place.data.filter(([category]) => category === 'CTA');
@@ -100,7 +100,7 @@ export const MarkerContent = ({ place, isMobileVariable }) => {
                     }}
                 >
                     {categoriesWithSubcategories.map(([category, value]) => (
-                        <>
+                        <React.Fragment key={category}>
                             <p key={`${category}-label`} className="m-0" style={{ margin: 0 }}>
                                 {`${category}:`}
                             </p>
@@ -114,7 +114,7 @@ export const MarkerContent = ({ place, isMobileVariable }) => {
                             >
                                 <PopupValue valueToDisplay={value} />
                             </div>
-                        </>
+                        </React.Fragment>
                     ))}
                 </div>
                 <div
@@ -131,7 +131,7 @@ export const MarkerContent = ({ place, isMobileVariable }) => {
                     ))}
                 </div>
             </div>
-            {isMobileVariable && <NavigateMeButton place={place} />}
+            {isMobile && <NavigateMeButton place={place} />}
 
             <p onClick={toggleForm} style={{ cursor: 'pointer', textAlign: 'right', color: 'red' }}>
                 {t('ReportIssueButton')}
