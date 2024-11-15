@@ -125,89 +125,113 @@ export const MarkerContent = ({ place }) => {
     );
 };
 
-// TODO Rename MarkerPopup because it is not a popup for mobile
 
-// Maybe something like MarkerForDeviceType
-export const MarkerPopup = ({ place }) => {
+const MobileMarker = ({ place }) => {
     const [open, setOpen] = useState(false);
     const map = useMap();
 
     const handleClickOpen = () => {
-        if (isMobile) {
-            const offset = 0.003;
-            const newLat = place.position[0] - offset;
-            map.panTo([newLat, place.position[1]], { duration: 0.5 });
-            console.log('clicked');
-            setOpen(true);
-        }
+        const offset = 0.003;
+        const newLat = place.position[0] - offset;
+        map.panTo([newLat, place.position[1]], { duration: 0.5 });
+        setOpen(true);
     };
 
     const handleClose = () => {
         setOpen(false);
     };
 
-    let contentForDeviceType;
-    let eventHandlersForDeviceType;
-
-    if (isMobile) {
-        eventHandlersForDeviceType = { click: handleClickOpen };
-
-        contentForDeviceType = (
-            <Dialog
-                open={open}
-                onClose={handleClose}
-                fullWidth
-                maxWidth="md"
-                style={{
-                    position: 'fixed',
-                    bottom: 0,
-                    margin: 0,
-                }}
-                PaperProps={{
-                    style: {
-                        position: 'fixed',
-                        bottom: 0,
-                        margin: 0,
-                        width: '100%',
-                        maxHeight: '50%',
-                    },
-                }}
-            >
-                <DialogTitle>
-                    <IconButton
-                        aria-label="close"
-                        onClick={handleClose}
-                        style={{ position: 'absolute', right: 8, top: 8 }}
-                    >
-                        <CloseIcon />
-                    </IconButton>
-                </DialogTitle>
-                <DialogContent>
-                    <MarkerContent place={place} />
-                </DialogContent>
-            </Dialog>
-        );
-    } else {
-        eventHandlersForDeviceType = null;
-
-        contentForDeviceType = (
-            <Popup>
-                <MarkerContent place={place} />
-            </Popup>
-        );
-    }
-
     return (
         <>
             <Marker
                 position={place.position}
                 key={place.metadata.UUID}
-                eventHandlers={eventHandlersForDeviceType}
+                eventHandlers={{ click: handleClickOpen }}
             >
-                {contentForDeviceType}
+                <Dialog
+                    open={open}
+                    onClose={handleClose}
+                    fullWidth
+                    maxWidth="md"
+                    style={{
+                        position: 'fixed',
+                        bottom: 0,
+                        margin: 0,
+                    }}
+                    PaperProps={{
+                        style: {
+                            position: 'fixed',
+                            bottom: 0,
+                            margin: 0,
+                            width: '100%',
+                            maxHeight: '50%',
+                        },
+                    }}
+                >
+                    <DialogTitle>
+                        <IconButton
+                            aria-label="close"
+                            onClick={handleClose}
+                            style={{ position: 'absolute', right: 8, top: 8 }}
+                        >
+                            <CloseIcon />
+                        </IconButton>
+                    </DialogTitle>
+                    <DialogContent>
+                        <MarkerContent place={place} />
+                    </DialogContent>
+                </Dialog>
             </Marker>
         </>
     );
+
+}
+
+
+
+// const DesktopMarker = ({ place }) => {
+
+
+// }
+
+
+
+// TODO Rename MarkerPopup because it is not a popup for mobile
+
+// Maybe something more general like MarkerObject
+export const MarkerPopup = ({ place }) => {
+    // let contentForDeviceType;
+    // let eventHandlersForDeviceType;
+
+    if (isMobile) {
+        return (
+            <MobileMarker place={place} />
+        )
+    } else {
+        return (
+            <Marker
+                position={place.position}
+                key={place.metadata.UUID}
+            >
+                <Popup>
+                    <MarkerContent place={place} />
+                </Popup>
+            </Marker>
+
+        )
+    }
+
+    // return (
+    //     <>
+    //         <Marker
+    //             position={place.position}
+    //             key={place.metadata.UUID}
+    //             eventHandlers={isMobile ? { click: handleClickOpen } : undefined}
+    //         >
+    //             {contentForDeviceType}
+    //         </Marker>
+    //     </>
+    // );
 };
 
 MarkerPopup.propTypes = {
