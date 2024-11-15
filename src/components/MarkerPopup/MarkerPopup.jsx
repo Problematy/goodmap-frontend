@@ -31,7 +31,7 @@ const LocationDetailsBoxWrapper = ({ theplace }) => {
 
 const DesktopPopup = ({ place, isVisible }) => {
     return (
-        <StyledMarkerPopup autoClose={false} closeOnClick={false} autoPan={false}>
+        <StyledMarkerPopup>
             {isVisible ? <LocationDetailsBoxWrapper theplace={place} /> : null}
         </StyledMarkerPopup>
     );
