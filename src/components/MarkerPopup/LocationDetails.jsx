@@ -49,87 +49,68 @@ const NavigateMeButton = ({ place }) => (
     </a>
 );
 
-// TODO Replace with MarkerContentWrapper after /api/data endpoint is removed from backend
-// const MarkerContent = ({ place }) => {
-//     // TODO CTA should not be any special case. It is just different format, like website is.
-//     const categoriesWithSubcategories = place.data.filter(([category]) => category !== 'CTA');
-//     const CTACategories = place.data.filter(([category]) => category === 'CTA');
-//
-//     return (
-//         <Marker
-//             position={place.position}
-//             key={place.metadata.UUID}
-//             eventHandlers={{ click: handleClickOpen }}
-//         >
-//             <MobilePopup isOpen={open} onCloseHandler={handleClose}>
-//                 <MarkerContent place={place} isMobileVariable={true} />
-//             </MobilePopup>
-//         </Marker>
-//     );
-// };
-
 const LocationDetails = ({ place }) => {
-     const categoriesWithSubcategories = place.data.filter(([category]) => !(category === 'CTA'));
-     const CTACategories = place.data.filter(([category]) => category === 'CTA');
+    const categoriesWithSubcategories = place.data.filter(([category]) => !(category === 'CTA'));
+    const CTACategories = place.data.filter(([category]) => category === 'CTA');
 
-     return(
-<div className="place-data m-0">
-                <div style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>
-                    <p className="point-title m-0" style={{ fontSize: 14, fontWeight: 'bold' }}>
-                        <b>{place.title}</b>
-                    </p>
-                </div>
-                <div style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>
-                    <p className="point-subtitle mt-0 mb-2" style={{ fontSize: 10 }}>
-                        {place.subtitle}
-                    </p>
-                </div>
+    return (
+        <div className="place-data m-0">
+            <div style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>
+                <p className="point-title m-0" style={{ fontSize: 14, fontWeight: 'bold' }}>
+                    <b>{place.title}</b>
+                </p>
+            </div>
+            <div style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>
+                <p className="point-subtitle mt-0 mb-2" style={{ fontSize: 10 }}>
+                    {place.subtitle}
+                </p>
+            </div>
 
-                <div
-                    style={{
-                        display: 'grid',
-                        gridTemplateColumns: '100px 1fr',
-                        columnGap: '10px',
-                        rowGap: '5px',
-                        margin: '10px 25px',
-                        alignItems: 'start',
-                        fontSize: 12,
-                    }}
-                >
-                    {categoriesWithSubcategories.map(([category, value]) => (
-                        <React.Fragment key={category}>
-                            <p key={`${category}-label`} className="m-0" style={{ margin: 0 }}>
-                                {`${category}:`}
-                            </p>
-                            <div
-                                key={`${category}-value`}
-                                style={{
-                                    overflowWrap: 'break-word',
-                                    wordBreak: 'break-word',
-                                    maxWidth: '100%',
-                                }}
-                            >
-                                <PopupValue valueToDisplay={value} />
-                            </div>
-                        </React.Fragment>
-                    ))}
-                </div>
-                <div
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        marginRight: 25,
-                        marginLeft: 25,
-                        marginTop: 10,
-                    }}
-                >
-                    {CTACategories.map(([_category, value]) => (
-                        <PopupValue key={value} valueToDisplay={value} />
-                    ))}
-                </div>
-            </div>);
+            <div
+                style={{
+                    display: 'grid',
+                    gridTemplateColumns: '100px 1fr',
+                    columnGap: '10px',
+                    rowGap: '5px',
+                    margin: '10px 25px',
+                    alignItems: 'start',
+                    fontSize: 12,
+                }}
+            >
+                {categoriesWithSubcategories.map(([category, value]) => (
+                    <React.Fragment key={category}>
+                        <p key={`${category}-label`} className="m-0" style={{ margin: 0 }}>
+                            {`${category}:`}
+                        </p>
+                        <div
+                            key={`${category}-value`}
+                            style={{
+                                overflowWrap: 'break-word',
+                                wordBreak: 'break-word',
+                                maxWidth: '100%',
+                            }}
+                        >
+                            <PopupValue valueToDisplay={value} />
+                        </div>
+                    </React.Fragment>
+                ))}
+            </div>
+            <div
+                style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    marginRight: 25,
+                    marginLeft: 25,
+                    marginTop: 10,
+                }}
+            >
+                {CTACategories.map(([_category, value]) => (
+                    <PopupValue key={value} valueToDisplay={value} />
+                ))}
+            </div>
+        </div>
+    );
 };
-
 
 export const LocationDetailsBox = ({ place }) => {
     const { t } = useTranslation();
@@ -138,7 +119,7 @@ export const LocationDetailsBox = ({ place }) => {
 
     return (
         <React.Fragment>
-        <LocationDetails place={place} />
+            <LocationDetails place={place} />
 
             {isMobile && <NavigateMeButton place={place} />}
 

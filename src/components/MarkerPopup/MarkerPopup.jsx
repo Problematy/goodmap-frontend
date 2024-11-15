@@ -56,10 +56,7 @@ export const MarkerPopup = ({ place }) => {
     };
 
     return (
-        <Marker
-            position={place.position}
-            eventHandlers={{ click: handleMarkerClick }}
-        >
+        <Marker position={place.position} eventHandlers={{ click: handleMarkerClick }}>
             <ChosenMarker place={place} isVisible={isClicked} />
         </Marker>
     );
