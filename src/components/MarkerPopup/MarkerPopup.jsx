@@ -1,10 +1,13 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Marker, Popup, useMap } from 'react-leaflet';
 import { isMobile } from 'react-device-detect';
+import { httpService } from '../../services/http/httpService';
+import styled from 'styled-components';
 
 import { MarkerContent } from './MarkerContent';
 import { MobilePopup } from './MobilePopup';
+
 
 const MobileMarker = ({ place }) => {
     const [open, setOpen] = useState(false);
@@ -22,40 +25,62 @@ const MobileMarker = ({ place }) => {
     };
 
     return (
-        <Marker
-            position={place.position}
-            key={place.metadata.UUID}
-            eventHandlers={{ click: handleClickOpen }}
-        >
             <MobilePopup isOpen={open} onCloseHandler={handleClose}>
-                <MarkerContent place={place} isMobileVariable={true} />
+                <MarkerContentWrapper place={place} isMobileVariable={true} />
             </MobilePopup>
-        </Marker>
     );
+};
+
+const StyledMarkerPopup = styled(Popup)`min-width: 300px;`;
+
+const MarkerContentWrapper = ({ theplace }) => {
+    if (!window.USE_LAZY_LOADING) {
+      return <MarkerContent place={theplace} isMobileVariable={isMobile} />;
+    }
+
+    const [place, setPlace] = useState(null);
+    useEffect(() => {
+        const fetchPlace = async () => {
+            const fetchedPlace = await httpService.getLocation(theplace.UUID);
+            setPlace(fetchedPlace);
+        };
+        fetchPlace();
+    }, [theplace.UUID]);
+
+    if (!place) {
+        return <p>Loading...</p>;
+    }
+    return <MarkerContent place={place} />;
 };
 
 const DesktopMarker = ({ place }) => {
+    let uid = ""
+    if (!window.USE_LAZY_LOADING) {
+        uid = place.metadata.UUID;
+    } else {
+        uid = place.UUID;
+    }
     return (
-        <Marker position={place.position} key={place.metadata.UUID}>
             <Popup>
-                <MarkerContent place={place} isMobileVariable={false} />
+                <MarkerContentWrapper theplace={place} />
             </Popup>
-        </Marker>
     );
 };
 
-// TODO Rename MarkerPopup because it is not a popup for mobile
 
-// Maybe ResponsiveMarker? The filename should be changed too.
-export const MarkerPopup = ({ place }) => {
-    if (isMobile) return <MobileMarker place={place} />;
-    else return <DesktopMarker place={place} />;
+const ChosenMarker = ({ place }) => {
+    return isMobile ? <MobileMarker place={place} /> : <DesktopMarker place={place} />
 };
 
-MarkerPopup.propTypes = {
-    place: PropTypes.shape({
-        title: PropTypes.string.isRequired,
-        subtitle: PropTypes.string.isRequired,
-        data: PropTypes.shape({}).isRequired,
-    }).isRequired,
+export const MarkerPopup = ({ place }) => {
+    const [isClicked, setIsClicked] = useState(false);
+
+    const handleMarkerClick = () => {
+        setIsClicked(true);
+    };
+
+    return <Marker position={place.position} eventHandlers={{click: handleMarkerClick}}
+>
+    {isClicked && <ChosenMarker place={place} /> }
+    </Marker>
 };

@@ -49,6 +49,25 @@ const NavigateMeButton = ({ place }) => (
     </a>
 );
 
+// TODO Replace with MarkerContentWrapper after /api/data endpoint is removed from backend
+// const MarkerContent = ({ place }) => {
+//     // TODO CTA should not be any special case. It is just different format, like website is.
+//     const categoriesWithSubcategories = place.data.filter(([category]) => category !== 'CTA');
+//     const CTACategories = place.data.filter(([category]) => category === 'CTA');
+//
+//     return (
+//         <Marker
+//             position={place.position}
+//             key={place.metadata.UUID}
+//             eventHandlers={{ click: handleClickOpen }}
+//         >
+//             <MobilePopup isOpen={open} onCloseHandler={handleClose}>
+//                 <MarkerContent place={place} isMobileVariable={true} />
+//             </MobilePopup>
+//         </Marker>
+//     );
+// };
+
 export const MarkerContent = ({ place, isMobileVariable }) => {
     const { t } = useTranslation();
     const categoriesWithSubcategories = place.data.filter(([category]) => !(category === 'CTA'));
