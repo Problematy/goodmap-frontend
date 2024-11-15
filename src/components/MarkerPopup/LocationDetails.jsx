@@ -10,7 +10,7 @@ import React, { useState } from 'react';
 
 const isCustomValue = value => typeof value === 'object' && !(value instanceof Array);
 
-const PopupValue = ({ valueToDisplay }) => {
+const LocationDetailsValue = ({ valueToDisplay }) => {
     const value = isCustomValue(valueToDisplay)
         ? mapCustomTypeToReactComponent(valueToDisplay)
         : valueToDisplay;
@@ -21,7 +21,7 @@ const PopupValue = ({ valueToDisplay }) => {
     );
 };
 
-PopupValue.propTypes = {
+LocationDetailsValue.propTypes = {
     valueToDisplay: PropTypes.oneOfType([
         PropTypes.string,
         PropTypes.number,
@@ -51,6 +51,7 @@ const NavigateMeButton = ({ place }) => (
 
 const LocationDetails = ({ place }) => {
     const categoriesWithSubcategories = place.data.filter(([category]) => !(category === 'CTA'));
+    // TODO CTA should be handled like website is
     const CTACategories = place.data.filter(([category]) => category === 'CTA');
 
     return (
@@ -90,7 +91,7 @@ const LocationDetails = ({ place }) => {
                                 maxWidth: '100%',
                             }}
                         >
-                            <PopupValue valueToDisplay={value} />
+                            <LocationDetailsValue valueToDisplay={value} />
                         </div>
                     </React.Fragment>
                 ))}
@@ -105,7 +106,7 @@ const LocationDetails = ({ place }) => {
                 }}
             >
                 {CTACategories.map(([_category, value]) => (
-                    <PopupValue key={value} valueToDisplay={value} />
+                    <LocationDetailsValue key={value} valueToDisplay={value} />
                 ))}
             </div>
         </div>
