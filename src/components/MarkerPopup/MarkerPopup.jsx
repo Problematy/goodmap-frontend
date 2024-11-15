@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { Marker, Popup, useMap } from 'react-leaflet';
+import { Marker, Popup } from 'react-leaflet';
 import { isMobile } from 'react-device-detect';
 import { httpService } from '../../services/http/httpService';
 import styled from 'styled-components';
@@ -29,28 +29,15 @@ const LocationDetailsBoxWrapper = ({ theplace }) => {
     return <LocationDetailsBox place={place} />;
 };
 
-const DesktopPopup = ({ place }) => (
-    <StyledMarkerPopup>
-        <LocationDetailsBoxWrapper theplace={place} />
-    </StyledMarkerPopup>
-);
-
-const ChosenPopup = ({ place }) => {
-    if (isMobile) {
-        return (
-            <MobilePopup onCloseHandler={() => {}}>
-                <LocationDetailsBoxWrapper theplace={place} />
-            </MobilePopup>
-        );
-    }
-    return <DesktopPopup place={place} />;
-};
-
 export const MarkerPopup = ({ place }) => {
     const [isClicked, setIsClicked] = useState(false);
 
     const handleMarkerClick = () => {
         setIsClicked(true);
+    };
+
+    const handleClosePopup = () => {
+        setIsClicked(false);
     };
 
     return (
@@ -60,18 +47,20 @@ export const MarkerPopup = ({ place }) => {
                 click: handleMarkerClick,
             }}
         >
-            {isClicked && (
-                <>
-                    {isMobile ? (
-                        <MobilePopup onCloseHandler={() => setIsClicked(false)}>
-                            <LocationDetailsBoxWrapper theplace={place} />
-                        </MobilePopup>
-                    ) : (
-                        <Popup onClose={() => setIsClicked(false)}>
-                            <LocationDetailsBoxWrapper theplace={place} />
-                        </Popup>
-                    )}
-                </>
+            {!isMobile && isClicked && (
+                <StyledMarkerPopup
+                    onClose={handleClosePopup}
+                    autoClose={false} // Ensure it doesn't auto-close when re-rendering
+                    closeOnClick={false}
+                    open={isClicked} // Controls visibility
+                >
+                    <LocationDetailsBoxWrapper theplace={place} />
+                </StyledMarkerPopup>
+            )}
+            {isMobile && isClicked && (
+                <MobilePopup onCloseHandler={handleClosePopup}>
+                    <LocationDetailsBoxWrapper theplace={place} />
+                </MobilePopup>
             )}
         </Marker>
     );
