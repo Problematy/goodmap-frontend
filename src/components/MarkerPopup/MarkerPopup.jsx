@@ -29,23 +29,21 @@ const LocationDetailsBoxWrapper = ({ theplace }) => {
     return <LocationDetailsBox place={place} />;
 };
 
-const DesktopPopup = ({ place, isVisible }) => {
-    return (
-        <StyledMarkerPopup>
-            {isVisible ? <LocationDetailsBoxWrapper theplace={place} /> : null}
-        </StyledMarkerPopup>
-    );
-};
+const DesktopPopup = ({ place }) => (
+    <StyledMarkerPopup>
+        <LocationDetailsBoxWrapper theplace={place} />
+    </StyledMarkerPopup>
+);
 
-const ChosenPopup = ({ place, isVisible }) => {
+const ChosenPopup = ({ place }) => {
     if (isMobile) {
         return (
-            <MobilePopup isOpen={isVisible} onCloseHandler={() => {}}>
+            <MobilePopup onCloseHandler={() => {}}>
                 <LocationDetailsBoxWrapper theplace={place} />
             </MobilePopup>
         );
     }
-    return <DesktopPopup place={place} isVisible={isVisible} />;
+    return <DesktopPopup place={place} />;
 };
 
 export const MarkerPopup = ({ place }) => {
@@ -56,8 +54,25 @@ export const MarkerPopup = ({ place }) => {
     };
 
     return (
-        <Marker position={place.position} eventHandlers={{ click: handleMarkerClick }}>
-            <ChosenPopup place={place} isVisible={isClicked} />
+        <Marker
+            position={place.position}
+            eventHandlers={{
+                click: handleMarkerClick,
+            }}
+        >
+            {isClicked && (
+                <>
+                    {isMobile ? (
+                        <MobilePopup onCloseHandler={() => setIsClicked(false)}>
+                            <LocationDetailsBoxWrapper theplace={place} />
+                        </MobilePopup>
+                    ) : (
+                        <Popup onClose={() => setIsClicked(false)}>
+                            <LocationDetailsBoxWrapper theplace={place} />
+                        </Popup>
+                    )}
+                </>
+            )}
         </Marker>
     );
 };
@@ -65,5 +80,6 @@ export const MarkerPopup = ({ place }) => {
 MarkerPopup.propTypes = {
     place: PropTypes.shape({
         position: PropTypes.arrayOf(PropTypes.number).isRequired,
+        UUID: PropTypes.string.isRequired,
     }).isRequired,
 };
