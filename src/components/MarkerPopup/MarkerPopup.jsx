@@ -5,14 +5,14 @@ import { isMobile } from 'react-device-detect';
 import { httpService } from '../../services/http/httpService';
 import styled from 'styled-components';
 
-import { LocationDetails } from './LocationDetails';
+import { LocationDetailsBox } from './LocationDetails';
 import { MobilePopup } from './MobilePopup';
 
 const StyledMarkerPopup = styled(Popup)`
     min-width: 300px;
 `;
 
-const LocationDetailsWrapper = ({ theplace }) => {
+const LocationDetailsBoxWrapper = ({ theplace }) => {
     const [place, setPlace] = useState(null);
 
     useEffect(() => {
@@ -26,13 +26,13 @@ const LocationDetailsWrapper = ({ theplace }) => {
     if (!place) {
         return <p>Loading...</p>;
     }
-    return <LocationDetails place={place} />;
+    return <LocationDetailsBox place={place} />;
 };
 
 const DesktopMarker = ({ place, isVisible }) => {
     return (
         <StyledMarkerPopup autoClose={false} closeOnClick={false} autoPan={false}>
-            {isVisible ? <LocationDetailsWrapper theplace={place} /> : null}
+            {isVisible ? <LocationDetailsBoxWrapper theplace={place} /> : null}
         </StyledMarkerPopup>
     );
 };
@@ -41,7 +41,7 @@ const ChosenMarker = ({ place, isVisible }) => {
     if (isMobile) {
         return (
             <MobilePopup isOpen={isVisible} onCloseHandler={() => {}}>
-                <LocationDetailsWrapper theplace={place} />
+                <LocationDetailsBoxWrapper theplace={place} />
             </MobilePopup>
         );
     }

@@ -68,16 +68,12 @@ const NavigateMeButton = ({ place }) => (
 //     );
 // };
 
-export const LocationDetails = ({ place }) => {
-    const { t } = useTranslation();
-    const categoriesWithSubcategories = place.data.filter(([category]) => !(category === 'CTA'));
-    const CTACategories = place.data.filter(([category]) => category === 'CTA');
-    const [showForm, setShowForm] = useState(false);
-    const toggleForm = () => setShowForm(!showForm);
+const LocationDetails = ({ place }) => {
+     const categoriesWithSubcategories = place.data.filter(([category]) => !(category === 'CTA'));
+     const CTACategories = place.data.filter(([category]) => category === 'CTA');
 
-    return (
-        <React.Fragment>
-            <div className="place-data m-0">
+     return(
+<div className="place-data m-0">
                 <div style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>
                     <p className="point-title m-0" style={{ fontSize: 14, fontWeight: 'bold' }}>
                         <b>{place.title}</b>
@@ -131,7 +127,19 @@ export const LocationDetails = ({ place }) => {
                         <PopupValue key={value} valueToDisplay={value} />
                     ))}
                 </div>
-            </div>
+            </div>);
+};
+
+
+export const LocationDetailsBox = ({ place }) => {
+    const { t } = useTranslation();
+    const [showForm, setShowForm] = useState(false);
+    const toggleForm = () => setShowForm(!showForm);
+
+    return (
+        <React.Fragment>
+        <LocationDetails place={place} />
+
             {isMobile && <NavigateMeButton place={place} />}
 
             <p onClick={toggleForm} style={{ cursor: 'pointer', textAlign: 'right', color: 'red' }}>
