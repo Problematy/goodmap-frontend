@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { Marker, Popup, useMap } from 'react-leaflet';
 import { isMobile } from 'react-device-detect';
@@ -26,42 +26,26 @@ const MarkerContentWrapper = ({ theplace }) => {
     if (!place) {
         return <p>Loading...</p>;
     }
-    return <MarkerContent place={place} key={theplace.UUID} />;
+    return <MarkerContent place={place} />;
 };
 
-const MobileMarker = ({ place }) => {
-    const [open, setOpen] = useState(false);
-    const map = useMap();
-
-    const handleClickOpen = () => {
-        const offset = 0.003;
-        const newLat = place.position[0] - offset;
-        map.panTo([newLat, place.position[1]], { duration: 0.5 });
-        setOpen(true);
-    };
-
-    const handleClose = () => {
-        setOpen(false);
-    };
-
+const DesktopMarker = ({ place, isVisible }) => {
     return (
-        <MobilePopup isOpen={open} onCloseHandler={handleClose}>
-            <MarkerContentWrapper theplace={place} />
-        </MobilePopup>
-    );
-};
-
-const DesktopMarker = ({ place }) => {
-
-    return (
-        <StyledMarkerPopup>
-            <MarkerContentWrapper theplace={place} />
+        <StyledMarkerPopup autoClose={false} closeOnClick={false} autoPan={false}>
+            {isVisible ? <MarkerContentWrapper theplace={place} /> : null}
         </StyledMarkerPopup>
     );
 };
 
-const ChosenMarker = ({ place }) => {
-    return isMobile ? <MobileMarker place={place} /> : <DesktopMarker place={place} />;
+const ChosenMarker = ({ place, isVisible }) => {
+    if (isMobile) {
+        return (
+            <MobilePopup isOpen={isVisible} onCloseHandler={() => {}}>
+                <MarkerContentWrapper theplace={place} />
+            </MobilePopup>
+        );
+    }
+    return <DesktopMarker place={place} isVisible={isVisible} />;
 };
 
 export const MarkerPopup = ({ place }) => {
@@ -76,7 +60,7 @@ export const MarkerPopup = ({ place }) => {
             position={place.position}
             eventHandlers={{ click: handleMarkerClick }}
         >
-            {isClicked && <ChosenMarker place={place} />}
+            <ChosenMarker place={place} isVisible={isClicked} />
         </Marker>
     );
 };
