@@ -29,9 +29,7 @@ describe('CTA', () => {
     it('should redirect to a page specified by CTA when CTA button clicked', async () => {
         const mockOpen = jest.spyOn(window, 'open').mockImplementation(() => {});
 
-        const { getByText } = render(
-            <MarkerContent place={correctMarkerData}/>,
-        );
+        const { getByText } = render(<MarkerContent place={correctMarkerData} />);
 
         const button = getByText('Visit example.org!');
 
