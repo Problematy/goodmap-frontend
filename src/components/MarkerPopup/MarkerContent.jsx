@@ -75,7 +75,7 @@ export const MarkerContent = ({ place, isMobileVariable }) => {
     const [showForm, setShowForm] = useState(false);
     const toggleForm = () => setShowForm(!showForm);
     return (
-        <>
+        <React.Fragment>
             <div className="place-data m-0">
                 <div style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>
                     <p className="point-title m-0" style={{ fontSize: 14, fontWeight: 'bold' }}>
@@ -137,6 +137,6 @@ export const MarkerContent = ({ place, isMobileVariable }) => {
                 {t('ReportIssueButton')}
             </p>
             {showForm && <ReportProblemForm placeId={place.metadata.UUID} />}
-        </>
+        </React.Fragment>
     );
 };

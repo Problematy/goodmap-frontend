@@ -26,7 +26,7 @@ const MarkerContentWrapper = ({ theplace }) => {
     if (!place) {
         return <p>Loading...</p>;
     }
-    return <MarkerContent place={place} />;
+    return <MarkerContent place={place} key={theplace.UUID} />;
 };
 
 const MobileMarker = ({ place }) => {
