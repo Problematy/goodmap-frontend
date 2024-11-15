@@ -25,12 +25,10 @@ export async function getNewMarkers(categories) {
     const filtersUrlQueryString = allCheckboxes.filter(n => n).join('&');
     const locations = await httpService.getLocations(filtersUrlQueryString);
 
-    let markers =  locations.map(location =>
-    {
-       const locationKey = window.USE_LAZY_LOADING ? location.UUID : location.metadata.UUID;
-       return <MarkerPopup place={location} key={locationKey} />
-      }
-    );
+    let markers = locations.map(location => {
+        const locationKey = window.USE_LAZY_LOADING ? location.UUID : location.metadata.UUID;
+        return <MarkerPopup place={location} key={locationKey} />;
+    });
     return markers;
 }
 

@@ -16,7 +16,6 @@ const StyledMarkerPopup = styled(Popup)`
     min-width: 300px;
 `;
 
-
 const PopupValue = ({ valueToDisplay }) => {
     const value = isCustomValue(valueToDisplay)
         ? mapCustomTypeToReactComponent(valueToDisplay)
@@ -55,7 +54,6 @@ const NavigateMeButton = ({ place }) => (
         </p>
     </a>
 );
-
 
 // TODO Replace with MarkerContentWrapper after /api/data endpoint is removed from backend
 const MarkerContent = ({ place }) => {
@@ -148,8 +146,7 @@ const MarkerContentWrapper = ({ theplace }) => {
         return <p>Loading...</p>;
     }
     return <MarkerContent place={place} />;
-}
-
+};
 
 export const MarkerPopup = ({ place }) => {
     const [isClicked, setIsClicked] = useState(false);
@@ -165,16 +162,17 @@ export const MarkerPopup = ({ place }) => {
                 click: handleMarkerClick,
             }}
         >
-
-        {isClicked && <StyledMarkerPopup><MarkerContentWrapper theplace={place} /></StyledMarkerPopup>}
-
+            {isClicked && (
+                <StyledMarkerPopup>
+                    <MarkerContentWrapper theplace={place} />
+                </StyledMarkerPopup>
+            )}
         </Marker>
     );
 };
 
-
 MarkerPopup.propTypes = {
     place: PropTypes.shape({
-         position: PropTypes.arrayOf(PropTypes.number).isRequired,
+        position: PropTypes.arrayOf(PropTypes.number).isRequired,
     }).isRequired,
 };
