@@ -29,7 +29,7 @@ const LocationDetailsBoxWrapper = ({ theplace }) => {
     return <LocationDetailsBox place={place} />;
 };
 
-const DesktopMarker = ({ place, isVisible }) => {
+const DesktopPopup = ({ place, isVisible }) => {
     return (
         <StyledMarkerPopup autoClose={false} closeOnClick={false} autoPan={false}>
             {isVisible ? <LocationDetailsBoxWrapper theplace={place} /> : null}
@@ -37,7 +37,7 @@ const DesktopMarker = ({ place, isVisible }) => {
     );
 };
 
-const ChosenMarker = ({ place, isVisible }) => {
+const ChosenPopup = ({ place, isVisible }) => {
     if (isMobile) {
         return (
             <MobilePopup isOpen={isVisible} onCloseHandler={() => {}}>
@@ -45,7 +45,7 @@ const ChosenMarker = ({ place, isVisible }) => {
             </MobilePopup>
         );
     }
-    return <DesktopMarker place={place} isVisible={isVisible} />;
+    return <DesktopPopup place={place} isVisible={isVisible} />;
 };
 
 export const MarkerPopup = ({ place }) => {
@@ -57,7 +57,7 @@ export const MarkerPopup = ({ place }) => {
 
     return (
         <Marker position={place.position} eventHandlers={{ click: handleMarkerClick }}>
-            <ChosenMarker place={place} isVisible={isClicked} />
+            <ChosenPopup place={place} isVisible={isClicked} />
         </Marker>
     );
 };
