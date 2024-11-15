@@ -68,7 +68,7 @@ const NavigateMeButton = ({ place }) => (
 //     );
 // };
 
-export const MarkerContent = ({ place }) => {
+export const LocationDetails = ({ place }) => {
     const { t } = useTranslation();
     const categoriesWithSubcategories = place.data.filter(([category]) => !(category === 'CTA'));
     const CTACategories = place.data.filter(([category]) => category === 'CTA');
