@@ -1,14 +1,16 @@
 import React, { useState, useEffect } from 'react';
+import ReactDOM from 'react-dom';
 import PropTypes from 'prop-types';
-import { Marker, Popup } from 'react-leaflet';
+import { Marker, useMap } from 'react-leaflet';
 import { isMobile } from 'react-device-detect';
 import { httpService } from '../../services/http/httpService';
 import styled from 'styled-components';
+import L from 'leaflet';
 
 import { LocationDetailsBox } from './LocationDetails';
 import { MobilePopup } from './MobilePopup';
 
-const StyledMarkerPopup = styled(Popup)`
+const StyledPopup = styled.div`
     min-width: 300px;
 `;
 
@@ -21,7 +23,7 @@ const LocationDetailsBoxWrapper = ({ theplace }) => {
             setPlace(fetchedPlace);
         };
         fetchPlace();
-    }, [theplace.UUID]);
+    }, [theplace]);
 
     if (!place) {
         return <p>Loading...</p>;
@@ -31,13 +33,39 @@ const LocationDetailsBoxWrapper = ({ theplace }) => {
 
 export const MarkerPopup = ({ place }) => {
     const [isClicked, setIsClicked] = useState(false);
+    const map = useMap(); // Access the map instance to dynamically control popups.
 
     const handleMarkerClick = () => {
         setIsClicked(true);
-    };
 
-    const handleClosePopup = () => {
-        setIsClicked(false);
+        const popup = L.popup({
+            autoClose: false,
+            closeOnClick: false,
+        })
+            .setLatLng(place.position)
+            .setContent(
+                isMobile
+                    ? `<div id="popup-${place.UUID}"></div>` // Placeholder for React content.
+                    : `<div id="popup-${place.UUID}"></div>`
+            )
+            .openOn(map); // Attach the popup to the map.
+
+        // Dynamically render React content inside the popup placeholder.
+        const popupElement = document.getElementById(`popup-${place.UUID}`);
+        if (popupElement) {
+            ReactDOM.render(
+                isMobile ? (
+                    <MobilePopup onCloseHandler={() => popup.remove()}>
+                        <LocationDetailsBoxWrapper key={place.UUID} theplace={place} />
+                    </MobilePopup>
+                ) : (
+                    <StyledPopup>
+                        <LocationDetailsBoxWrapper key={place.UUID} theplace={place} />
+                    </StyledPopup>
+                ),
+                popupElement
+            );
+        }
     };
 
     return (
@@ -46,23 +74,7 @@ export const MarkerPopup = ({ place }) => {
             eventHandlers={{
                 click: handleMarkerClick,
             }}
-        >
-            {!isMobile && isClicked && (
-                <StyledMarkerPopup
-                    onClose={handleClosePopup}
-                    autoClose={false} // Ensure it doesn't auto-close when re-rendering
-                    closeOnClick={false}
-                    open={isClicked} // Controls visibility
-                >
-                    <LocationDetailsBoxWrapper theplace={place} />
-                </StyledMarkerPopup>
-            )}
-            {isMobile && isClicked && (
-                <MobilePopup onCloseHandler={handleClosePopup}>
-                    <LocationDetailsBoxWrapper theplace={place} />
-                </MobilePopup>
-            )}
-        </Marker>
+        />
     );
 };
 
