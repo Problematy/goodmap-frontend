@@ -30,7 +30,7 @@ describe('CTA', () => {
         const mockOpen = jest.spyOn(window, 'open').mockImplementation(() => {});
 
         const { getByText } = render(
-            <MarkerContent place={correctMarkerData} isMobileVariable={false} />,
+            <MarkerContent place={correctMarkerData}/>,
         );
 
         const button = getByText('Visit example.org!');
