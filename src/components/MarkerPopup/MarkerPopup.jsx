@@ -28,7 +28,7 @@ const MobileMarker = ({ place }) => {
             eventHandlers={{ click: handleClickOpen }}
         >
             <MobilePopup isOpen={open} onCloseHandler={handleClose}>
-                <MarkerContent place={place} isMobileVariable={false} />
+                <MarkerContent place={place} isMobileVariable={true} />
             </MobilePopup>
         </Marker>
     );
