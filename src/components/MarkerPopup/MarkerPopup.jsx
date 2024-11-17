@@ -8,7 +8,6 @@ import styled from 'styled-components';
 import { LocationDetailsBox } from './LocationDetails';
 import { MobilePopup } from './MobilePopup';
 
-
 const StyledPopup = styled(Popup)`
     min-width: 300px;
 `;
@@ -25,11 +24,7 @@ export const AutoOpenPopup = ({ children }) => {
         }
     }, []);
 
-    return (
-        <StyledPopup ref={popupRef}>
-            {children}
-        </StyledPopup>
-    );
+    return <StyledPopup ref={popupRef}>{children}</StyledPopup>;
 };
 
 const DesktopPopup = AutoOpenPopup;
@@ -56,7 +51,7 @@ const LocationDetailsBoxWrapper = ({ theplace }) => {
 
 export const MarkerPopup = ({ place }) => {
     const [isClicked, setIsClicked] = useState(false);
-    const handleMarkerClick = (e) => {
+    const handleMarkerClick = e => {
         setIsClicked(true);
     };
 
