@@ -13,7 +13,6 @@ const StyledPopup = styled(Popup)`
     min-width: 300px;
 `;
 
-
 export const AutoOpenPopup = ({ children }) => {
     const popupRef = useRef(null);
 
@@ -33,6 +32,8 @@ export const AutoOpenPopup = ({ children }) => {
     );
 };
 
+const DesktopPopup = AutoOpenPopup;
+
 const LocationDetailsBoxWrapper = ({ theplace }) => {
     const [place, setPlace] = useState(null);
 
@@ -44,10 +45,13 @@ const LocationDetailsBoxWrapper = ({ theplace }) => {
         fetchPlace();
     }, [theplace.UUID]);
 
-    if (!place) {
-        return <p>Loading...</p>;
-    }
-    return <LocationDetailsBox place={place} />;
+    const ChosenPopup = isMobile ? MobilePopup : DesktopPopup;
+
+    return (
+        <ChosenPopup>
+            {place ? <LocationDetailsBox place={place} /> : <p>Loading...</p>}
+        </ChosenPopup>
+    );
 };
 
 export const MarkerPopup = ({ place }) => {
@@ -56,7 +60,6 @@ export const MarkerPopup = ({ place }) => {
         setIsClicked(true);
     };
 
-
     return (
         <Marker
             position={place.position}
@@ -64,16 +67,7 @@ export const MarkerPopup = ({ place }) => {
                 click: handleMarkerClick,
             }}
         >
-            {!isMobile && isClicked && (
-                <AutoOpenPopup>
-                    <LocationDetailsBoxWrapper theplace={place} />
-                </AutoOpenPopup>
-            )}
-            {isMobile && isClicked && (
-                <MobilePopup onCloseHandler={handleClosePopup}>
-                    <LocationDetailsBoxWrapper theplace={place} />
-                </MobilePopup>
-            )}
+            {isClicked && <LocationDetailsBoxWrapper theplace={place} />}
         </Marker>
     );
 };
