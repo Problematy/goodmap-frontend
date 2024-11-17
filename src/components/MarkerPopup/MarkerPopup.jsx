@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Marker, Popup } from 'react-leaflet';
 import { isMobile } from 'react-device-detect';
@@ -8,9 +8,30 @@ import styled from 'styled-components';
 import { LocationDetailsBox } from './LocationDetails';
 import { MobilePopup } from './MobilePopup';
 
-const StyledMarkerPopup = styled(Popup)`
+
+const StyledPopup = styled(Popup)`
     min-width: 300px;
 `;
+
+
+export const AutoOpenPopup = ({ children }) => {
+    const popupRef = useRef(null);
+
+    useEffect(() => {
+        if (popupRef.current) {
+            const marker = popupRef.current._source;
+            if (marker) {
+                marker.openPopup();
+            }
+        }
+    }, []);
+
+    return (
+        <StyledPopup ref={popupRef}>
+            {children}
+        </StyledPopup>
+    );
+};
 
 const LocationDetailsBoxWrapper = ({ theplace }) => {
     const [place, setPlace] = useState(null);
@@ -31,14 +52,10 @@ const LocationDetailsBoxWrapper = ({ theplace }) => {
 
 export const MarkerPopup = ({ place }) => {
     const [isClicked, setIsClicked] = useState(false);
-
-    const handleMarkerClick = () => {
+    const handleMarkerClick = (e) => {
         setIsClicked(true);
     };
 
-    const handleClosePopup = () => {
-        setIsClicked(false);
-    };
 
     return (
         <Marker
@@ -48,14 +65,9 @@ export const MarkerPopup = ({ place }) => {
             }}
         >
             {!isMobile && isClicked && (
-                <StyledMarkerPopup
-                    onClose={handleClosePopup}
-                    autoClose={false} // Ensure it doesn't auto-close when re-rendering
-                    closeOnClick={false}
-                    open={isClicked} // Controls visibility
-                >
+                <AutoOpenPopup>
                     <LocationDetailsBoxWrapper theplace={place} />
-                </StyledMarkerPopup>
+                </AutoOpenPopup>
             )}
             {isMobile && isClicked && (
                 <MobilePopup onCloseHandler={handleClosePopup}>
