@@ -33,15 +33,13 @@ const LocationDetailsBoxWrapper = ({ theplace }) => {
     const [place, setPlace] = useState(null);
     const ChosenPopup = isMobile ? MobilePopup : DesktopPopup;
 
-
     if (!window.USE_LAZY_LOADING) {
-      return (
-        <ChosenPopup>
-            <LocationDetailsBox place={theplace} />
-        </ChosenPopup>
-      );
+        return (
+            <ChosenPopup>
+                <LocationDetailsBox place={theplace} />
+            </ChosenPopup>
+        );
     }
-
 
     useEffect(() => {
         const fetchPlace = async () => {
