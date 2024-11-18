@@ -1,45 +1,18 @@
 import { Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import React, { useState, useEffect } from 'react';
-import { useMap } from 'react-leaflet';
+import React, { useState } from 'react';
 
 export const MobilePopup = ({ children }) => {
-    const [isOpen, setIsOpen] = useState(false);
-    const [currentMarker, setCurrentMarker] = useState(null);
-    const map = useMap();
+    const [isOpen, setIsOpen] = useState(true);
 
-    const closePopup = () => {
+    const onCloseHandler = () => {
         setIsOpen(false);
-        setCurrentMarker(null);
     };
-
-    useEffect(() => {
-        const handleMarkerClick = (e) => {
-            setIsOpen(true);
-            setCurrentMarker(e.target); // Przechowuje kliknięty marker
-        };
-
-        // Dodajemy zdarzenie kliknięcia do wszystkich markerów
-        map.eachLayer((layer) => {
-            if (layer instanceof L.Marker) {
-                layer.on('click', handleMarkerClick);
-            }
-        });
-
-        // Czyszczenie zdarzeń przy odmontowaniu
-        return () => {
-            map.eachLayer((layer) => {
-                if (layer instanceof L.Marker) {
-                    layer.off('click', handleMarkerClick);
-                }
-            });
-        };
-    }, [map]);
 
     return (
         <Dialog
             open={isOpen}
-            onClose={closePopup}
+            onClose={onCloseHandler}
             fullWidth
             maxWidth="md"
             style={{
@@ -60,15 +33,13 @@ export const MobilePopup = ({ children }) => {
             <DialogTitle>
                 <IconButton
                     aria-label="close"
-                    onClick={closePopup}
+                    onClick={onCloseHandler}
                     style={{ position: 'absolute', right: 8, top: 8 }}
                 >
                     <CloseIcon />
                 </IconButton>
             </DialogTitle>
-            <DialogContent>
-                {currentMarker && children}
-            </DialogContent>
+            <DialogContent>{children}</DialogContent>
         </Dialog>
     );
 };
