@@ -1,25 +1,38 @@
-import { Dialog, DialogContent, DialogTitle, IconButton } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Dialog, DialogContent, DialogTitle, IconButton, Slide } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
-import React, { useState } from 'react';
+import { useLeafletContext } from '@react-leaflet/core';
 
 export const MobilePopup = ({ children }) => {
     const [isOpen, setIsOpen] = useState(true);
+    const context = useLeafletContext();
 
-    const onCloseHandler = () => {
+    useEffect(() => {
+        const overlayContainer = context?.overlayContainer;
+        if (overlayContainer) {
+            overlayContainer.on('click', () => {
+                setIsOpen(true);
+            });
+        }
+
+        return () => {
+            if (overlayContainer) {
+                overlayContainer.off('click');
+            }
+        };
+    }, [context]);
+
+    const handleClose = () => {
         setIsOpen(false);
     };
 
     return (
         <Dialog
             open={isOpen}
-            onClose={onCloseHandler}
+            onClose={handleClose}
             fullWidth
             maxWidth="md"
-            style={{
-                position: 'fixed',
-                bottom: 0,
-                margin: 0,
-            }}
+            TransitionComponent={SlideTransition}
             PaperProps={{
                 style: {
                     position: 'fixed',
@@ -27,19 +40,26 @@ export const MobilePopup = ({ children }) => {
                     margin: 0,
                     width: '100%',
                     maxHeight: '50%',
+                    borderRadius: '16px 16px 0 0',
                 },
             }}
         >
-            <DialogTitle>
+            <DialogTitle style={{ textAlign: 'center', padding: '8px 16px' }}>
                 <IconButton
                     aria-label="close"
-                    onClick={onCloseHandler}
+                    onClick={handleClose}
                     style={{ position: 'absolute', right: 8, top: 8 }}
                 >
                     <CloseIcon />
                 </IconButton>
+                <span>Details</span>
             </DialogTitle>
             <DialogContent>{children}</DialogContent>
         </Dialog>
     );
 };
+
+// Funkcja przejścia wysuwania z dołu
+const SlideTransition = React.forwardRef(function Transition(props, ref) {
+    return <Slide direction="up" ref={ref} {...props} />;
+});
