@@ -26,7 +26,7 @@ export async function getNewMarkers(categories) {
     const locations = await httpService.getLocations(filtersUrlQueryString);
 
     let markers = locations.map(location => {
-        const locationKey = window.USE_LAZY_LOADING ? location.UUID : location.metadata.UUID;
+        const locationKey = (window.USE_LAZY_LOADING ?? false) ? location.UUID : location.metadata.UUID;
         return <MarkerPopup place={location} key={locationKey} />;
     });
     return markers;
