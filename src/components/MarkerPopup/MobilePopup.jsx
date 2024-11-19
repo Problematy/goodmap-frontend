@@ -7,6 +7,8 @@ export const MobilePopup = ({ children }) => {
     const [isOpen, setIsOpen] = useState(true);
     const context = useLeafletContext();
 
+    // useEffect below contains workaround to bo compatible with Popoup from react-leaflet
+    // where it's Marker (parent of Popup) is responsible for closing the Popup
     useEffect(() => {
         const overlayContainer = context?.overlayContainer;
         if (overlayContainer) {
@@ -59,7 +61,6 @@ export const MobilePopup = ({ children }) => {
     );
 };
 
-// Funkcja przejścia wysuwania z dołu
 const SlideTransition = React.forwardRef(function Transition(props, ref) {
     return <Slide direction="up" ref={ref} {...props} />;
 });
