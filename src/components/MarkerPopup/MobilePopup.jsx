@@ -11,9 +11,19 @@ export const MobilePopup = ({ children }) => {
     // where it's Marker (parent of Popup) is responsible for closing the Popup
     useEffect(() => {
         const overlayContainer = context?.overlayContainer;
+
+        const centerMap = (latlng) =>  {
+              const offset = 0.003;
+              const newLat = latlng.lat - offset;
+              context.map.panTo([newLat, latlng.lng], { duration: 0.5 });
+        }
+
         if (overlayContainer) {
-            overlayContainer.on('click', () => {
-                setIsOpen(true);
+            centerMap(overlayContainer._latlng);
+
+            overlayContainer.on('click', (place) => {
+              centerMap(place.latlng);
+              setIsOpen(true);
             });
         }
 
@@ -54,7 +64,6 @@ export const MobilePopup = ({ children }) => {
                 >
                     <CloseIcon />
                 </IconButton>
-                <span>Details</span>
             </DialogTitle>
             <DialogContent>{children}</DialogContent>
         </Dialog>
