@@ -12,18 +12,18 @@ export const MobilePopup = ({ children }) => {
     useEffect(() => {
         const overlayContainer = context?.overlayContainer;
 
-        const centerMap = (latlng) =>  {
-              const offset = 0.003;
-              const newLat = latlng.lat - offset;
-              context.map.panTo([newLat, latlng.lng], { duration: 0.5 });
-        }
+        const centerMap = latlng => {
+            const offset = 0.003;
+            const newLat = latlng.lat - offset;
+            context.map.panTo([newLat, latlng.lng], { duration: 0.5 });
+        };
 
         if (overlayContainer) {
             centerMap(overlayContainer._latlng);
 
-            overlayContainer.on('click', (place) => {
-              centerMap(place.latlng);
-              setIsOpen(true);
+            overlayContainer.on('click', place => {
+                centerMap(place.latlng);
+                setIsOpen(true);
             });
         }
 
