@@ -12,7 +12,7 @@ const StyledPopup = styled(Popup)`
     min-width: 300px;
 `;
 
-// AutoOpenPopup is a workaround for not existing lazy loading Popup
+// DesktopPopup is a workaround for not existing lazy loading Popup as
 // react-leaflet Popup doesn't support .open() function
 const DesktopPopup = ({ children }) => {
     const popupRef = useRef(null);
