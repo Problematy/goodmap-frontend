@@ -1,8 +1,8 @@
 import React from 'react';
 import PropTypes from 'prop-types';
-import { Checkbox } from '../../Checkbox/Checkbox';
+import { Checkbox } from './Checkbox';
 
-export const FilterFormCategory = ({ filtersData, onClick }) => {
+export const FilterFormCategory = ({ filtersData, onChange }) => {
     const categoryData = filtersData[0];
     const subcategoryData = filtersData[1];
 
@@ -21,7 +21,7 @@ export const FilterFormCategory = ({ filtersData, onClick }) => {
                     name={name}
                     translation={translation}
                     categoryName={categoryData[0]}
-                    onClick={onClick}
+                    onChange={onChange}
                 />
             ))}
         </div>
@@ -35,5 +35,5 @@ FilterFormCategory.propTypes = {
             PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
         ]),
     ).isRequired,
-    onClick: PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired,
 };

@@ -1,12 +1,12 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export const Checkbox = ({ name, translation, categoryName, onClick }) => (
+export const Checkbox = ({ name, translation, categoryName, onChange }) => (
     <div className="form-check">
         <label htmlFor={name}>
             {translation}
             <input
-                onClick={onClick}
+                onChange={onChange}
                 className={`form-check-input filter ${categoryName}`}
                 type="checkbox"
                 id={name}
@@ -20,5 +20,5 @@ Checkbox.propTypes = {
     name: PropTypes.string.isRequired,
     translation: PropTypes.string.isRequired,
     categoryName: PropTypes.string.isRequired,
-    onClick: PropTypes.func.isRequired,
+    onChange: PropTypes.func.isRequired,
 };

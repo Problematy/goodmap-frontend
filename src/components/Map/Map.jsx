@@ -19,10 +19,13 @@ function getSelectedCheckboxesOfCategory(filterType) {
 }
 
 export async function getNewMarkers(categories) {
+    console.log(categories);
     const allCheckboxes = categories.map(([categoryString]) =>
         getSelectedCheckboxesOfCategory(categoryString),
     );
+    console.log('allCheckboxes', allCheckboxes);
     const filtersUrlQueryString = allCheckboxes.filter(n => n).join('&');
+    console.log('filtersUrlQueryString', filtersUrlQueryString)
     const locations = await httpService.getLocations(filtersUrlQueryString);
 
     let markers = locations.map(location => {
