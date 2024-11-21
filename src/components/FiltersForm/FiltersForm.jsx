@@ -1,10 +1,12 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { useState } from 'react';
+import { useCategories } from '../Categories/CategoriesContext';
+import { httpService } from '../../services/http/httpService';
 
-
-export const FiltersForm = ({ categoriesData, onChange }) => {
+export const FiltersForm = () => {
+    const { setCategories } = useCategories();
     const [selectedFilters, setSelectedFilters] = useState({});
+    const [categoriesData, setCategoriesData] = useState([]);
 
     const handleCheckboxChange = (event) => {
         const { value, checked } = event.target;
@@ -22,14 +24,22 @@ export const FiltersForm = ({ categoriesData, onChange }) => {
                     (filter) => filter !== value,
                 );
             }
-            onChange(newSelectedFilters);
-            return newSelectedFilters;
+            setCategories(newSelectedFilters);
         });
     };
 
+    useEffect(() => {
+        const fetchCategories = async () => {
+            const categoriesData = await httpService.getCategories();
+            console.log('categories', categoriesData);
+            setCategoriesData(categoriesData);
+        };
+        fetchCategories();
+    }, []);
+
     const sections = categoriesData.map(filtersData => (
         <div
-            key={`${filtersData[0][0]} ${filtersData[0][1]}`}
+            key={`${filtersData[0][0]}-${filtersData[0][1]}`}
             aria-labelledby={`filter-label-${filtersData[0][0]}-${filtersData[0][1]}`}
         >
             <span id={`filter-label-${filtersData[0][0]}-${filtersData[0][1]}`}>
@@ -54,16 +64,4 @@ export const FiltersForm = ({ categoriesData, onChange }) => {
     ));
 
     return <form>{sections}</form>;
-};
-
-FiltersForm.propTypes = {
-    categoriesData: PropTypes.arrayOf(
-        PropTypes.arrayOf(
-            PropTypes.oneOfType([
-                PropTypes.arrayOf(PropTypes.string),
-                PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string)),
-            ]),
-        ),
-    ).isRequired,
-    onChange: PropTypes.func.isRequired,
 };

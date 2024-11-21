@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import PropTypes from 'prop-types';
@@ -8,9 +8,35 @@ import { mapConfig } from './map.config';
 import { CustomZoomControl } from './components/ZoomControl';
 import Control from 'react-leaflet-custom-control';
 import MapAutocomplete from './components/MapAutocomplete';
+import { useCategories } from '../Categories/CategoriesContext';
+import { httpService } from '../../services/http/httpService';
 
-export const MapComponent = ({ markers }) => {
+export async function getNewMarkers(filters) {
+  const query = Object.entries(filters).map(filter => filter[1].map(value => `${filter[0]}=${value}`).join('&')).join('&');
+  const locations = await httpService.getLocations(query);
+  return locations.map(location => {
+      const locationKey =
+          window.USE_LAZY_LOADING ?? false ? location.UUID : location.metadata.UUID;
+      return <MarkerPopup place={location} key={locationKey} />;
+  });
+}
+
+
+export const MapComponent = () => {
     const [, setUserPosition] = useState(null);
+    const [markers, setMarkers] = useState([]);
+    const { categories } = useCategories();
+
+    useEffect(() => {
+        const query = Object.entries(categories).map(filter => filter[1].map(value => `${filter[0]}=${value}`).join('&')).join('&');
+        const fetchMarkers = async () => {
+            const locations = await httpService.getLocations(query);
+            const marks = locations.map((loc) => ({ position: loc.position, name: loc.name }));
+            setMarkers(marks);
+        };
+        fetchMarkers();
+    }, [categories]);
+
     return (
         <MapContainer
             center={mapConfig.initialMapCoordinates}
@@ -35,8 +61,4 @@ export const MapComponent = ({ markers }) => {
             {window.SHOW_SEARCH_BAR && <MapAutocomplete />}
         </MapContainer>
     );
-};
-
-MapComponent.propTypes = {
-    markers: PropTypes.arrayOf(PropTypes.element).isRequired,
 };
