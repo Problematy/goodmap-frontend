@@ -19,13 +19,13 @@ function getSelectedCheckboxesOfCategory(filterType) {
 }
 
 export async function getNewMarkers(categories) {
-    console.log(categories);
+//     console.log(categories);
     const allCheckboxes = categories.map(([categoryString]) =>
         getSelectedCheckboxesOfCategory(categoryString),
     );
-    console.log('allCheckboxes', allCheckboxes);
+//     console.log('allCheckboxes', allCheckboxes);
     const filtersUrlQueryString = allCheckboxes.filter(n => n).join('&');
-    console.log('filtersUrlQueryString', filtersUrlQueryString)
+//     console.log('filtersUrlQueryString', filtersUrlQueryString)
     const locations = await httpService.getLocations(filtersUrlQueryString);
 
     let markers = locations.map(location => {
@@ -50,12 +50,29 @@ export async function repaintMarkers(categories) {
 export const Map = async () => {
     httpService.getCategoriesData().then(categoriesData => {
         const parsedCategoriesData = categoriesData.map(categoryData => categoryData[0]);
+        console.log('parsedCategoriesData', parsedCategoriesData);
+        console.log('categoriesData', categoriesData);
+
+        const repaintMarkersButReal= ((filters) => {
+          console.log('repaint filters',filters);
+          const queries = Object.entries(filters).map(filter => filter[1].map(value => `${filter[0]}=${value}`).join('&')).join('&');
+          console.log('query', queries);
+          });
+
+//           const query_string = filters[0].map(checkboxNode => `${filterType}=${checkboxNode.value}`).join('&');
+//           console.log('listOfCategories', listOfCategories);
+//           console.log('query', query_string);
+
 
         repaintMarkers(parsedCategoriesData);
         filtersPlaceholder.render(
             <FiltersForm
                 categoriesData={categoriesData}
-                onClick={() => repaintMarkers(parsedCategoriesData)}
+                onChange={(filters)=>{
+                    repaintMarkersButReal(filters);
+                    console.log(filters);
+                }}
+//                 onChange={(categories) => repaintMarkers(categories)}
             />,
         );
     });

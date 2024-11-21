@@ -1,12 +1,19 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 
-export const Checkbox = ({ name, translation, categoryName, onChange }) => (
+// function which changes which variable has been changed
+export const handleCheckboxChange = (event) => {
+    const { value } = event.target;
+
+};
+
+
+export const Checkbox = ({ name, translation, categoryName }) => (
     <div className="form-check">
         <label htmlFor={name}>
             {translation}
             <input
-                onChange={onChange}
+                onChange={handleCheckboxChange}
                 className={`form-check-input filter ${categoryName}`}
                 type="checkbox"
                 id={name}
@@ -20,5 +27,5 @@ Checkbox.propTypes = {
     name: PropTypes.string.isRequired,
     translation: PropTypes.string.isRequired,
     categoryName: PropTypes.string.isRequired,
-    onChange: PropTypes.func.isRequired,
+
 };
