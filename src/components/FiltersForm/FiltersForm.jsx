@@ -1,15 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import { useState } from 'react';
-import { FilterFormCategory } from './components/FilterFormCategory';
-
 
 
 export const FiltersForm = ({ categoriesData, onChange }) => {
-
     const [selectedFilters, setSelectedFilters] = useState({});
 
-    // handleCheckboxChange stores filters like that {categoryName: [filters which are checked], categoryName2: [filters which are checked}
     const handleCheckboxChange = (event) => {
         const { value, checked } = event.target;
         const category = event.target.classList[2];
@@ -32,11 +28,6 @@ export const FiltersForm = ({ categoriesData, onChange }) => {
     };
 
     const sections = categoriesData.map(filtersData => (
-//     const categoryData = filtersData[0];
-//     const subcategoryData = filtersData[1];
-//         <FilterFormCategory key={categoryData[0][0]} filtersData={categoryData} onChange={handleCategoryChange} />
-//
-
         <div
             key={`${filtersData[0][0]} ${filtersData[0][1]}`}
             aria-labelledby={`filter-label-${filtersData[0][0]}-${filtersData[0][1]}`}
