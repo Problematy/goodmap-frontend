@@ -4,7 +4,6 @@ import { Checkbox } from './Checkbox';
 
 const handleCheckboxChange = (event) => {
     const { value } = event.target;
-    console.log(value);
 };
 
 export const FilterFormCategory = ({ filtersData, onChange }) => {

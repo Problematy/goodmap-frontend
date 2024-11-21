@@ -27,8 +27,6 @@ export const FiltersForm = ({ categoriesData, onChange }) => {
                 );
             }
             onChange(newSelectedFilters);
-            // log type of newSelectedFilters
-            console.log(typeof newSelectedFilters);
             return newSelectedFilters;
         });
     };
