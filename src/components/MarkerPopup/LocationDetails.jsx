@@ -33,11 +33,7 @@ LocationDetailsValue.propTypes = {
 const NavigateMeButton = ({ place }) => (
     <a
         href={`geo:${place.position[0]},${place.position[1]}?q=${place.position[0]},${place.position[1]}`}
-        style={{ textDecoration: 'none',
-            alignItems: 'center',
-            height: '20%'
-        }}
-
+        style={{ textDecoration: 'none', alignItems: 'center', height: '20%' }}
     >
         <p
             style={{
