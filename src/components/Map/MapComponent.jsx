@@ -10,6 +10,8 @@ import Control from 'react-leaflet-custom-control';
 import MapAutocomplete from './components/MapAutocomplete';
 import { useCategories } from '../Categories/CategoriesContext';
 import { httpService } from '../../services/http/httpService';
+import { MarkerPopup } from '../MarkerPopup/MarkerPopup';
+
 
 export async function getNewMarkers(filters) {
   const query = Object.entries(filters).map(filter => filter[1].map(value => `${filter[0]}=${value}`).join('&')).join('&');
@@ -30,8 +32,8 @@ export const MapComponent = () => {
     useEffect(() => {
         const query = Object.entries(categories).map(filter => filter[1].map(value => `${filter[0]}=${value}`).join('&')).join('&');
         const fetchMarkers = async () => {
-            const locations = await httpService.getLocations(query);
-            const marks = locations.map((loc) => ({ position: loc.position, name: loc.name }));
+
+            const marks = await httpService.getLocations(query);
             setMarkers(marks);
         };
         fetchMarkers();
@@ -55,7 +57,9 @@ export const MapComponent = () => {
                     <SuggestNewPointButton />
                 </Control>
             )}
-            <MarkerClusterGroup>{markers}</MarkerClusterGroup>
+            <MarkerClusterGroup>
+                {markers.map(location => <MarkerPopup place={location} key={location.UUID} />)}
+            </MarkerClusterGroup>
             <LocationControl setUserPosition={setUserPosition} />
             <CustomZoomControl position="topright" />
             {window.SHOW_SEARCH_BAR && <MapAutocomplete />}
