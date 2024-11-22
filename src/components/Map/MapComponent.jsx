@@ -13,17 +13,6 @@ import { httpService } from '../../services/http/httpService';
 import { MarkerPopup } from '../MarkerPopup/MarkerPopup';
 
 
-export async function getNewMarkers(filters) {
-  const query = Object.entries(filters).map(filter => filter[1].map(value => `${filter[0]}=${value}`).join('&')).join('&');
-  const locations = await httpService.getLocations(query);
-  return locations.map(location => {
-      const locationKey =
-          window.USE_LAZY_LOADING ?? false ? location.UUID : location.metadata.UUID;
-      return <MarkerPopup place={location} key={locationKey} />;
-  });
-}
-
-
 export const MapComponent = () => {
     const [, setUserPosition] = useState(null);
     const [markers, setMarkers] = useState([]);
@@ -35,8 +24,9 @@ export const MapComponent = () => {
 
             const marks = await httpService.getLocations(query);
             const markeros = marks.map(location => <MarkerPopup place={location} key={location.UUID} />);
+            const mark = <MarkerClusterGroup>{markeros}</MarkerClusterGroup>;
             console.log('markers rdy')
-            setMarkers(markeros);
+            setMarkers(mark);
         };
         fetchMarkers();
     }, [categories]);
@@ -60,10 +50,12 @@ export const MapComponent = () => {
                     <SuggestNewPointButton />
                 </Control>
             )}
-            <MarkerClusterGroup>{markers}</MarkerClusterGroup>
+            {markers}
             <LocationControl setUserPosition={setUserPosition} />
             <CustomZoomControl position="topright" />
             {window.SHOW_SEARCH_BAR && <MapAutocomplete />}
         </MapContainer>
     );
 };
+// 41 sekund oryginał
+// 25 zaklastrowane
