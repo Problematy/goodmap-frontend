@@ -31,6 +31,7 @@ export const FiltersForm = () => {
     useEffect(() => {
         const fetchCategories = async () => {
             const categoriesData = await httpService.getCategoriesData();
+            console.log(categoriesData);
             setCategoriesData(categoriesData);
         };
         fetchCategories();

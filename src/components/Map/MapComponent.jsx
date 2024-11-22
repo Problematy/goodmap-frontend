@@ -34,10 +34,13 @@ export const MapComponent = () => {
         const fetchMarkers = async () => {
 
             const marks = await httpService.getLocations(query);
-            setMarkers(marks);
+            const markeros = marks.map(location => <MarkerPopup place={location} key={location.UUID} />);
+            console.log('markers rdy')
+            setMarkers(markeros);
         };
         fetchMarkers();
     }, [categories]);
+
 
     return (
         <MapContainer
@@ -57,9 +60,7 @@ export const MapComponent = () => {
                     <SuggestNewPointButton />
                 </Control>
             )}
-            <MarkerClusterGroup>
-                {markers.map(location => <MarkerPopup place={location} key={location.UUID} />)}
-            </MarkerClusterGroup>
+            <MarkerClusterGroup>{markers}</MarkerClusterGroup>
             <LocationControl setUserPosition={setUserPosition} />
             <CustomZoomControl position="topright" />
             {window.SHOW_SEARCH_BAR && <MapAutocomplete />}
