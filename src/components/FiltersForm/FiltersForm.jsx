@@ -8,11 +8,14 @@ export const FiltersForm = () => {
     const [selectedFilters, setSelectedFilters] = useState({});
     const [categoriesData, setCategoriesData] = useState([]);
 
+    // Funkcja obsługująca zmianę checkboxa
     const handleCheckboxChange = (event) => {
         const { value, checked } = event.target;
         const category = event.target.classList[2];
-        setSelectedFilters((prevSelectedFilters) => {
+
+        setCategories((prevSelectedFilters) => {
             const newSelectedFilters = { ...prevSelectedFilters };
+
             if (checked) {
                 if (newSelectedFilters[category]) {
                     newSelectedFilters[category].push(value);
@@ -21,33 +24,39 @@ export const FiltersForm = () => {
                 }
             } else {
                 newSelectedFilters[category] = newSelectedFilters[category].filter(
-                    (filter) => filter !== value,
+                    (filter) => filter !== value
                 );
             }
-            setCategories(newSelectedFilters);
+
+            return newSelectedFilters;
         });
     };
 
+//     // Synchronizacja selectedFilters z CategoriesProvider
+//     useEffect(() => {
+//         setCategories(selectedFilters);
+//     }, [selectedFilters, setCategories]);
+//
+//     // Pobranie danych kategorii
     useEffect(() => {
         const fetchCategories = async () => {
             const categoriesData = await httpService.getCategoriesData();
-            console.log(categoriesData);
             setCategoriesData(categoriesData);
         };
         fetchCategories();
     }, []);
 
-    const sections = categoriesData.map(filtersData => (
+    // Generowanie sekcji filtrów
+    const sections = categoriesData.map((filtersData) => (
         <div
             key={`${filtersData[0][0]}-${filtersData[0][1]}`}
             aria-labelledby={`filter-label-${filtersData[0][0]}-${filtersData[0][1]}`}
         >
             <span id={`filter-label-${filtersData[0][0]}-${filtersData[0][1]}`}>
-                {' '}
                 {filtersData[0][1]}
             </span>
             {filtersData[1].map(([name, translation]) => (
-                <div className="form-check" key={name}>
+                <div className="form-check" key={`${filtersData[0][0]}-${name}`}>
                     <label htmlFor={name}>
                         {translation}
                         <input
