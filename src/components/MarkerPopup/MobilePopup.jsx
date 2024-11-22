@@ -51,7 +51,7 @@ export const MobilePopup = ({ children }) => {
                     bottom: 0,
                     margin: 0,
                     width: '100%',
-                    maxHeight: '60%',
+                    maxHeight: '90%',
                     borderRadius: '16px 16px 0 0',
                     padding: '1px 1px',
                 },

@@ -38,9 +38,8 @@ const NavigateMeButton = ({ place }) => (
         <p
             style={{
                 ...buttonStyleSmall,
-                // width: '80%',
-                // marginTop: '5px', // Set top margin
-                // marginBottom: '10px', // Set bottom margin
+                marginTop: '8px',
+                marginBottom: '8px',
                 justifyContent: 'center',
                 display: 'flex',
             }}
@@ -73,9 +72,11 @@ const LocationDetails = ({ place }) => {
                 style={{
                     display: 'grid',
                     gridTemplateColumns: '100px 1fr',
-                    columnGap: '5px',
-                    rowGap: '2px',
-                    margin: '1px 5px',
+                    columnGap: '10px',
+                    rowGap: '10px',
+                    margin: '5px 5px',
+                    marginLeft: '10px',
+                    marginRight: '10px',
                     alignItems: 'start',
                     fontSize: 12,
                 }}
@@ -136,7 +137,16 @@ export const LocationDetailsBox = ({ place }) => {
                 {isMobile && <NavigateMeButton place={place} />}
             </div>
 
-            <p onClick={toggleForm} style={{ cursor: 'pointer', textAlign: 'right', color: 'red' }}>
+            <p
+                onClick={toggleForm}
+                style={{
+                    cursor: 'pointer',
+                    textAlign: 'right',
+                    color: 'red',
+                    marginTop: '5px',
+                    marginBottom: '5px',
+                }}
+            >
                 {t('ReportIssueButton')}
             </p>
             {showForm && <ReportProblemForm placeId={place.metadata.UUID} />}
