@@ -13,7 +13,7 @@ export const Markers = () => {
     const map = useMap();
 
     useEffect(() => {
-        setAreMarkersLoaded(false); // Resetuj stan ładowania
+        setAreMarkersLoaded(false);
 
         const fetchMarkers = async () => {
             const query = Object.entries(categories)
@@ -22,7 +22,6 @@ export const Markers = () => {
 
             const marks = await httpService.getLocations(query);
 
-            // Utwórz markery i śledź ich dodanie
             const markersToAdd = marks.map(location => (
                 <MarkerPopup place={location} key={location.UUID} />
             ));
@@ -31,8 +30,7 @@ export const Markers = () => {
                 <MarkerClusterGroup
                     eventHandlers={{
                         add: () => {
-                            console.log('Cluster added to the map');
-                            setAreMarkersLoaded(true); // Markery są na mapie
+                            setAreMarkersLoaded(true);
                         },
                     }}
                 >
@@ -46,14 +44,18 @@ export const Markers = () => {
         fetchMarkers();
 
         return () => {
-            setMarkers([]); // Czyść markery przy unmount
+            setMarkers([]);
         };
     }, [categories]);
 
-    // Zmieniaj kursor na mapie w zależności od stanu
     useEffect(() => {
+        const mapContainer = map.getContainer();
         const cursorStyle = areMarkersLoaded ? 'auto' : 'progress';
-        map.getContainer().style.cursor = cursorStyle;
+        mapContainer.style.cursor = cursorStyle;
+
+        return () => {
+            mapContainer.style.cursor = 'auto';
+        };
     }, [areMarkersLoaded, map]);
 
     return markers;
