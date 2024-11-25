@@ -1,16 +1,16 @@
-import React, { useState } from 'react';
-import { MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
-import MarkerClusterGroup from 'react-leaflet-cluster';
-import PropTypes from 'prop-types';
+import React, { useState, useEffect } from 'react';
+import { MapContainer, TileLayer, ZoomControl, useMap } from 'react-leaflet';
 import { LocationControl } from './components/LocationControl';
 import { SuggestNewPointButton } from './components/SuggestNewPointButton';
 import { mapConfig } from './map.config';
 import { CustomZoomControl } from './components/ZoomControl';
 import Control from 'react-leaflet-custom-control';
 import MapAutocomplete from './components/MapAutocomplete';
+import { Markers } from './components/Markers';
 
-export const MapComponent = ({ markers }) => {
+export const MapComponent = () => {
     const [, setUserPosition] = useState(null);
+
     return (
         <MapContainer
             center={mapConfig.initialMapCoordinates}
@@ -29,14 +29,10 @@ export const MapComponent = ({ markers }) => {
                     <SuggestNewPointButton />
                 </Control>
             )}
-            <MarkerClusterGroup>{markers}</MarkerClusterGroup>
+            <Markers />
             <LocationControl setUserPosition={setUserPosition} />
             <CustomZoomControl position="topright" />
             {window.SHOW_SEARCH_BAR && <MapAutocomplete />}
         </MapContainer>
     );
-};
-
-MapComponent.propTypes = {
-    markers: PropTypes.arrayOf(PropTypes.element).isRequired,
 };

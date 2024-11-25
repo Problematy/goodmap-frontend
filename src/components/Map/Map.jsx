@@ -1,59 +1,32 @@
 import ReactDOM from 'react-dom/client';
 import React from 'react';
-
-import { httpService } from '../../services/http/httpService';
+import {createPortal} from 'react-dom';
 import { FiltersForm } from '../FiltersForm/FiltersForm';
 import { MarkerPopup } from '../MarkerPopup/MarkerPopup';
 import { MapComponent } from './MapComponent';
+import { CategoriesProvider } from '../Categories/CategoriesContext';
 
-const mapPlaceholder = ReactDOM.createRoot(document.getElementById('map'));
-const filtersPlaceholder = ReactDOM.createRoot(document.getElementById('filter-form'));
+const MapWrap = () => {
+    const filtersPlaceholder = document.getElementById('filter-form');
+    const mapPlaceholder = document.getElementById('map');
 
-function getSelectedCheckboxesOfCategory(filterType) {
-    const checkedBoxesTypes = document.querySelectorAll(`.filter.${filterType}:checked`);
-    const types = Array.from(checkedBoxesTypes)
-        .map(checkboxNode => `${filterType}=${checkboxNode.value}`)
-        .join('&');
-
-    return types;
-}
-
-export async function getNewMarkers(categories) {
-    const allCheckboxes = categories.map(([categoryString]) =>
-        getSelectedCheckboxesOfCategory(categoryString),
-    );
-    const filtersUrlQueryString = allCheckboxes.filter(n => n).join('&');
-    const locations = await httpService.getLocations(filtersUrlQueryString);
-
-    let markers = locations.map(location => {
-        const locationKey =
-            window.USE_LAZY_LOADING ?? false ? location.UUID : location.metadata.UUID;
-        return <MarkerPopup place={location} key={locationKey} />;
-    });
-    return markers;
-}
-
-export async function repaintMarkers(categories) {
-    try {
-        const newMarkers = await getNewMarkers(categories);
-        const mainMap = <MapComponent markers={newMarkers} />;
-        mapPlaceholder.render(mainMap);
-    } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error('Error repainting markers:', error);
+    if (!filtersPlaceholder || !mapPlaceholder) {
+        console.error("Nie znaleziono elementów docelowych w DOM");
+        return null;
     }
-}
 
-export const Map = async () => {
-    httpService.getCategoriesData().then(categoriesData => {
-        const parsedCategoriesData = categoriesData.map(categoryData => categoryData[0]);
-
-        repaintMarkers(parsedCategoriesData);
-        filtersPlaceholder.render(
-            <FiltersForm
-                categoriesData={categoriesData}
-                onClick={() => repaintMarkers(parsedCategoriesData)}
-            />,
-        );
-    });
+    return (
+        <CategoriesProvider>
+            {createPortal(<FiltersForm />, filtersPlaceholder)}
+            {createPortal(<MapComponent />, mapPlaceholder)}
+        </CategoriesProvider>
+    );
 };
+
+export const Map = () => {
+  const appContainer = document.createElement('div');
+  document.body.appendChild(appContainer);
+
+  const root = ReactDOM.createRoot(appContainer);
+  root.render(<MapWrap />);
+}
