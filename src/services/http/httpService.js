@@ -1,4 +1,4 @@
-import { CATEGORIES, CATEGORY, DATA, LANGUAGES, SEARCH_ADDRESS } from './endpoints';
+import { CATEGORIES, CATEGORY, DATA, LANGUAGES, LOCATION, LOCATIONS, SEARCH_ADDRESS } from './endpoints';
 import {getSelectedCheckboxesOfCategory} from '../../components/Map/Map'
 
 export const httpService = {
@@ -20,7 +20,18 @@ export const httpService = {
     },
 
     getLocations: async filtersUrlParams => {
-        const response = await fetch(`${DATA}?${filtersUrlParams}`, {
+      const ENDPOINT = window.USE_LAZY_LOADING ? LOCATIONS : DATA;
+      const response = await fetch(`${ENDPOINT}?${filtersUrlParams}`, {
+          method: 'GET',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+      });
+      return response.json();
+    },
+
+    getLocation: async locationId => {
+      const response = await fetch(`${LOCATION}/${locationId}`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',
@@ -54,4 +65,5 @@ export const httpService = {
 
         return fetch(`${SEARCH_ADDRESS}?${queryString}`).then(response => response.json());
     },
+
 };
