@@ -101,7 +101,7 @@ export const ReportProblemForm = ({ placeId }) => {
                     />
                 </Label>
             )}
-            {problemType !== `` && <SubmitButton type="submit" value={t("submitProblem")} />}
+            {problemType !== `` && <SubmitButton type="submit" value={t('submitProblem')} />}
         </Form>
     );
 };
