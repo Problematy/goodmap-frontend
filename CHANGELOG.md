@@ -2,7 +2,7 @@
 
 # 0.3.5
 - Fix: change uuid to lowercase as in requirements
-
+- Fix: other option works on other languages than English
 
 # 0.3.4
 - Fix: Fit details in Dialog box on mobile
