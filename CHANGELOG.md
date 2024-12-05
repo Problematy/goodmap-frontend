@@ -1,6 +1,8 @@
 - Feature: Suggesting new points button
 
 # 0.3.5
+- Added UA translations
+
 - Fix: change uuid to lowercase as in requirements
 - Fix: other option works on other languages than English
 
