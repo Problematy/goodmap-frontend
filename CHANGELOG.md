@@ -1,5 +1,9 @@
 - Feature: Suggesting new points button
 
+# 0.3.5
+- Fix: change uuid to lowercase as in requirements
+
+
 # 0.3.4
 - Fix: Fit details in Dialog box on mobile
 
