@@ -1,132 +1,80 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import PropTypes from 'prop-types';
 import { Marker, Popup } from 'react-leaflet';
-import ExploreIcon from '@mui/icons-material/Explore';
 import { isMobile } from 'react-device-detect';
-import { getContentAsString, mapCustomTypeToReactComponent } from './mapCustomTypeToReactComponent';
-import { buttonStyleSmall } from '../../styles/buttonStyle';
-import { ReportProblemForm } from './ReportProblemForm';
-import { useTranslation } from 'react-i18next';
+import { httpService } from '../../services/http/httpService';
+import styled from 'styled-components';
 
-const isCustomValue = value => typeof value === 'object' && !(value instanceof Array);
+import { LocationDetailsBox } from './LocationDetails';
+import { MobilePopup } from './MobilePopup';
 
-const PopupValue = ({ valueToDisplay }) => {
-    const value = isCustomValue(valueToDisplay)
-        ? mapCustomTypeToReactComponent(valueToDisplay)
-        : valueToDisplay;
+const StyledPopup = styled(Popup)`
+    min-width: 300px;
+`;
+
+// DesktopPopup is a workaround for not existing lazy loading Popup as
+// react-leaflet Popup doesn't support .open() function
+const DesktopPopup = ({ children }) => {
+    const popupRef = useRef(null);
+
+    useEffect(() => {
+        if (popupRef.current) {
+            const marker = popupRef.current._source;
+            if (marker) {
+                marker.openPopup();
+            }
+        }
+    }, []);
+
+    return <StyledPopup ref={popupRef}>{children}</StyledPopup>;
+};
+
+const LocationDetailsBoxWrapper = ({ theplace }) => {
+    const [place, setPlace] = useState(null);
+    const ChosenPopup = isMobile ? MobilePopup : DesktopPopup;
+
+    if (!window.USE_LAZY_LOADING) {
+        return (
+            <ChosenPopup>
+                <LocationDetailsBox place={theplace} />
+            </ChosenPopup>
+        );
+    }
+
+    useEffect(() => {
+        const fetchPlace = async () => {
+            const fetchedPlace = await httpService.getLocation(theplace.uuid);
+            setPlace(fetchedPlace);
+        };
+        fetchPlace();
+    }, [theplace.uuid]);
+
     return (
-        <p className="m-0">
-            <b>{getContentAsString(value)}</b>
-        </p>
+        <ChosenPopup>
+            {place ? <LocationDetailsBox place={place} /> : <p>Loading...</p>}
+        </ChosenPopup>
     );
 };
 
-PopupValue.propTypes = {
-    valueToDisplay: PropTypes.oneOfType([
-        PropTypes.string,
-        PropTypes.number,
-        PropTypes.array,
-        PropTypes.element,
-    ]).isRequired,
-};
-
-const NavigateMeButton = ({ place }) => (
-    <a
-        href={`geo:${place.position[0]},${place.position[1]}?q=${place.position[0]},${place.position[1]}`}
-        style={{ textDecoration: 'none' }}
-    >
-        <p
-            style={{
-                ...buttonStyleSmall,
-                justifyContent: 'center',
-                display: 'flex',
-                alignItems: 'center',
+export const MarkerPopup = ({ place }) => {
+    const [isClicked, setIsClicked] = useState(false);
+    const handleMarkerClick = e => {
+        setIsClicked(true);
+    };
+    return (
+        <Marker
+            position={place.position}
+            eventHandlers={{
+                click: handleMarkerClick,
             }}
         >
-            <ExploreIcon style={{ color: 'white', marginRight: '10px' }} />
-            <span>Navigate me</span>
-        </p>
-    </a>
-);
-
-export const MarkerContent = ({ place }) => {
-    const { t } = useTranslation();
-    const categoriesWithSubcategories = place.data.filter(([category]) => !(category === 'CTA'));
-    const CTACategories = place.data.filter(([category]) => category === 'CTA');
-    const [showForm, setShowForm] = useState(false);
-    const toggleForm = () => setShowForm(!showForm);
-    return (
-        <>
-            <div className="place-data m-0">
-                <div style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>
-                    <p className="point-title m-0" style={{ fontSize: 14, fontWeight: 'bold' }}>
-                        <b>{place.title}</b>
-                    </p>
-                </div>
-                <div style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>
-                    <p className="point-subtitle mt-0 mb-2" style={{ fontSize: 10 }}>
-                        {place.subtitle}
-                    </p>
-                </div>
-
-                <div
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        marginRight: 25,
-                        marginLeft: 25,
-                        marginTop: 10,
-                    }}
-                >
-                    <div>
-                        {categoriesWithSubcategories.map(([category]) => (
-                            <p className="m-0" key={category}>
-                                {`${category}: `}
-                            </p>
-                        ))}
-                    </div>
-                    <div style={{ marginLeft: 10 }}>
-                        {categoriesWithSubcategories.map(([_category, value]) => (
-                            <PopupValue key={value} valueToDisplay={value} />
-                        ))}
-                    </div>
-                </div>
-                <div
-                    style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        marginRight: 25,
-                        marginLeft: 25,
-                        marginTop: 10,
-                    }}
-                >
-                    {CTACategories.map(([_category, value]) => (
-                        <PopupValue key={value} valueToDisplay={value} />
-                    ))}
-                </div>
-            </div>
-            {isMobile && <NavigateMeButton place={place} />}
-
-            <p onClick={toggleForm} style={{ cursor: 'pointer', textAlign: 'right', color: 'red' }}>
-                {t('ReportIssueButton')}
-            </p>
-            {showForm && <ReportProblemForm placeId={place.metadata.UUID} />}
-        </>
+            {isClicked && <LocationDetailsBoxWrapper theplace={place} />}
+        </Marker>
     );
 };
-
-export const MarkerPopup = ({ place }) => (
-    <Marker position={place.position} key={place.metadata.UUID}>
-        <Popup>
-            <MarkerContent place={place} />
-        </Popup>
-    </Marker>
-);
 
 MarkerPopup.propTypes = {
     place: PropTypes.shape({
-        title: PropTypes.string.isRequired,
-        subtitle: PropTypes.string.isRequired,
-        data: PropTypes.shape({}).isRequired,
+        position: PropTypes.arrayOf(PropTypes.number).isRequired,
     }).isRequired,
 };

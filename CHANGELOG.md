@@ -1,5 +1,25 @@
 - Feature: Suggesting new points button
 
+# 0.3.7
+- Added translation for navigate me button
+
+# 0.3.6
+- Added UA translations
+
+# 0.3.5
+- Fix: change uuid to lowercase as in requirements
+- Fix: other option works on other languages than English
+
+# 0.3.4
+- Fix: Fit details in Dialog box on mobile
+
+# 0.3.3
+- Fix: lazy loading
+- Feature: infobox for mobiles
+
+# 0.3.2
+- fix: marker popup one-line value
+
 # 0.3.1
 - Feature: displaying CTA
 - Fix: Map centering on user location all the time

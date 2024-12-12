@@ -2,11 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import PropTypes from 'prop-types';
+import Control from 'react-leaflet-custom-control';
 import { LocationControl } from './components/LocationControl';
 import { SuggestNewPointButton } from './components/SuggestNewPointButton';
 import { mapConfig } from './map.config';
 import { CustomZoomControl } from './components/ZoomControl';
-import Control from 'react-leaflet-custom-control';
 import MapAutocomplete from './components/MapAutocomplete';
 import NavigateMeButton from './components/NavigateMeButton';
 import AccessibilityTable from './components/AccessibilityTable';
@@ -28,7 +28,7 @@ export const MapComponent = ({ markers, categories, allCheckboxes }) => {
             />
         );
     }
-
+    
     return (
         <MapContainer
             center={mapConfig.initialMapCoordinates}
@@ -42,7 +42,7 @@ export const MapComponent = ({ markers, categories, allCheckboxes }) => {
                 attribution='&amp;copy <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
                 maxZoom={mapConfig.maxMapZoom}
             />
-            {process.env.NODE_ENV === 'development' && (
+            {window.SHOW_SUGGEST_NEW_POINT_BUTTON && (
                 <Control position="bottomright" prepend>
                     <SuggestNewPointButton />
                 </Control>
@@ -50,8 +50,8 @@ export const MapComponent = ({ markers, categories, allCheckboxes }) => {
             <MarkerClusterGroup>{markers}</MarkerClusterGroup>
             <LocationControl setUserPosition={setUserPosition} />
             <CustomZoomControl position="topright" />
-            <MapAutocomplete />
             {userPosition && <NavigateMeButton onClick={handleNavigateMeButtonClick} />}
+            {window.SHOW_SEARCH_BAR && <MapAutocomplete />}
         </MapContainer>
     );
 };

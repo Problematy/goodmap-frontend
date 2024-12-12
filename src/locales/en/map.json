@@ -8,5 +8,8 @@
     "reportNotHere": "this point is not here",
     "reportOverload": "it's overloaded",
     "reportBroken": "it's broken",
-    "reportOther": "other"
+    "reportOther": "other",
+    "submitProblem": "Submit",
+    "describeOtherProblem": "Please describe",
+    "navigateMeButton": "Navigate me"
 }
