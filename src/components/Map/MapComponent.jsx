@@ -61,7 +61,7 @@ export const MapComponent = ({ markers, categories, allCheckboxes }) => {
                 <MarkerClusterGroup>{markers}</MarkerClusterGroup>
                 <LocationControl setUserPosition={setUserPosition} />
                 <CustomZoomControl position="topright" />
-                <NavigateMeButton onClick={handleNavigateMeButtonClick} />
+                {window.ACCESSIBILITY_TABLE && <NavigateMeButton onClick={handleNavigateMeButtonClick} />}
                 {window.SHOW_SEARCH_BAR && <MapAutocomplete />}
             </MapContainer>
         </>
