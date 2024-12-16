@@ -8,7 +8,7 @@ import { SuggestNewPointButton } from './components/SuggestNewPointButton';
 import { mapConfig } from './map.config';
 import { CustomZoomControl } from './components/ZoomControl';
 import MapAutocomplete from './components/MapAutocomplete';
-import NavigateMeButton from './components/NavigateMeButton';
+import ListViewButton from './components/ListView';
 import AccessibilityTable from './components/AccessibilityTable';
 import { toast } from '../../utils/toast';
 import { useTranslation } from 'react-i18next';
@@ -18,21 +18,21 @@ export const MapComponent = ({ markers, categories, allCheckboxes }) => {
     const { t } = useTranslation();
 
     const [userPosition, setUserPosition] = useState(null);
-    const [isAccessibilityTableOpen, setIsAccessibilityTableOpen] = useState(false);
+    const [isListViewOpen, setIsListViewOpen] = useState(false);
 
-    const handleNavigateMeButtonClick = () => {
+    const handleListViewButtonClick = () => {
         if (!userPosition) {
-            toast.error(t('navigateMeButtonUserLocation'));
+            toast.error(t('listViewButtonUserLocation'));
             return;
         }
-        setIsAccessibilityTableOpen(!isAccessibilityTableOpen);
+        setIsListViewOpen(!isListViewOpen);
     };
 
-    if (isAccessibilityTableOpen) {
+    if (isListViewOpen) {
         return (
             <AccessibilityTable
                 userPosition={userPosition}
-                setIsAccessibilityTableOpen={setIsAccessibilityTableOpen}
+                setIsAccessibilityTableOpen={setIsListViewOpen}
                 allCheckboxes={allCheckboxes}
             />
         );
@@ -61,7 +61,7 @@ export const MapComponent = ({ markers, categories, allCheckboxes }) => {
                 <MarkerClusterGroup>{markers}</MarkerClusterGroup>
                 <LocationControl setUserPosition={setUserPosition} />
                 <CustomZoomControl position="topright" />
-                {window.ACCESSIBILITY_TABLE && <NavigateMeButton onClick={handleNavigateMeButtonClick} />}
+                {window.ACCESSIBILITY_TABLE && <ListViewButton onClick={handleListViewButtonClick} />}
                 {window.SHOW_SEARCH_BAR && <MapAutocomplete />}
             </MapContainer>
         </>

@@ -3,7 +3,7 @@ import { useTranslation } from 'react-i18next';
 import { Button } from '@mui/material';
 import styled from 'styled-components';
 
-const NavigateMeButton = ({ onClick }) => {
+const ListView = ({ onClick }) => {
     const { t } = useTranslation();
 
     const handleOnClick = e => {
@@ -14,14 +14,14 @@ const NavigateMeButton = ({ onClick }) => {
     return (
         <Wrapper>
             <Button
-                id="navigateMeButton"
+                id="listViewButton"
                 onClick={handleOnClick}
                 style={{
                     backgroundColor: window.SECONDARY_COLOR,
                 }}
                 variant="contained"
             >
-                {t('navigateMe')}
+                {t('listView')}
             </Button>
         </Wrapper>
     );
@@ -38,4 +38,4 @@ const Wrapper = styled.div`
     }
 `;
 
-export default NavigateMeButton;
+export default ListView;

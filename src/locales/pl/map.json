@@ -11,6 +11,6 @@
     "reportOther": "inny",
     "submitProblem": "Wyślij",
     "describeOtherProblem": "Opisz problem",
-    "navigateMeButton": "Prowadź mnie",
-    "navigateMeButtonUserLocation": "Aby włączyć tabelę 'Nawiguj mnie', proszę zezwolić na dostęp do swojej lokalizacji"
+    "listView": "Widok listy",
+    "listViewButtonUserLocation": "Aby włączyć widok listy, proszę zezwolić na dostęp do swojej lokalizacji"
 }
