@@ -9,5 +9,6 @@
     "reportOther": "інше",
     "submitProblem": "Відправити",
     "describeOtherProblem": "Опишіть проблему",
-    "navigateMeButton": "Прокласти маршрут"
+    "navigateMeButton": "Прокласти маршрут",
+    "navigateMeButtonUserLocation": "Щоб увімкнути таблицю 'Навігатор', будь ласка, дозвольте доступ до вашого місцезнаходження"
 }

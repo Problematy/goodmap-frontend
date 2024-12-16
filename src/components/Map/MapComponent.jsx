@@ -10,12 +10,21 @@ import { CustomZoomControl } from './components/ZoomControl';
 import MapAutocomplete from './components/MapAutocomplete';
 import NavigateMeButton from './components/NavigateMeButton';
 import AccessibilityTable from './components/AccessibilityTable';
+import { toast } from '../../utils/toast';
+import { useTranslation } from 'react-i18next';
+import { AppToaster } from '../common/AppToaster';
 
 export const MapComponent = ({ markers, categories, allCheckboxes }) => {
+    const { t } = useTranslation();
+
     const [userPosition, setUserPosition] = useState(null);
     const [isAccessibilityTableOpen, setIsAccessibilityTableOpen] = useState(false);
 
     const handleNavigateMeButtonClick = () => {
+        if (!userPosition) {
+            toast.error(t('navigateMeButtonUserLocation'));
+            return;
+        }
         setIsAccessibilityTableOpen(!isAccessibilityTableOpen);
     };
 
@@ -30,29 +39,32 @@ export const MapComponent = ({ markers, categories, allCheckboxes }) => {
     }
 
     return (
-        <MapContainer
-            center={mapConfig.initialMapCoordinates}
-            zoom={mapConfig.initialMapZoom}
-            scrollWheelZoom
-            style={{ height: '100%' }}
-            zoomControl={false}
-        >
-            <TileLayer
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                attribution='&amp;copy <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
-                maxZoom={mapConfig.maxMapZoom}
-            />
-            {window.SHOW_SUGGEST_NEW_POINT_BUTTON && (
-                <Control position="bottomright" prepend>
-                    <SuggestNewPointButton />
-                </Control>
-            )}
-            <MarkerClusterGroup>{markers}</MarkerClusterGroup>
-            <LocationControl setUserPosition={setUserPosition} />
-            <CustomZoomControl position="topright" />
-            {userPosition && <NavigateMeButton onClick={handleNavigateMeButtonClick} />}
-            {window.SHOW_SEARCH_BAR && <MapAutocomplete />}
-        </MapContainer>
+        <>
+            <AppToaster />
+            <MapContainer
+                center={mapConfig.initialMapCoordinates}
+                zoom={mapConfig.initialMapZoom}
+                scrollWheelZoom
+                style={{ height: '100%' }}
+                zoomControl={false}
+            >
+                <TileLayer
+                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                    attribution='&amp;copy <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
+                    maxZoom={mapConfig.maxMapZoom}
+                />
+                {window.SHOW_SUGGEST_NEW_POINT_BUTTON && (
+                    <Control position="bottomright" prepend>
+                        <SuggestNewPointButton />
+                    </Control>
+                )}
+                <MarkerClusterGroup>{markers}</MarkerClusterGroup>
+                <LocationControl setUserPosition={setUserPosition} />
+                <CustomZoomControl position="topright" />
+                <NavigateMeButton onClick={handleNavigateMeButtonClick} />
+                {window.SHOW_SEARCH_BAR && <MapAutocomplete />}
+            </MapContainer>
+        </>
     );
 };
 

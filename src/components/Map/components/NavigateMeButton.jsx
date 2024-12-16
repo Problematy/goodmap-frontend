@@ -5,11 +5,17 @@ import styled from 'styled-components';
 
 const NavigateMeButton = ({ onClick }) => {
     const { t } = useTranslation();
+
+    const handleOnClick = e => {
+        e.stopPropagation();
+        onClick();
+    };
+
     return (
         <Wrapper>
             <Button
                 id="navigateMeButton"
-                onClick={onClick}
+                onClick={handleOnClick}
                 style={{
                     backgroundColor: window.SECONDARY_COLOR,
                 }}

@@ -11,5 +11,6 @@
     "reportOther": "other",
     "submitProblem": "Submit",
     "describeOtherProblem": "Please describe",
-    "navigateMeButton": "Navigate me"
+    "navigateMeButton": "Navigate me",
+    "navigateMeButtonUserLocation": "To enable navigate me table, please allow access to your location"
 }
