@@ -11,6 +11,7 @@ import Arrow from '@mui/icons-material/ArrowLeftRounded';
 import { IconButton } from '@mui/material';
 import PropTypes from 'prop-types';
 import { httpService } from '../../../services/http/httpService';
+import { mapCustomTypeToReactComponent } from '../../MarkerPopup/mapCustomTypeToReactComponent';
 
 const AccessibilityTable = ({ userPosition, setIsAccessibilityTableOpen, allCheckboxes }) => {
     const { t } = useTranslation();
@@ -61,7 +62,11 @@ const AccessibilityTable = ({ userPosition, setIsAccessibilityTableOpen, allChec
                 row.push(it.title);
                 for (let i = 1; i < orderedKeysArray.length; i += 1) {
                     const key = orderedKeysArray[i];
-                    const value = getArr(place, key)[1];
+                    const values = getArr(place, key);
+                    if (values === undefined) {
+                        continue;
+                    }
+                    const value = values[1];
                     if (Array.isArray(value)) {
                         const str = value.join(', ');
                         row.push(str);
@@ -107,8 +112,8 @@ const AccessibilityTable = ({ userPosition, setIsAccessibilityTableOpen, allChec
                                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                             >
                                 {row.map((cell, index) => (
-                                    <TableCell key={cell} align="center">
-                                        {cell}
+                                    <TableCell key={`${cell.toString()}-${index}`} align="center">
+                                        {cell.type ? mapCustomTypeToReactComponent(cell) : cell}
                                     </TableCell>
                                 ))}
                             </TableRow>

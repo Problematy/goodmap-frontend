@@ -28,7 +28,7 @@ export const MapComponent = ({ markers, categories, allCheckboxes }) => {
             />
         );
     }
-    
+
     return (
         <MapContainer
             center={mapConfig.initialMapCoordinates}
