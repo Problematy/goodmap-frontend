@@ -26,7 +26,6 @@ LocationDetailsValue.propTypes = {
         PropTypes.string,
         PropTypes.number,
         PropTypes.array,
-        PropTypes.element,
         PropTypes.shape({
             type: PropTypes.string.isRequired,
             value: PropTypes.string.isRequired,
@@ -61,7 +60,7 @@ const LocationDetails = ({ place }) => {
     const categoriesWithSubcategories = place.data.filter(([category]) => !(category === 'CTA'));
     // TODO CTA should be handled like website is
     const CTACategories = place.data.filter(([category]) => category === 'CTA');
-
+    console.log(CTACategories);
     return (
         <div className="place-data m-0">
             <div style={{ width: '100%', justifyContent: 'center', display: 'flex' }}>
