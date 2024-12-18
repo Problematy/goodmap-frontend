@@ -1,9 +1,13 @@
 import React from 'react';
 import { Marker } from '@adamscybot/react-leaflet-component-marker';
 import styled from 'styled-components';
+import { useMap } from 'react-leaflet';
 
 export const ClusterMarker = ({ cluster }) => {
-    const handleClusterClick = () => {};
+    const map = useMap();
+    const handleClusterClick = () => {
+        map.flyTo(cluster.position, map.getZoom() + 5);
+    };
 
     return (
         <Marker
