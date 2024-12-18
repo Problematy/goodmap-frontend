@@ -8,9 +8,12 @@ import { mapConfig } from './map.config';
 import { CustomZoomControl } from './components/ZoomControl';
 import Control from 'react-leaflet-custom-control';
 import MapAutocomplete from './components/MapAutocomplete';
+import useSaveMapConfiguration from './components/SaveMapConfiguration';
+import SaveMapConfiguration from './components/SaveMapConfiguration';
 
 export const MapComponent = ({ markers }) => {
     const [, setUserPosition] = useState(null);
+
     return (
         <MapContainer
             center={mapConfig.initialMapCoordinates}
@@ -19,6 +22,7 @@ export const MapComponent = ({ markers }) => {
             style={{ height: '100%' }}
             zoomControl={false}
         >
+            <SaveMapConfiguration />
             <TileLayer
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 attribution='&amp;copy <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
@@ -29,7 +33,10 @@ export const MapComponent = ({ markers }) => {
                     <SuggestNewPointButton />
                 </Control>
             )}
-            <MarkerClusterGroup>{markers}</MarkerClusterGroup>
+            {!window.USE_SERVER_SIDE_CLUSTERING && (
+                <MarkerClusterGroup>{markers}</MarkerClusterGroup>
+            )}
+            {window.USE_SERVER_SIDE_CLUSTERING && markers}
             <LocationControl setUserPosition={setUserPosition} />
             <CustomZoomControl position="topright" />
             {window.SHOW_SEARCH_BAR && <MapAutocomplete />}

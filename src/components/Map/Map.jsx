@@ -1,10 +1,13 @@
 import ReactDOM from 'react-dom/client';
-import React from 'react';
+import React, { useEffect } from 'react';
 
 import { httpService } from '../../services/http/httpService';
 import { FiltersForm } from '../FiltersForm/FiltersForm';
 import { MarkerPopup } from '../MarkerPopup/MarkerPopup';
 import { MapComponent } from './MapComponent';
+import { useMapStore } from './store/map.store';
+import { ClusterMarker } from '../MarkerPopup/ClusterMarker';
+import useDebounce from '../../utils/hooks/useDebounce';
 
 const mapPlaceholder = ReactDOM.createRoot(document.getElementById('map'));
 const filtersPlaceholder = ReactDOM.createRoot(document.getElementById('filter-form'));
@@ -22,8 +25,26 @@ export async function getNewMarkers(categories) {
     const allCheckboxes = categories.map(([categoryString]) =>
         getSelectedCheckboxesOfCategory(categoryString),
     );
-    const filtersUrlQueryString = allCheckboxes.filter(n => n).join('&');
+    let filtersUrlQueryString = allCheckboxes.filter(n => n).join('&');
+    if (window.USE_SERVER_SIDE_CLUSTERING) {
+        const mapConfigurationData = useMapStore.getState().mapConfiguration;
+        if (mapConfigurationData) {
+            const mapConfigQueryString = Object.entries(mapConfigurationData)
+                .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+                .join('&');
+            filtersUrlQueryString += `&${mapConfigQueryString}`;
+        }
+    }
     const locations = await httpService.getLocations(filtersUrlQueryString);
+
+    if (window.USE_SERVER_SIDE_CLUSTERING) {
+        return locations.map(location => {
+            if (location.type === 'cluster') {
+                return <ClusterMarker cluster={location} key={location.cluster_uuid} />;
+            }
+            return <MarkerPopup place={location} key={location.uuid} />;
+        });
+    }
 
     let markers = locations.map(location => {
         const locationKey =
