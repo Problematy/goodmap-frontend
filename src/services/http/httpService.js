@@ -1,4 +1,4 @@
-import { CATEGORIES, CATEGORY, DATA, LANGUAGES, LOCATION, LOCATIONS, SEARCH_ADDRESS } from './endpoints';
+import { CATEGORIES, CATEGORY, DATA, LANGUAGES, LOCATION, LOCATIONS, SEARCH_ADDRESS, LOCATIONS_CLUSTERED } from './endpoints';
 
 export const httpService = {
     getCategories: () => fetch(CATEGORIES).then(response => response.json()),
@@ -19,7 +19,14 @@ export const httpService = {
     },
 
     getLocations: async filtersUrlParams => {
-      const ENDPOINT = window.USE_LAZY_LOADING ? LOCATIONS : DATA;
+      let ENDPOINT = DATA;
+      if (window.USE_SERVER_SIDE_CLUSTERING) {
+          ENDPOINT = LOCATIONS_CLUSTERED;
+      } else if (window.USE_LAZY_LOADING) {
+          ENDPOINT = LOCATIONS;
+      }
+
+
       const response = await fetch(`${ENDPOINT}?${filtersUrlParams}`, {
           method: 'GET',
           headers: {
