@@ -85,8 +85,8 @@ const AccessibilityTable = ({ userPosition, setIsAccessibilityTableOpen, allChec
     return (
         <>
             <div>
-                <IconButton>
-                    <Arrow onClick={() => setIsAccessibilityTableOpen(false)} />
+                <IconButton onClick={() => setIsAccessibilityTableOpen(false)}>
+                    <Arrow />
                 </IconButton>
             </div>
             <TableContainer component={Paper}>
@@ -95,6 +95,7 @@ const AccessibilityTable = ({ userPosition, setIsAccessibilityTableOpen, allChec
                         <TableRow>
                             {headers.map(header => (
                                 <TableCell
+                                    key={header}
                                     align="center"
                                     style={{
                                         fontWeight: 'bold',

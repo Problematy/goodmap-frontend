@@ -31,19 +31,21 @@ const examplePlaces = [
 ];
 
 describe('should accessibility table work correctly', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
         jest.spyOn(global, 'fetch').mockResolvedValue({
             json: jest.fn().mockResolvedValue(examplePlaces),
         });
         const lat = 51.10655;
         const lng = 17.0555;
-        render(
-            <AccessibilityTable
-                allCheckboxes={['', '']}
-                userPosition={{ latlng: { lat, lng } }}
-                setIsAccessibilityTableOpen={() => {}}
-            />,
-        );
+        await act(async () => {
+            render(
+                <AccessibilityTable
+                    allCheckboxes={['', '']}
+                    userPosition={{ latlng: { lat, lng } }}
+                    setIsAccessibilityTableOpen={() => {}}
+                />,
+            );
+        });
     });
 
     it('should properly render the table', async () => {
