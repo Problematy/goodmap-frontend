@@ -1,6 +1,5 @@
 {
     "search": "Szukaj",
-    "navigateMe": "Nawiguj mnie",
     "title": "Nazwa",
     "centerButtonAriaLabel": "Ikona celu lokalizacji, używana do określenia lokalizacji na mapie.",
     "ReportIssueButton": "zgłoś problem",
@@ -12,5 +11,6 @@
     "submitProblem": "Wyślij",
     "describeOtherProblem": "Opisz problem",
     "listView": "Widok listy",
-    "listViewButtonUserLocation": "Aby włączyć widok listy, proszę zezwolić na dostęp do swojej lokalizacji"
+    "listViewButtonUserLocation": "Aby włączyć widok listy, proszę zezwolić na dostęp do swojej lokalizacji",
+    "navigateMeButton": "Prowadź mnie"
 }
