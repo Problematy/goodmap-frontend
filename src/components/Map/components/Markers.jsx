@@ -15,12 +15,7 @@ export const Markers = () => {
         setAreMarkersLoaded(false);
 
         const fetchMarkers = async () => {
-            const query = Object.entries(categories)
-                .map(([key, values]) => values.map(value => `${key}=${value}`).join('&'))
-                .join('&');
-
-            const marks = await httpService.getLocations(query);
-
+            const marks = await httpService.getLocations(categories);
             const markersToAdd = marks.map(location => (
                 <MarkerPopup place={location} key={location.UUID} />
             ));
