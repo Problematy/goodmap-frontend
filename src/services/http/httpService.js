@@ -39,9 +39,12 @@ export const httpService = {
         return response.json();
     },
 
-    getLocationsWithLatLon: async (lat, lon, allCheckboxes) => {
-        const filtersUrlParams = allCheckboxes.filter(n => n).join('&');
-        const response = await fetch(`${DATA}?${filtersUrlParams}&lat=${lat}&lon=${lon}&limit=10`, {
+    getLocationsWithLatLon: async (lat, lon, categories) => {
+        const query = Object.entries(categories)
+                .map(([key, values]) => values.map(value => `${key}=${value}`).join('&'))
+                .join('&');
+        console.log('getLocationsWithLatLon', lat, lon, query);
+        const response = await fetch(`${DATA}?${query}&lat=${lat}&lon=${lon}&limit=10`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

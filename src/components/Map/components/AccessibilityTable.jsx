@@ -12,9 +12,13 @@ import { IconButton } from '@mui/material';
 import PropTypes from 'prop-types';
 import { httpService } from '../../../services/http/httpService';
 import { mapCustomTypeToReactComponent } from '../../MarkerPopup/mapCustomTypeToReactComponent';
+import { useCategories } from '../../Categories/CategoriesContext';
 
-const AccessibilityTable = ({ userPosition, setIsAccessibilityTableOpen, allCheckboxes }) => {
+const AccessibilityTable = ({ userPosition, setIsAccessibilityTableOpen }) => {
+    const { categories } = useCategories();
     const { t } = useTranslation();
+
+
 
     const [data, setData] = useState(null);
     const [headers, setHeaders] = useState([]);
@@ -22,11 +26,11 @@ const AccessibilityTable = ({ userPosition, setIsAccessibilityTableOpen, allChec
 
     useEffect(() => {
         httpService
-            .getLocationsWithLatLon(userPosition.lat, userPosition.lng, allCheckboxes)
+            .getLocationsWithLatLon(userPosition.lat, userPosition.lng, categories)
             .then(places => {
                 setData(places);
             });
-    }, [allCheckboxes, userPosition]);
+    }, [categories, userPosition]);
 
     useEffect(() => {
         try {
@@ -131,8 +135,7 @@ AccessibilityTable.propTypes = {
         lat: PropTypes.number,
         lng: PropTypes.number,
     }).isRequired,
-    setIsAccessibilityTableOpen: PropTypes.func.isRequired,
-    allCheckboxes: PropTypes.arrayOf(PropTypes.string).isRequired,
+    setIsAccessibilityTableOpen: PropTypes.func.isRequired
 };
 
 export default AccessibilityTable;
