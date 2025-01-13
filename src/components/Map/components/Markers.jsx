@@ -5,7 +5,6 @@ import { httpService } from '../../../services/http/httpService';
 import { MarkerPopup } from '../../MarkerPopup/MarkerPopup';
 import { useCategories } from '../../Categories/CategoriesContext';
 
-
 export const Markers = () => {
     const { categories } = useCategories();
     const [markers, setMarkers] = useState([]);
@@ -34,8 +33,6 @@ export const Markers = () => {
 
             setMarkers(markerCluster);
         };
-
-
 
         fetchMarkers();
 

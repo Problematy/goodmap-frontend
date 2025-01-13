@@ -9,11 +9,11 @@ export const FiltersForm = () => {
     const [categoriesData, setCategoriesData] = useState([]);
 
     // Funkcja obsługująca zmianę checkboxa
-    const handleCheckboxChange = (event) => {
+    const handleCheckboxChange = event => {
         const { value, checked } = event.target;
         const category = event.target.classList[2];
 
-        setCategories((prevSelectedFilters) => {
+        setCategories(prevSelectedFilters => {
             const newSelectedFilters = { ...prevSelectedFilters };
 
             if (checked) {
@@ -24,7 +24,7 @@ export const FiltersForm = () => {
                 }
             } else {
                 newSelectedFilters[category] = newSelectedFilters[category].filter(
-                    (filter) => filter !== value
+                    filter => filter !== value,
                 );
             }
 
@@ -32,12 +32,12 @@ export const FiltersForm = () => {
         });
     };
 
-//     // Synchronizacja selectedFilters z CategoriesProvider
-//     useEffect(() => {
-//         setCategories(selectedFilters);
-//     }, [selectedFilters, setCategories]);
-//
-//     // Pobranie danych kategorii
+    //     // Synchronizacja selectedFilters z CategoriesProvider
+    //     useEffect(() => {
+    //         setCategories(selectedFilters);
+    //     }, [selectedFilters, setCategories]);
+    //
+    //     // Pobranie danych kategorii
     useEffect(() => {
         const fetchCategories = async () => {
             const categoriesData = await httpService.getCategoriesData();
@@ -47,7 +47,7 @@ export const FiltersForm = () => {
     }, []);
 
     // Generowanie sekcji filtrów
-    const sections = categoriesData.map((filtersData) => (
+    const sections = categoriesData.map(filtersData => (
         <div
             key={`${filtersData[0][0]}-${filtersData[0][1]}`}
             aria-labelledby={`filter-label-${filtersData[0][0]}-${filtersData[0][1]}`}

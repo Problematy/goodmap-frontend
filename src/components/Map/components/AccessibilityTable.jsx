@@ -18,8 +18,6 @@ const AccessibilityTable = ({ userPosition, setIsAccessibilityTableOpen }) => {
     const { categories } = useCategories();
     const { t } = useTranslation();
 
-
-
     const [data, setData] = useState(null);
     const [headers, setHeaders] = useState([]);
     const [rows, setRows] = useState([]);
@@ -135,7 +133,7 @@ AccessibilityTable.propTypes = {
         lat: PropTypes.number,
         lng: PropTypes.number,
     }).isRequired,
-    setIsAccessibilityTableOpen: PropTypes.func.isRequired
+    setIsAccessibilityTableOpen: PropTypes.func.isRequired,
 };
 
 export default AccessibilityTable;
