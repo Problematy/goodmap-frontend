@@ -46,30 +46,28 @@ describe('should accessibility table work correctly', () => {
                         userPosition={{ latlng: { lat, lng } }}
                         setIsAccessibilityTableOpen={() => {}}
                     />
-                </CategoriesProvider>
+                </CategoriesProvider>,
             );
         });
     });
 
-    it('should properly render the table', () => {
-        return waitFor(() => {
-            expect(screen.getByText('Grunwaldzki')).toBeInTheDocument();
-            expect(screen.getByText('Zwierzyniecka')).toBeInTheDocument();
-        });
-    });
+    it('should properly render the table', () =>
+        waitFor(() => {
+        expect(screen.getByText('Grunwaldzki')).toBeInTheDocument();
+        expect(screen.getByText('Zwierzyniecka')).toBeInTheDocument();
+    }));
 
-    it('should render "Zwierzyniecka" before "Grunwaldzki"', () => {
-        return waitFor(() => {
-            const zwierzynieckaRow = screen.getByText('Zwierzyniecka');
-            const grunwaldzkiRow = screen.getByText('Grunwaldzki');
-            expect(zwierzynieckaRow).toBeInTheDocument();
-            expect(grunwaldzkiRow).toBeInTheDocument();
+    it('should render "Zwierzyniecka" before "Grunwaldzki"', () =>
+        waitFor(() => {
+        const zwierzynieckaRow = screen.getByText('Zwierzyniecka');
+        const grunwaldzkiRow = screen.getByText('Grunwaldzki');
+        expect(zwierzynieckaRow).toBeInTheDocument();
+        expect(grunwaldzkiRow).toBeInTheDocument();
 
-            expect(zwierzynieckaRow.compareDocumentPosition(grunwaldzkiRow)).toBe(
-                Node.DOCUMENT_POSITION_PRECEDING
-            );
-        });
-    });
+        expect(zwierzynieckaRow.compareDocumentPosition(grunwaldzkiRow)).toBe(
+            Node.DOCUMENT_POSITION_PRECEDING,
+        );
+    }));
 
     afterEach(() => {
         jest.restoreAllMocks();
