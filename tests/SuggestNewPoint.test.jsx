@@ -9,7 +9,7 @@ const clickSuggestionsButton = () => {
     fireEvent.click(screen.getByTestId('suggest-new-point'));
 };
 
-const mockUploadingFileWithSizeInMB = sizeInMB => {
+const mockUploadingFileWithSizeInMB = (sizeInMB) => {
     const largeFile = {
         name: 'large-file.txt',
         size: sizeInMB * 1024 * 1024,
@@ -30,7 +30,7 @@ describe('SuggestNewPointButton', () => {
 
         await waitFor(() => {
             expect(
-                screen.getByText('Please enable location services to suggest a new point.'),
+                screen.getByText('Please enable location services to suggest a new point.')
             ).toBeInTheDocument();
         });
     });
@@ -46,15 +46,15 @@ describe('SuggestNewPointButton', () => {
 
         await waitFor(() => {
             expect(
-                screen.getByText('Please enable location services to suggest a new point.'),
+                screen.getByText('Please enable location services to suggest a new point.')
             ).toBeInTheDocument();
         });
     });
 
     it('opens new point suggestion box when location services are enabled', async () => {
         global.navigator.geolocation = {
-            getCurrentPosition: jest.fn(success =>
-                success({ coords: { latitude: 0, longitude: 0 } }),
+            getCurrentPosition: jest.fn((success) =>
+                success({ coords: { latitude: 0, longitude: 0 } })
             ),
         };
 
@@ -69,8 +69,8 @@ describe('SuggestNewPointButton', () => {
 
     it('displays error message when selected file is too large', async () => {
         global.navigator.geolocation = {
-            getCurrentPosition: jest.fn(success =>
-                success({ coords: { latitude: 0, longitude: 0 } }),
+            getCurrentPosition: jest.fn((success) =>
+                success({ coords: { latitude: 0, longitude: 0 } })
             ),
         };
 
@@ -85,8 +85,8 @@ describe('SuggestNewPointButton', () => {
         await waitFor(() => {
             expect(
                 screen.getByText(
-                    'The selected file is too large. Please select a file smaller than 5MB.',
-                ),
+                    'The selected file is too large. Please select a file smaller than 5MB.'
+                )
             ).toBeInTheDocument();
         });
     });
@@ -96,8 +96,8 @@ describe('SuggestNewPointButton', () => {
         axios.post.mockResolvedValue({});
 
         global.navigator.geolocation = {
-            getCurrentPosition: jest.fn(success =>
-                success({ coords: { latitude: 0, longitude: 0 } }),
+            getCurrentPosition: jest.fn((success) =>
+                success({ coords: { latitude: 0, longitude: 0 } })
             ),
         };
 
@@ -121,7 +121,7 @@ describe('SuggestNewPointButton', () => {
                     headers: {
                         'Content-Type': 'multipart/form-data',
                     },
-                },
+                }
             );
         });
     });

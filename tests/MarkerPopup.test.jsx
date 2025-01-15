@@ -48,7 +48,7 @@ describe('should render marker popup correctly', () => {
 
     describe('should render data', () => {
         it('should render data keys', () => {
-            correctMarkerData.data.forEach(key => {
+            correctMarkerData.data.forEach((key) => {
                 expect(screen.getByText(`${key[0]}:`)).toBeInTheDocument();
             });
         });
@@ -68,13 +68,13 @@ describe('should render marker popup correctly', () => {
 
             it('should render hyperlink', () => {
                 expect(
-                    screen.getByRole('link', { name: 'https://www.google.com' }),
+                    screen.getByRole('link', { name: 'https://www.google.com' })
                 ).toBeInTheDocument();
             });
 
             it('should render unknown data type as text', () => {
                 expect(
-                    screen.getByText(/example value for unknown data type/i),
+                    screen.getByText(/example value for unknown data type/i)
                 ).toBeInTheDocument();
             });
         });
@@ -86,7 +86,7 @@ describe('should render marker popup correctly', () => {
                 consoleSpy.mockImplementation(() => {});
 
                 expect(() =>
-                    render(<LocationDetailsBox place={incorrectComplexMarkerData} />),
+                    render(<LocationDetailsBox place={incorrectComplexMarkerData} />)
                 ).toThrow('Custom value must have type and value properties');
 
                 consoleSpy.mockRestore();

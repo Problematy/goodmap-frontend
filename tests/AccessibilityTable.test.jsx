@@ -46,7 +46,7 @@ describe('should accessibility table work correctly', () => {
                         userPosition={{ latlng: { lat, lng } }}
                         setIsAccessibilityTableOpen={() => {}}
                     />
-                </CategoriesProvider>,
+                </CategoriesProvider>
             );
         });
     });
@@ -65,7 +65,7 @@ describe('should accessibility table work correctly', () => {
             expect(grunwaldzkiRow).toBeInTheDocument();
 
             expect(zwierzynieckaRow.compareDocumentPosition(grunwaldzkiRow)).toBe(
-                Node.DOCUMENT_POSITION_PRECEDING,
+                Node.DOCUMENT_POSITION_PRECEDING
             );
         }));
 
