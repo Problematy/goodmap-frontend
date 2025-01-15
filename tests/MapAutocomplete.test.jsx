@@ -99,15 +99,10 @@ describe('should autocomplete work correctly', () => {
 
     it('should render proper list', () => {
         const input = screen.getByRole('textbox');
-
         return act(() =>
             userEvent.type(input, 'War').then(() => {
                 expect(screen.getByText('Warren County, Ohio, United States')).toBeInTheDocument();
             }),
         );
-    });
-
-    afterEach(() => {
-        jest.restoreAllMocks();
     });
 });
