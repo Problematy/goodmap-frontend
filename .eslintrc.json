@@ -30,6 +30,7 @@
         "object-shorthand": "error",
         "template-curly-spacing": "off",
         "computed-property-spacing": "off",
+        "arrow-parens": "off",
         "class-methods-use-this": "error",
         "import/prefer-default-export": "error",
         "react/require-default-props": "error",

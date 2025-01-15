@@ -67,7 +67,7 @@ export const ReportProblemForm = ({ placeId }) => {
                     'Content-Type': 'application/json',
                     'X-CSRFToken': csrfToken,
                 },
-            },
+            }
         );
         const responseData = response.data;
         setResponseMessage(responseData.message);

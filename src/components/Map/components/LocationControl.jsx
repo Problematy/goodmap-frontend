@@ -70,7 +70,7 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
                 },
                 () => {
                     handleLocationError({ code: 1 });
-                },
+                }
             );
         } else {
             handleLocationError({ code: 1 });

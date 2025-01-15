@@ -23,7 +23,7 @@ export const FiltersForm = () => {
                 }
             } else {
                 newSelectedFilters[category] = newSelectedFilters[category].filter(
-                    filter => filter !== value,
+                    filter => filter !== value
                 );
             }
 
