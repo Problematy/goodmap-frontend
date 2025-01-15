@@ -28,6 +28,8 @@
         "func-names": "error",
         "no-process-exit": "error",
         "object-shorthand": "error",
+        "template-curly-spacing": "off",
+        "computed-property-spacing": "off",
         "class-methods-use-this": "error",
         "import/prefer-default-export": "error",
         "react/require-default-props": "error",

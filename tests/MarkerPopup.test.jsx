@@ -48,7 +48,7 @@ describe('should render marker popup correctly', () => {
 
     describe('should render data', () => {
         it('should render data keys', () => {
-            correctMarkerData.data.forEach((key) => {
+            correctMarkerData.data.forEach(key => {
                 expect(screen.getByText(`${key[0]}:`)).toBeInTheDocument();
             });
         });
