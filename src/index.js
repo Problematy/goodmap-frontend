@@ -1,4 +1,4 @@
-import { MapCOntainer } from './components/Map/Map';
+import { MapContainer } from './components/Map/Map';
 
 import './i18n';
 
