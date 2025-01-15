@@ -1,6 +1,7 @@
 import React from 'react';
 import { render } from '@testing-library/react';
 import { FiltersForm } from '../../src/components/FiltersForm/FiltersForm';
+import { CategoriesProvider } from '../../src/components/Categories/CategoriesContext';
 
 const categories = [
     [
@@ -13,7 +14,11 @@ const categories = [
 ];
 
 test('Creates good filter_form box', () => {
-    const { asFragment } = render(<FiltersForm categoriesData={categories} onClick={() => {}} />);
+      const { asFragment } = render(
+        <CategoriesProvider>
+            <FiltersForm categoriesData={categories} onClick={() => {}} />
+        </CategoriesProvider>
+    );
 
     expect(asFragment()).toMatchInlineSnapshot(`
 <DocumentFragment>

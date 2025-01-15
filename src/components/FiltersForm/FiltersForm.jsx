@@ -8,7 +8,6 @@ export const FiltersForm = () => {
     const [selectedFilters, setSelectedFilters] = useState({});
     const [categoriesData, setCategoriesData] = useState([]);
 
-    // Funkcja obsługująca zmianę checkboxa
     const handleCheckboxChange = event => {
         const { value, checked } = event.target;
         const category = event.target.classList[2];
