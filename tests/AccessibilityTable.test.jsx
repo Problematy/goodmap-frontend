@@ -41,12 +41,12 @@ describe('should accessibility table work correctly', () => {
         const lng = 17.0555;
         await act(async () => {
             render(
-            <CategoriesProvider>
-                <AccessibilityTable
-                    userPosition={{ latlng: { lat, lng } }}
-                    setIsAccessibilityTableOpen={() => {}}
-                />
-              </CategoriesProvider>
+                <CategoriesProvider>
+                    <AccessibilityTable
+                        userPosition={{ latlng: { lat, lng } }}
+                        setIsAccessibilityTableOpen={() => {}}
+                    />
+                </CategoriesProvider>,
             );
         });
     });

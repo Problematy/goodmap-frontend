@@ -4,6 +4,7 @@ import { ReportProblemForm } from '../src/components/MarkerPopup/ReportProblemFo
 
 jest.mock('axios');
 const axios = require('axios');
+
 axios.get.mockResolvedValue({ data: { csrf_token: 'test-csrf-token' } });
 axios.post.mockResolvedValue({ data: { success: true } });
 

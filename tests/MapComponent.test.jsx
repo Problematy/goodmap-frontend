@@ -1,8 +1,8 @@
 import React from 'react';
 import { render, act, screen } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import { MapComponent } from '../src/components/Map/MapComponent';
 import { Marker, Popup } from 'react-leaflet';
+import { MapComponent } from '../src/components/Map/MapComponent';
 import { CategoriesProvider } from '../src/components/Categories/CategoriesContext';
 import { httpService } from '../src/services/http/httpService';
 
@@ -22,7 +22,7 @@ const locations = [
     {
         UUID: '1',
         name: 'name',
-        position: [ 50, 50],
+        position: [50, 50],
     },
 ];
 
@@ -37,15 +37,13 @@ describe('MapComponent', () => {
         await act(async () => {
             render(
                 <CategoriesProvider>
-                    <MapComponent/>
+                    <MapComponent />
                 </CategoriesProvider>
             );
         });
     });
 
-
     it('renders without crashing', () => {
         expect(screen.getAllByRole('presentation').length).toBeGreaterThan(0);
     });
-
 });
