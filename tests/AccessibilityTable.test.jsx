@@ -33,40 +33,40 @@ const examplePlaces = [
 ];
 
 describe('should accessibility table work correctly', () => {
-    beforeEach(async () => {
+    beforeEach(() => {
         jest.spyOn(global, 'fetch').mockResolvedValue({
             json: jest.fn().mockResolvedValue(examplePlaces),
         });
         const lat = 51.10655;
         const lng = 17.0555;
-        await act(async () => {
+        return act(() => {
             render(
                 <CategoriesProvider>
                     <AccessibilityTable
                         userPosition={{ latlng: { lat, lng } }}
                         setIsAccessibilityTableOpen={() => {}}
                     />
-                </CategoriesProvider>,
+                </CategoriesProvider>
             );
         });
     });
 
-    it('should properly render the table', async () => {
-        await waitFor(() => {
+    it('should properly render the table', () => {
+        return waitFor(() => {
             expect(screen.getByText('Grunwaldzki')).toBeInTheDocument();
             expect(screen.getByText('Zwierzyniecka')).toBeInTheDocument();
         });
     });
 
-    it('should render "Zwierzyniecka" before "Grunwaldzki"', async () => {
-        await waitFor(() => {
+    it('should render "Zwierzyniecka" before "Grunwaldzki"', () => {
+        return waitFor(() => {
             const zwierzynieckaRow = screen.getByText('Zwierzyniecka');
             const grunwaldzkiRow = screen.getByText('Grunwaldzki');
             expect(zwierzynieckaRow).toBeInTheDocument();
             expect(grunwaldzkiRow).toBeInTheDocument();
 
             expect(zwierzynieckaRow.compareDocumentPosition(grunwaldzkiRow)).toBe(
-                Node.DOCUMENT_POSITION_PRECEDING,
+                Node.DOCUMENT_POSITION_PRECEDING
             );
         });
     });
