@@ -3,6 +3,8 @@ import '@testing-library/jest-dom/extend-expect';
 import { render, screen, act, waitFor } from '@testing-library/react';
 import AccessibilityTable from '../src/components/Map/components/AccessibilityTable';
 
+import { CategoriesProvider } from '../src/components/Categories/CategoriesContext';
+
 const examplePlaces = [
     {
         data: [
@@ -39,11 +41,12 @@ describe('should accessibility table work correctly', () => {
         const lng = 17.0555;
         await act(async () => {
             render(
+            <CategoriesProvider>
                 <AccessibilityTable
-                    allCheckboxes={['', '']}
                     userPosition={{ latlng: { lat, lng } }}
                     setIsAccessibilityTableOpen={() => {}}
-                />,
+                />
+              </CategoriesProvider>
             );
         });
     });
