@@ -1,5 +1,5 @@
 import React from 'react';
-import { render, act, screen } from '@testing-library/react';
+import { render, act } from '@testing-library/react';
 import { FiltersForm } from '../src/components/FiltersForm/FiltersForm';
 import { CategoriesProvider } from '../src/components/Categories/CategoriesContext';
 import { httpService } from '../src/services/http/httpService';
@@ -19,24 +19,24 @@ const categories = [
 httpService.getCategoriesData.mockResolvedValue(categories);
 
 describe('Creates good filter_form box', () => {
-    beforeEach(async () => {
+    beforeEach(() => {
         jest.spyOn(global, 'fetch').mockResolvedValue({
             json: jest.fn().mockResolvedValue(categories),
         });
-        await act(async () => {
+        return act(() =>
             render(
                 <CategoriesProvider>
                     <FiltersForm />
                 </CategoriesProvider>
-            );
-        });
+            )
+        );
     });
 
     afterEach(() => {
         global.fetch.mockRestore();
     });
 
-    it('should properly render the table', async () => {
+    it('should properly render the table', () => {
         const form = document.querySelector('form');
         expect(form).not.toBeNull();
 
