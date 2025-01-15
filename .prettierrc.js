@@ -2,8 +2,7 @@ module.exports = {
     tabWidth: 4,
     bracketSpacing: true,
     singleQuote: true,
-    trailingComma: 'es5',
+    trailingComma: 'all',
     arrowParens: 'avoid',
     printWidth: 100,
-    semi: true,
 };

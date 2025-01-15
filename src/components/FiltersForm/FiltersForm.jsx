@@ -10,7 +10,7 @@ export const FiltersForm = () => {
 
     const handleCheckboxChange = event => {
         const { value, checked } = event.target;
-        const category = event.target.classList[2];
+        const category = event.target.dataset.category;
 
         setCategories(prevSelectedFilters => {
             const newSelectedFilters = { ...prevSelectedFilters };
@@ -23,7 +23,7 @@ export const FiltersForm = () => {
                 }
             } else {
                 newSelectedFilters[category] = newSelectedFilters[category].filter(
-                    filter => filter !== value
+                    filter => filter !== value,
                 );
             }
 
@@ -31,12 +31,6 @@ export const FiltersForm = () => {
         });
     };
 
-    //     // Synchronizacja selectedFilters z CategoriesProvider
-    //     useEffect(() => {
-    //         setCategories(selectedFilters);
-    //     }, [selectedFilters, setCategories]);
-    //
-    //     // Pobranie danych kategorii
     useEffect(() => {
         const fetchCategories = async () => {
             const categoriesData = await httpService.getCategoriesData();
@@ -45,7 +39,6 @@ export const FiltersForm = () => {
         fetchCategories();
     }, []);
 
-    // Generowanie sekcji filtrów
     const sections = categoriesData.map(filtersData => (
         <div
             key={`${filtersData[0][0]}-${filtersData[0][1]}`}
@@ -60,7 +53,8 @@ export const FiltersForm = () => {
                         {translation}
                         <input
                             onChange={handleCheckboxChange}
-                            className={`form-check-input filter ${filtersData[0][0]}`}
+                            className={`form-check-input filter`}
+                            data-category={filtersData[0][0]}
                             type="checkbox"
                             id={name}
                             value={name}

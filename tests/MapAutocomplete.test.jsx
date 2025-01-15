@@ -103,7 +103,7 @@ describe('should autocomplete work correctly', () => {
         return act(() =>
             userEvent.type(input, 'War').then(() => {
                 expect(screen.getByText('Warren County, Ohio, United States')).toBeInTheDocument();
-            })
+            }),
         );
     });
 

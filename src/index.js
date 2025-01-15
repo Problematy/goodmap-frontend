@@ -1,5 +1,5 @@
-import { Map } from './components/Map/Map';
+import { MapCOntainer } from './components/Map/Map';
 
 import './i18n';
 
-Map();
+MapContainer();

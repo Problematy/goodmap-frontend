@@ -37,8 +37,8 @@ describe('MapComponent', () => {
             render(
                 <CategoriesProvider>
                     <MapComponent />
-                </CategoriesProvider>
-            )
+                </CategoriesProvider>,
+            ),
         );
     });
 

@@ -27,8 +27,8 @@ describe('Creates good filter_form box', () => {
             render(
                 <CategoriesProvider>
                     <FiltersForm />
-                </CategoriesProvider>
-            )
+                </CategoriesProvider>,
+            ),
         );
     });
 

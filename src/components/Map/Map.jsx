@@ -11,7 +11,7 @@ const MapWrap = () => {
     const filtersPlaceholder = document.getElementById('filter-form');
 
     if (!filtersPlaceholder || !mapPlaceholder) {
-        console.error('Nie znaleziono elementów docelowych w DOM');
+        console.error('Did not find any DOM elements to render the map or filters form');
         return null;
     }
 
@@ -23,7 +23,7 @@ const MapWrap = () => {
     );
 };
 
-export const Map = () => {
+export const MapContainer = () => {
     const appContainer = document.createElement('div');
     document.body.appendChild(appContainer);
 

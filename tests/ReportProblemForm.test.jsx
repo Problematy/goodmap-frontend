@@ -28,7 +28,7 @@ describe('ReportProblemForm', () => {
                         'Content-Type': 'application/json',
                         'X-CSRFToken': 'test-csrf-token',
                     },
-                }
+                },
             );
         });
     });
@@ -50,7 +50,7 @@ describe('ReportProblemForm', () => {
                         'Content-Type': 'application/json',
                         'X-CSRFToken': 'test-csrf-token',
                     },
-                }
+                },
             );
         });
     });

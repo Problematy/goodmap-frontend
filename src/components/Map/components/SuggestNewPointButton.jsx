@@ -38,7 +38,7 @@ export const SuggestNewPointButton = () => {
                 () => {
                     setSnackbarMessage('Please enable location services to suggest a new point.');
                     setSnackbarOpen(true);
-                }
+                },
             );
         } else {
             setSnackbarMessage('Geolocation is not supported by this browser.');
@@ -65,7 +65,7 @@ export const SuggestNewPointButton = () => {
             () => {
                 setSnackbarMessage('Please enable location services to suggest a new point.');
                 setSnackbarOpen(true);
-            }
+            },
         );
     };
 
@@ -82,7 +82,7 @@ export const SuggestNewPointButton = () => {
             () => {
                 setSnackbarMessage('Please enable location services to suggest a new point.');
                 setSnackbarOpen(true);
-            }
+            },
         );
     };
 
@@ -103,7 +103,7 @@ export const SuggestNewPointButton = () => {
         const fileSizeMB = file.size / 1024 / 1024;
         if (fileSizeMB > 5) {
             setSnackbarMessage(
-                'The selected file is too large. Please select a file smaller than 5MB.'
+                'The selected file is too large. Please select a file smaller than 5MB.',
             );
             setSnackbarOpen(true);
             return;

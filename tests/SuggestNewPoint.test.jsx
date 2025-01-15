@@ -31,7 +31,7 @@ describe('SuggestNewPointButton', () => {
 
         return waitFor(() => {
             expect(
-                screen.getByText('Please enable location services to suggest a new point.')
+                screen.getByText('Please enable location services to suggest a new point.'),
             ).toBeInTheDocument();
         });
     });
@@ -47,7 +47,7 @@ describe('SuggestNewPointButton', () => {
 
         return waitFor(() => {
             expect(
-                screen.getByText('Please enable location services to suggest a new point.')
+                screen.getByText('Please enable location services to suggest a new point.'),
             ).toBeInTheDocument();
         });
     });
@@ -55,7 +55,7 @@ describe('SuggestNewPointButton', () => {
     it('opens new point suggestion box when location services are enabled', () => {
         global.navigator.geolocation = {
             getCurrentPosition: jest.fn(success =>
-                success({ coords: { latitude: 0, longitude: 0 } })
+                success({ coords: { latitude: 0, longitude: 0 } }),
             ),
         };
 
@@ -71,7 +71,7 @@ describe('SuggestNewPointButton', () => {
     it('displays error message when selected file is too large', () => {
         global.navigator.geolocation = {
             getCurrentPosition: jest.fn(success =>
-                success({ coords: { latitude: 0, longitude: 0 } })
+                success({ coords: { latitude: 0, longitude: 0 } }),
             ),
         };
 
@@ -85,10 +85,10 @@ describe('SuggestNewPointButton', () => {
             waitFor(() => {
                 expect(
                     screen.getByText(
-                        'The selected file is too large. Please select a file smaller than 5MB.'
-                    )
+                        'The selected file is too large. Please select a file smaller than 5MB.',
+                    ),
                 ).toBeInTheDocument();
-            })
+            }),
         );
     });
 
@@ -97,7 +97,7 @@ describe('SuggestNewPointButton', () => {
 
         global.navigator.geolocation = {
             getCurrentPosition: jest.fn(success =>
-                success({ coords: { latitude: 0, longitude: 0 } })
+                success({ coords: { latitude: 0, longitude: 0 } }),
             ),
         };
 
@@ -120,9 +120,9 @@ describe('SuggestNewPointButton', () => {
                         headers: {
                             'Content-Type': 'multipart/form-data',
                         },
-                    }
+                    },
                 );
-            })
+            }),
         );
     });
 });

@@ -47,7 +47,7 @@ const AccessibilityTable = ({ userPosition, setIsAccessibilityTableOpen }) => {
                 uniqueNumberedKeys[key] = index;
             });
             const orderedKeysArray = Object.keys(uniqueNumberedKeys).sort(
-                (a, b) => uniqueNumberedKeys[a] - uniqueNumberedKeys[b]
+                (a, b) => uniqueNumberedKeys[a] - uniqueNumberedKeys[b],
             );
             setHeaders(orderedKeysArray);
 
