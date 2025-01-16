@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 import { useCategories } from '../Categories/CategoriesContext';
 import useDebounce from '../../utils/hooks/useDebounce';
 import { httpService } from '../../services/http/httpService';
-import { useEffect } from 'react';
 import { useMapStore } from '../Map/store/map.store';
 
 export const FiltersForm = () => {

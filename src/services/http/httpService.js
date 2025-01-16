@@ -1,5 +1,5 @@
 import { CATEGORIES, CATEGORY, DATA, LANGUAGES, LOCATION, LOCATIONS, SEARCH_ADDRESS, LOCATIONS_CLUSTERED } from './endpoints';
-import { useMapStore } from '../../store/mapStore';
+import { useMapStore } from '../../components/Map/store/map.store';
 
 function filtersToQuery(filters) {
     const basicQuery = Object.entries(filters)
