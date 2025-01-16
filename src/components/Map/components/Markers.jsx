@@ -6,7 +6,6 @@ import { MarkerPopup } from '../../MarkerPopup/MarkerPopup';
 import { useCategories } from '../../Categories/CategoriesContext';
 import { ClusterMarker } from '../../MarkerPopup/ClusterMarker';
 
-
 const getMarkers = locations => {
     if (window.USE_SERVER_SIDE_CLUSTERING) {
         return locations.map(location => {
@@ -16,12 +15,8 @@ const getMarkers = locations => {
             return <MarkerPopup place={location} key={location.uuid} />;
         });
     }
-    return locations.map(location => (
-                <MarkerPopup place={location} key={location.UUID} />
-            ));
-}
-
-
+    return locations.map(location => <MarkerPopup place={location} key={location.UUID} />);
+};
 
 export const Markers = () => {
     const { categories } = useCategories();

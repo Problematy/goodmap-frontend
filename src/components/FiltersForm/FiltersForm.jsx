@@ -19,7 +19,6 @@ export const FiltersForm = () => {
         onClick();
     }, [mapConfigDebounced]);
 
-
     const handleCheckboxChange = event => {
         const { value, checked } = event.target;
         const category = event.target.dataset.category;

@@ -25,15 +25,14 @@ const MapWrap = () => {
     );
 };
 
-
-    if (window.USE_SERVER_SIDE_CLUSTERING) {
-        return locations.map(location => {
-            if (location.type === 'cluster') {
-                return <ClusterMarker cluster={location} key={location.cluster_uuid} />;
-            }
-            return <MarkerPopup place={location} key={location.uuid} />;
-        });
-    }
+if (window.USE_SERVER_SIDE_CLUSTERING) {
+    return locations.map(location => {
+        if (location.type === 'cluster') {
+            return <ClusterMarker cluster={location} key={location.cluster_uuid} />;
+        }
+        return <MarkerPopup place={location} key={location.uuid} />;
+    });
+}
 
 export const MapContainer = () => {
     const appContainer = document.createElement('div');
