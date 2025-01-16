@@ -1,5 +1,11 @@
 import { CATEGORIES, CATEGORY, DATA, LANGUAGES, LOCATION, LOCATIONS, SEARCH_ADDRESS, LOCATIONS_CLUSTERED } from './endpoints';
 
+function filtersToQuery(filters) {
+    return Object.entries(filters)
+        .map(([key, values]) => values.map(value => `${key}=${value}`).join('&'))
+        .join('&');
+}
+
 export const httpService = {
     getCategories: () => fetch(CATEGORIES).then(response => response.json()),
 
@@ -18,8 +24,9 @@ export const httpService = {
         );
     },
 
-    getLocations: async filtersUrlParams => {
-      let ENDPOINT = DATA;
+    getLocations: async filters => {
+      let ENDPOINT = DATA;  #TODO remove DATA endpont after removing it from main API
+      const filtersUrlParams = filtersToQuery(filters);
       if (window.USE_SERVER_SIDE_CLUSTERING) {
           ENDPOINT = LOCATIONS_CLUSTERED;
       } else if (window.USE_LAZY_LOADING) {
@@ -38,6 +45,17 @@ export const httpService = {
 
     getLocation: async locationId => {
       const response = await fetch(`${LOCATION}/${locationId}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        return response.json();
+    },
+
+    getLocationsWithLatLon: async (lat, lon, filters) => {
+        const query = filtersToQuery(filters);
+        const response = await fetch(`${DATA}?${query}&lat=${lat}&lon=${lon}&limit=10`, {
             method: 'GET',
             headers: {
                 'Content-Type': 'application/json',

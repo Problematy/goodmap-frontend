@@ -1,30 +1,30 @@
 import ReactDOM from 'react-dom/client';
 import React, { useEffect } from 'react';
-
 import { httpService } from '../../services/http/httpService';
 import { FiltersForm } from '../FiltersForm/FiltersForm';
-import { MarkerPopup } from '../MarkerPopup/MarkerPopup';
 import { MapComponent } from './MapComponent';
 import { useMapStore } from './store/map.store';
 import { ClusterMarker } from '../MarkerPopup/ClusterMarker';
+import { CategoriesProvider } from '../Categories/CategoriesContext';
+import { createPortal } from 'react-dom';
 import useDebounce from '../../utils/hooks/useDebounce';
 
-const mapPlaceholder = ReactDOM.createRoot(document.getElementById('map'));
-const filtersPlaceholder = ReactDOM.createRoot(document.getElementById('filter-form'));
+const MapWrap = () => {
+    const mapPlaceholder = document.getElementById('map');
+    const filtersPlaceholder = document.getElementById('filter-form');
 
-function getSelectedCheckboxesOfCategory(filterType) {
-    const checkedBoxesTypes = document.querySelectorAll(`.filter.${filterType}:checked`);
-    const types = Array.from(checkedBoxesTypes)
-        .map(checkboxNode => `${filterType}=${checkboxNode.value}`)
-        .join('&');
+    if (!filtersPlaceholder || !mapPlaceholder) {
+        console.error('Did not find any DOM elements to render the map or filters form');
+        return null;
+    }
 
-    return types;
-}
-
-export async function getNewMarkers(categories) {
-    const allCheckboxes = categories.map(([categoryString]) =>
-        getSelectedCheckboxesOfCategory(categoryString),
+    return (
+        <CategoriesProvider>
+            {createPortal(<FiltersForm />, filtersPlaceholder)}
+            {createPortal(<MapComponent />, mapPlaceholder)}
+        </CategoriesProvider>
     );
+};
     let filtersUrlQueryString = allCheckboxes.filter(n => n).join('&');
     if (window.USE_SERVER_SIDE_CLUSTERING) {
         const mapConfigurationData = useMapStore.getState().mapConfiguration;
@@ -35,7 +35,6 @@ export async function getNewMarkers(categories) {
             filtersUrlQueryString += `&${mapConfigQueryString}`;
         }
     }
-    const locations = await httpService.getLocations(filtersUrlQueryString);
 
     if (window.USE_SERVER_SIDE_CLUSTERING) {
         return locations.map(location => {
@@ -46,35 +45,10 @@ export async function getNewMarkers(categories) {
         });
     }
 
-    let markers = locations.map(location => {
-        const locationKey =
-            window.USE_LAZY_LOADING ?? false ? location.uuid : location.metadata.uuid;
-        return <MarkerPopup place={location} key={locationKey} />;
-    });
-    return markers;
-}
+export const MapContainer = () => {
+    const appContainer = document.createElement('div');
+    document.body.appendChild(appContainer);
 
-export async function repaintMarkers(categories) {
-    try {
-        const newMarkers = await getNewMarkers(categories);
-        const mainMap = <MapComponent markers={newMarkers} />;
-        mapPlaceholder.render(mainMap);
-    } catch (error) {
-        // eslint-disable-next-line no-console
-        console.error('Error repainting markers:', error);
-    }
-}
-
-export const Map = async () => {
-    httpService.getCategoriesData().then(categoriesData => {
-        const parsedCategoriesData = categoriesData.map(categoryData => categoryData[0]);
-
-        repaintMarkers(parsedCategoriesData);
-        filtersPlaceholder.render(
-            <FiltersForm
-                categoriesData={categoriesData}
-                onClick={() => repaintMarkers(parsedCategoriesData)}
-            />,
-        );
-    });
+    const root = ReactDOM.createRoot(appContainer);
+    root.render(<MapWrap />);
 };
