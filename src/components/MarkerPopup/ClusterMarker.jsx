@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import React from 'react';
 import { Marker } from '@adamscybot/react-leaflet-component-marker';
 import styled from 'styled-components';
@@ -38,3 +39,16 @@ const ClusterMarkerContainer = styled.div`
     color: white;
     border-radius: 50%;
 `;
+
+ClusterMarkerIcon.propTypes = {
+    cluster: PropTypes.shape({
+        cluster_count: PropTypes.number.isRequired,
+    }).isRequired,
+};
+
+ClusterMarker.propTypes = {
+    cluster: PropTypes.shape({
+        position: PropTypes.arrayOf(PropTypes.number).isRequired,
+        cluster_count: PropTypes.number.isRequired,
+    }).isRequired,
+};
