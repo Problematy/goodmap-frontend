@@ -1,12 +1,24 @@
 import { CATEGORIES, CATEGORY, DATA, LANGUAGES, LOCATION, LOCATIONS, SEARCH_ADDRESS, LOCATIONS_CLUSTERED } from './endpoints';
+import { useMapStore } from '../../store/mapStore';
 
 function filtersToQuery(filters) {
-    return Object.entries(filters)
+    const basicQuery = Object.entries(filters)
         .map(([key, values]) => values.map(value => `${key}=${value}`).join('&'))
         .join('&');
+
+    if (window.USE_SERVER_SIDE_CLUSTERING) {
+        const mapConfigurationData = useMapStore.getState().mapConfiguration;
+        if (mapConfigurationData) {
+            const mapConfigQueryString = Object.entries(mapConfigurationData)
+                .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
+                .join('&');
+            return `${basicQuery}&${mapConfigQueryString}`;
+        }
+    }
+    return basicQuery;
 }
 
-export const httpService = {
+ export const httpService = {
     getCategories: () => fetch(CATEGORIES).then(response => response.json()),
 
     getSubcategories: category =>

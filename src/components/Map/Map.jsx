@@ -4,7 +4,6 @@ import { httpService } from '../../services/http/httpService';
 import { FiltersForm } from '../FiltersForm/FiltersForm';
 import { MapComponent } from './MapComponent';
 import { useMapStore } from './store/map.store';
-import { ClusterMarker } from '../MarkerPopup/ClusterMarker';
 import { CategoriesProvider } from '../Categories/CategoriesContext';
 import { createPortal } from 'react-dom';
 import useDebounce from '../../utils/hooks/useDebounce';
@@ -25,16 +24,7 @@ const MapWrap = () => {
         </CategoriesProvider>
     );
 };
-    let filtersUrlQueryString = allCheckboxes.filter(n => n).join('&');
-    if (window.USE_SERVER_SIDE_CLUSTERING) {
-        const mapConfigurationData = useMapStore.getState().mapConfiguration;
-        if (mapConfigurationData) {
-            const mapConfigQueryString = Object.entries(mapConfigurationData)
-                .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-                .join('&');
-            filtersUrlQueryString += `&${mapConfigQueryString}`;
-        }
-    }
+
 
     if (window.USE_SERVER_SIDE_CLUSTERING) {
         return locations.map(location => {
