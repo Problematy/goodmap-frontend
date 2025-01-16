@@ -37,7 +37,7 @@ function filtersToQuery(filters) {
     },
 
     getLocations: async filters => {
-      let ENDPOINT = DATA;  #TODO remove DATA endpont after removing it from main API
+      let ENDPOINT = DATA;  // TODO remove DATA endpont after removing it from main API
       const filtersUrlParams = filtersToQuery(filters);
       if (window.USE_SERVER_SIDE_CLUSTERING) {
           ENDPOINT = LOCATIONS_CLUSTERED;
