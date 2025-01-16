@@ -16,7 +16,6 @@ export const FiltersForm = () => {
         if (mapConfigDebounced === null) {
             return;
         }
-        onClick();
     }, [mapConfigDebounced]);
 
     const handleCheckboxChange = event => {
