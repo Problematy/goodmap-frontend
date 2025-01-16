@@ -9,7 +9,7 @@ import { CustomZoomControl } from './components/ZoomControl';
 import MapAutocomplete from './components/MapAutocomplete';
 import ListViewButton from './components/ListView';
 import AccessibilityTable from './components/AccessibilityTable';
-import SaveMapConfiguration, { useSaveMapConfiguration } from './components/SaveMapConfiguration';
+import SaveMapConfiguration from './components/SaveMapConfiguration';
 import { toast } from '../../utils/toast';
 import { useTranslation } from 'react-i18next';
 import { AppToaster } from '../common/AppToaster';
