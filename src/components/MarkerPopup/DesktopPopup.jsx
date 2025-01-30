@@ -22,4 +22,3 @@ export const DesktopPopup = ({ children }) => {
 
     return <StyledPopup ref={popupRef}>{children}</StyledPopup>;
 };
-
