@@ -1,7 +1,7 @@
 import React from 'react';
-import { render, act } from '@testing-library/react';
+import { render, act, fireEvent } from '@testing-library/react';
 import { FiltersForm } from '../src/components/FiltersForm/FiltersForm';
-import { CategoriesProvider } from '../src/components/Categories/CategoriesContext';
+import { CategoriesProvider, useCategories } from '../src/components/Categories/CategoriesContext';
 import { httpService } from '../src/services/http/httpService';
 
 jest.mock('../src/services/http/httpService');
@@ -51,5 +51,26 @@ describe('Creates good filter_form box', () => {
         const shoesLabel = form.querySelector('label[for="shoes"]');
         expect(shoesLabel).not.toBeNull();
         expect(shoesLabel.textContent.trim()).toBe('buty');
+    });
+
+    it('should properly check and uncheck checkboxes', () => {
+        const form = document.querySelector('form');
+
+        const clothesCheckbox = form.querySelector('input[type=checkbox][id="clothes"]');
+        expect(clothesCheckbox.checked).toEqual(false);
+
+        fireEvent.click(clothesCheckbox);
+        expect(clothesCheckbox.checked).toEqual(true);
+        //expect(spyCheckClothes).toHaveBeenCalled();
+
+        const shoesCheckbox = form.querySelector('input[type=checkbox][id="shoes"]');
+        expect(shoesCheckbox.checked).toEqual(false);
+        fireEvent.click(shoesCheckbox);
+        expect(shoesCheckbox.checked).toEqual(true);
+        expect(clothesCheckbox.checked).toEqual(true);
+
+        fireEvent.click(clothesCheckbox);
+        expect(clothesCheckbox.checked).toEqual(false);
+        expect(shoesCheckbox.checked).toEqual(true);
     });
 });
