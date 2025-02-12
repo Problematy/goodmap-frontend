@@ -6,11 +6,11 @@ import { ClusterMarker } from '../src/components/MarkerPopup/ClusterMarker';
 
 const correctClusterData = {
     position: [51.1095, 17.0525],
-    cluster_count: 5,
+    cluster_count: 5, // eslint-disable-line camelcase
 };
 
 describe('ClusterMarker', () => {
-    it('should render cluster count', () => {
+    beforeEach(() => {
         render(
             <MapContainer
                 center={[51.1095, 17.0525]}
@@ -20,10 +20,20 @@ describe('ClusterMarker', () => {
                 <ClusterMarker cluster={correctClusterData} />
             </MapContainer>,
         );
+    });
 
-        //const cluster = screen.getByTestId('cluster');
-        expect(screen.getByText(correctClusterData.cluster_count)).toBeInTheDocument();
-        //fireEvent.click(cluster);
-        //expect(screen.getByText(correctClusterData.cluster_count)).not.toBeInTheDocument();
+    it('should render cluster count', () => {
+        const cluster = document.querySelector('.marker-cluster');
+        expect(cluster).toBeInTheDocument;
+        expect(screen.getByText(correctClusterData.cluster_count)).toBeInTheDocument;
+    });
+
+    it('should render markers after click on cluster', () => {
+        const cluster = document.querySelector('.leaflet-marker-icon');
+        const clusterCount = screen.getByText(correctClusterData.cluster_count); // eslint-disable-line camelcase
+        expect(clusterCount).toBeInTheDocument;
+        fireEvent.click(cluster);
+        expect(clusterCount).not.toBeInTheDocument;
+        expect(document.querySelector('.marker-cluster')).not.toBeInTheDocument;
     });
 });
