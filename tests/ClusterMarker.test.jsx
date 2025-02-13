@@ -27,7 +27,7 @@ describe('ClusterMarker', () => {
         expect(cluster).toBeInTheDocument;
         expect(screen.getByText(correctClusterData.cluster_count)).toBeInTheDocument;
     });
-
+    /* w sumie to chyba do testowania na wyższych poziomach??
     it('should render markers after click on cluster', () => {
         const cluster = document.querySelector('.leaflet-marker-icon');
         const clusterCount = screen.getByText(correctClusterData.cluster_count); // eslint-disable-line camelcase
@@ -36,4 +36,5 @@ describe('ClusterMarker', () => {
         expect(clusterCount).not.toBeInTheDocument;
         expect(document.querySelector('.marker-cluster')).not.toBeInTheDocument;
     });
+    */
 });

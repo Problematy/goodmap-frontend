@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, act, fireEvent } from '@testing-library/react';
 import { FiltersForm } from '../src/components/FiltersForm/FiltersForm';
-import { CategoriesProvider, useCategories } from '../src/components/Categories/CategoriesContext';
+import { CategoriesProvider } from '../src/components/Categories/CategoriesContext';
 import { httpService } from '../src/services/http/httpService';
 
 jest.mock('../src/services/http/httpService');
