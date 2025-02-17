@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import { MapContainer } from 'react-leaflet';
 import { ClusterMarker } from '../src/components/MarkerPopup/ClusterMarker';
 
@@ -24,7 +24,7 @@ describe('ClusterMarker', () => {
 
     it('should render cluster count', () => {
         const cluster = document.querySelector('.marker-cluster');
-        expect(cluster).toBeInTheDocument;
-        expect(screen.getByText(correctClusterData.cluster_count)).toBeInTheDocument;
+        expect(cluster).toBeInTheDocument();
+        expect(screen.getByText(correctClusterData.cluster_count)).toBeInTheDocument();
     });
 });

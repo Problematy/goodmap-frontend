@@ -43,19 +43,16 @@ describe('', () => {
         jest.spyOn(global, 'fetch').mockResolvedValue({
             json: jest.fn().mockResolvedValue(locationData),
         });
-    })
+    });
 
     afterEach(() => {
         global.fetch.mockRestore();
     });
 
     it('should fetch location', async () => {
-        const json = await httpService.getLocation(location.uuid)
-        //expect(fetchMock).toHaveBeenCalled
+        const json = await httpService.getLocation(location.uuid);
+        // expect(fetchMock).toHaveBeenCalled
 
-        expect(json.data.length).toEqual(5)
-        const data = json.data.filter(([category]) => !(category === 'CTA'));
-        console.log(data)
-
-    })
-})
+        expect(json.data.length).toEqual(5);
+    });
+});
