@@ -1,9 +1,18 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { render, screen } from '@testing-library/react';
-import { LocationDetailsBox } from '../src/components/MarkerPopup/LocationDetails';
+import { render, screen, fireEvent, act, waitFor } from '@testing-library/react';
+import { MapContainer } from 'react-leaflet';
+import { MarkerPopup } from '../src/components/MarkerPopup/MarkerPopup';
+import { httpService } from '../src/services/http/httpService';
 
-const correctMarkerData = {
+jest.mock('../src/services/http/httpService');
+
+const location = {
+    position: [51.1095, 17.0525],
+    uuid: '21231',
+};
+
+const locationData = {
     title: 'Most Grunwaldzki',
     position: [51.1095, 17.0525],
     subtitle: 'big bridge',
@@ -26,72 +35,43 @@ const correctMarkerData = {
     },
 };
 
-const incorrectComplexMarkerData = {
-    title: 'Most Grunwaldzki',
-    position: [51.1095, 17.0525],
-    subtitle: 'big bridge',
-    data: [['website', { wrongTypeAttribute: 'hyperlink', value: 'https://www.google.com' }]],
-};
+httpService.getLocation.mockResolvedValue(locationData);
 
-describe('should render marker popup correctly', () => {
+describe('MarkerPopup', () => {
     beforeEach(() => {
-        render(<LocationDetailsBox place={correctMarkerData} />);
+        window.USE_LAZY_LOADING = true;
+        jest.spyOn(global, 'fetch').mockResolvedValue({
+            json: jest.fn().mockResolvedValue(locationData),
+        });
+        return act(() =>
+            render(
+                <MapContainer
+                    center={[51.1095, 17.0525]}
+                    zoom={10}
+                    style={{ height: '100vh', width: '100%' }}
+                >
+                    <MarkerPopup place={location} key={location.uuid} />
+                </MapContainer>,
+            ),
+        );
     });
 
-    it('should render marker popup name', () => {
-        expect(screen.getByText(correctMarkerData.title)).toBeInTheDocument();
+    afterEach(() => {
+        global.fetch.mockRestore();
     });
 
-    it('should render marker popup subtitle', () => {
-        expect(screen.getByText(/big bridge/i)).toBeInTheDocument();
+    it('should render marker without popup', () => {
+        expect(document.querySelector('.leaflet-marker-icon')).toBeInTheDocument();
+        expect(document.querySelector('.leaflet-popup')).not.toBeInTheDocument();
+        expect(screen.queryByText(locationData.title)).not.toBeInTheDocument();
     });
 
-    describe('should render data', () => {
-        it('should render data keys', () => {
-            correctMarkerData.data.forEach(key => {
-                expect(screen.getByText(`${key[0]}:`)).toBeInTheDocument();
-            });
-        });
-
-        it('should render data with primitive value', () => {
-            expect(screen.getByText(/112\.5/i)).toBeInTheDocument();
-        });
-
-        it('should render data with array value', () => {
-            expect(screen.getByText(/pedestrians, cars/i)).toBeInTheDocument();
-        });
-
-        describe('should render complex data', () => {
-            it('should display `displayValue` if given', () => {
-                expect(screen.getByRole('link', { name: 'testWebsite' })).toBeInTheDocument();
-            });
-
-            it('should render hyperlink', () => {
-                expect(
-                    screen.getByRole('link', { name: 'https://www.google.com' }),
-                ).toBeInTheDocument();
-            });
-
-            it('should render unknown data type as text', () => {
-                expect(
-                    screen.getByText(/example value for unknown data type/i),
-                ).toBeInTheDocument();
-            });
-        });
-
-        describe('should throw error when complex data is incorrect', () => {
-            it('should throw error when data type is not given', () => {
-                // consoleSpy is used to suppress console.error output,
-                // which is expected in this test
-                const consoleSpy = jest.spyOn(console, 'error');
-                consoleSpy.mockImplementation(() => {});
-
-                expect(() =>
-                    render(<LocationDetailsBox place={incorrectComplexMarkerData} />),
-                ).toThrow('Custom value must have type and value properties');
-
-                consoleSpy.mockRestore();
-            });
+    it('should render marker popup after click on marker', () => {
+        const marker = document.querySelector('.leaflet-marker-icon');
+        waitFor(() => {
+            fireEvent.click(marker);
+            expect(document.querySelector('.leaflet-popup')).toBeInTheDocument();
+            expect(screen.queryByText(locationData.title)).toBeInTheDocument();
         });
     });
 });
