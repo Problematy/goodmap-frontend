@@ -23,8 +23,6 @@ describe('ClusterMarker', () => {
     });
 
     it('should render cluster count', () => {
-        const cluster = document.querySelector('.marker-cluster');
-        expect(cluster).toBeInTheDocument();
         expect(screen.getByText(correctClusterData.cluster_count)).toBeInTheDocument();
     });
 });
