@@ -9,7 +9,6 @@ jest.mock('../src/services/http/httpService');
 
 const location = {
     position: [51.1095, 17.0525],
-    name: 'name',
     uuid: '21231',
 };
 
@@ -40,6 +39,7 @@ httpService.getLocation.mockResolvedValue(locationData);
 
 describe('MarkerPopup', () => {
     beforeEach(() => {
+        window.USE_LAZY_LOADING = true;
         jest.spyOn(global, 'fetch').mockResolvedValue({
             json: jest.fn().mockResolvedValue(locationData),
         });
@@ -63,13 +63,13 @@ describe('MarkerPopup', () => {
     it('should render marker without popup', () => {
         expect(document.querySelector('.leaflet-marker-icon')).toBeInTheDocument;
         expect(document.querySelector('.leaflet-popup')).not.toBeInTheDocument;
-        expect(screen.queryByText(correctMarkerData.title)).not.toBeInTheDocument;
+        expect(screen.queryByText(locationData.title)).not.toBeInTheDocument;
     });
 
     it('should render marker popup after click on marker', () => {
         const marker = document.querySelector('.leaflet-marker-icon');
         fireEvent.click(marker);
         expect(document.querySelector('.leaflet-popup')).toBeInTheDocument;
-        expect(screen.queryByText(correctMarkerData.title)).toBeInTheDocument;
+        expect(screen.queryByText(locationData.title)).toBeInTheDocument;
     });
 });
