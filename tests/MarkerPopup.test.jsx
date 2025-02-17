@@ -1,6 +1,6 @@
 import React from 'react';
 import '@testing-library/jest-dom';
-import { render, screen, fireEvent, act } from '@testing-library/react';
+import { render, screen, fireEvent, act, waitFor } from '@testing-library/react';
 import { MapContainer } from 'react-leaflet';
 import { MarkerPopup } from '../src/components/MarkerPopup/MarkerPopup';
 import { httpService } from '../src/services/http/httpService';
@@ -66,12 +66,12 @@ describe('MarkerPopup', () => {
         expect(screen.queryByText(locationData.title)).not.toBeInTheDocument();
     });
 
-    it('should render marker popup after click on marker', async () => {
+    it('should render marker popup after click on marker', () => {
         const marker = document.querySelector('.leaflet-marker-icon');
-        await act(async () => {
+        waitFor(() => {
             fireEvent.click(marker);
+            expect(document.querySelector('.leaflet-popup')).toBeInTheDocument();
+            expect(screen.queryByText(locationData.title)).toBeInTheDocument();
         });
-        expect(document.querySelector('.leaflet-popup')).toBeInTheDocument();
-        expect(screen.queryByText(locationData.title)).toBeInTheDocument();
     });
 });

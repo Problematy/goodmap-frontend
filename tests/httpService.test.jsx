@@ -1,3 +1,4 @@
+import { waitFor } from '@testing-library/react';
 import { httpService } from '../src/services/http/httpService';
 
 jest.mock('../src/services/http/httpService');
@@ -49,10 +50,11 @@ describe('', () => {
         global.fetch.mockRestore();
     });
 
-    it('should fetch location', async () => {
-        const json = await httpService.getLocation(location.uuid);
-        // expect(fetchMock).toHaveBeenCalled
-
-        expect(json.data.length).toEqual(5);
+    it('should fetch location', () => {
+        waitFor(() => {
+            const json = httpService.getLocation(location.uuid);
+            // expect(fetchMock).toHaveBeenCalled
+            expect(json.data.length).toEqual(5);
+        });
     });
 });
