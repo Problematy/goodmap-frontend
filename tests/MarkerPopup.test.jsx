@@ -66,9 +66,11 @@ describe('MarkerPopup', () => {
         expect(screen.queryByText(locationData.title)).not.toBeInTheDocument;
     });
 
-    it('should render marker popup after click on marker', () => {
+    it('should render marker popup after click on marker', async () => {
         const marker = document.querySelector('.leaflet-marker-icon');
+        await act(async ()=>{
         fireEvent.click(marker);
+        })
         expect(document.querySelector('.leaflet-popup')).toBeInTheDocument;
         expect(screen.queryByText(locationData.title)).toBeInTheDocument;
     });
