@@ -2,10 +2,10 @@ import React from 'react';
 import '@testing-library/jest-dom';
 import { render, screen, fireEvent, act, waitFor } from '@testing-library/react';
 import { MapContainer } from 'react-leaflet';
-import { MarkerPopup } from '../src/components/MarkerPopup/MarkerPopup';
-import { httpService } from '../src/services/http/httpService';
+import { MarkerPopup } from '../../src/components/MarkerPopup/MarkerPopup';
+import { httpService } from '../../src/services/http/httpService';
 
-jest.mock('../src/services/http/httpService');
+jest.mock('../../src/services/http/httpService');
 
 const location = {
     position: [51.1095, 17.0525],
@@ -68,8 +68,8 @@ describe('MarkerPopup', () => {
 
     it('should render marker popup after click on marker', () => {
         const marker = document.querySelector('.leaflet-marker-icon');
+        fireEvent.click(marker);
         waitFor(() => {
-            fireEvent.click(marker);
             expect(document.querySelector('.leaflet-popup')).toBeInTheDocument();
             expect(screen.queryByText(locationData.title)).toBeInTheDocument();
         });
