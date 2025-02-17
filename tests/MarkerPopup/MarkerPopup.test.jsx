@@ -58,6 +58,7 @@ describe('MarkerPopup', () => {
 
     afterEach(() => {
         global.fetch.mockRestore();
+        delete window.USE_LAZY_LOADING;
     });
 
     it('should render marker without popup', () => {

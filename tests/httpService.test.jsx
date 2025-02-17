@@ -39,7 +39,7 @@ const fetchMock = jest.spyOn(global, 'fetch').mockResolvedValue({
 });
 */
 
-describe('', () => {
+describe('httpService', () => {
     beforeEach(() => {
         jest.spyOn(global, 'fetch').mockResolvedValue({
             json: jest.fn().mockResolvedValue(locationData),
