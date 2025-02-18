@@ -19,19 +19,17 @@ const locationData = {
     data: [
         ['length', 112.5],
         ['accessible_by', ['pedestrians', 'cars']],
-        ['website', { type: 'hyperlink', value: 'https://www.google.com' }],
         [
-            'websiteWithDisplayValue',
+            'CTA',
             {
-                type: 'hyperlink',
-                value: 'https://www.google.com',
-                displayValue: 'testWebsite',
+                type: 'CTA',
+                value: 'https://www.example.com',
+                displayValue: 'Visit example.org!',
             },
         ],
-        ['unknownDataType', { type: 'unknown', value: 'example value for unknown data type' }],
     ],
     metadata: {
-        UUID: '21231',
+        uuid: '21231',
     },
 };
 
@@ -58,7 +56,6 @@ describe('MarkerPopup', () => {
 
     afterEach(() => {
         global.fetch.mockRestore();
-        delete window.USE_LAZY_LOADING;
     });
 
     it('should render marker without popup', () => {
