@@ -59,15 +59,15 @@ describe('MarkerPopup', () => {
     });
 
     it('should render marker without popup', () => {
-        expect(document.querySelector('.leaflet-marker-icon')).toBeInTheDocument();
+        expect(screen.getByAltText(/marker/i)).toBeInTheDocument();
         expect(document.querySelector('.leaflet-popup')).not.toBeInTheDocument();
         expect(screen.queryByText(locationData.title)).not.toBeInTheDocument();
     });
 
     it('should render marker popup after click on marker', () => {
-        const marker = document.querySelector('.leaflet-marker-icon');
+        const marker = screen.getByAltText(/marker/i);
         fireEvent.click(marker);
-        waitFor(() => {
+        return waitFor(() => {
             expect(document.querySelector('.leaflet-popup')).toBeInTheDocument();
             expect(screen.queryByText(locationData.title)).toBeInTheDocument();
         });
