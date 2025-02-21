@@ -55,6 +55,17 @@ function filtersToQuery(filters) {
       return response.json();
     },
 
+    getLocationsWithLatLon: async (lat, lon, filters) => {
+        const filtersUrlParams = filtersToQuery(filters);
+        const response = await fetch(`${LOCATIONS}?${filtersUrlParams}&lat=${lat}&lon=${lon}&limit=10`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        });
+        return response.json();
+    },
+
     getLocation: async locationId => {
       const response = await fetch(`${LOCATION}/${locationId}`, {
             method: 'GET',
@@ -65,15 +76,14 @@ function filtersToQuery(filters) {
         return response.json();
     },
 
-    getLocationsWithLatLon: async (lat, lon, filters) => {
-        const query = filtersToQuery(filters);
-        const response = await fetch(`${DATA}?${query}&lat=${lat}&lon=${lon}&limit=10`, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-        });
-        return response.json();
+    getLocationsData : async (lat, lon, filters) => {
+        const locations = await httpService.getLocationsWithLatLon(lat, lon, filters);
+        const dataPromises = locations.map((location) => 
+            httpService.getLocation(location.uuid),
+        );
+        const dataResponse = Promise.all(dataPromises);
+
+        return dataResponse;
     },
 
     getLanguages: () => fetch(LANGUAGES).then(response => response.json()),
