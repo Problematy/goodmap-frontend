@@ -76,12 +76,15 @@ function filtersToQuery(filters) {
 
     getLocationsData : async (lat, lon, filters) => {
         const locations = await httpService.getLocationsWithLatLon(lat, lon, filters);
-        const dataPromises = locations.map((location) => 
-            httpService.getLocation(location.uuid),
-        );
-        const dataResponse = Promise.all(dataPromises);
-
-        return dataResponse;
+        try {
+            const dataPromises = locations.map((location) => 
+                httpService.getLocation(location.uuid)
+            );
+            return await Promise.all(dataPromises);
+        } catch (error) {
+            console.error('Failed to fetch location data:', error);
+            throw error;
+        }
     },
 
     getLanguages: () => fetch(LANGUAGES).then(response => response.json()),
