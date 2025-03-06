@@ -62,7 +62,9 @@ export const MapComponent = () => {
                         <SuggestNewPointButton />
                     </Control>
                 )}
-                {!window.USE_SERVER_SIDE_CLUSTERING && <Markers setAreMarkersLoaded={setAreMarkersLoaded} />}
+                {!window.USE_SERVER_SIDE_CLUSTERING && (
+                    <Markers setAreMarkersLoaded={setAreMarkersLoaded} />
+                )}
                 {window.USE_SERVER_SIDE_CLUSTERING && markers}
                 <LocationControl setUserPosition={setUserPosition} />
                 <CustomZoomControl position="topright" />

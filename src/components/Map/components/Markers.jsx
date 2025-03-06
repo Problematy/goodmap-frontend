@@ -1,5 +1,4 @@
 import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, ZoomControl, useMap } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import { httpService } from '../../../services/http/httpService';
 import { MarkerPopup } from '../../MarkerPopup/MarkerPopup';
@@ -18,10 +17,9 @@ const getMarkers = locations => {
     return locations.map(location => <MarkerPopup place={location} key={location.uuid} />);
 };
 
-export const Markers = ({setAreMarkersLoaded}) => {
+export const Markers = ({ setAreMarkersLoaded }) => {
     const { categories } = useCategories();
     const [markers, setMarkers] = useState([]);
-    const map = useMap();
     useEffect(() => {
         setAreMarkersLoaded(false);
 

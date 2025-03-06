@@ -23,7 +23,7 @@ const LocationDetailsBoxWrapper = ({ theplace }) => {
 
     return (
         <ChosenPopup>
-            {place ? <LocationDetailsBox place={place} /> : <LoadingScreen/>}
+            {place ? <LocationDetailsBox place={place} /> : <LoadingScreen />}
         </ChosenPopup>
     );
 };
