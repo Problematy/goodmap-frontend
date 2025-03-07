@@ -71,4 +71,15 @@ describe('MarkerPopup', () => {
             expect(screen.queryByText(locationData.title)).toBeInTheDocument();
         });
     });
+
+    it('should show loading screen while fetching data', () => {
+        const marker = screen.getByAltText(/marker/i);
+        fireEvent.click(marker);
+        const loading = screen.getByRole('img', {alt: "Loading..."});
+        expect(loading).toBeInTheDocument();
+        return waitFor(() => {
+            expect(document.querySelector('.leaflet-popup')).toBeInTheDocument();
+            expect(loading).not.toBeInTheDocument();
+        });
+    });
 });
