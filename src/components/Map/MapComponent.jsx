@@ -22,21 +22,27 @@ export const MapComponent = () => {
     const [userPosition, setUserPosition] = useState(null);
     const [isListViewOpen, setIsListViewOpen] = useState(false);
     const [areMarkersLoaded, setAreMarkersLoaded] = useState(false);
+    const [isTableLoaded, setIsTableLoaded] = useState(true);
 
     const handleListViewButtonClick = () => {
         if (!userPosition) {
             toast.error(t('listViewButtonUserLocation'));
             return;
         }
+        setIsTableLoaded(false);
         setIsListViewOpen(!isListViewOpen);
     };
 
     if (isListViewOpen) {
         return (
-            <AccessibilityTable
-                userPosition={userPosition}
-                setIsAccessibilityTableOpen={setIsListViewOpen}
-            />
+            <>
+                {!isTableLoaded && <LoadingScreen />}
+                <AccessibilityTable
+                    userPosition={userPosition}
+                    setIsAccessibilityTableOpen={setIsListViewOpen}
+                    setIsTableLoaded={setIsTableLoaded}
+                />
+            </>
         );
     }
 

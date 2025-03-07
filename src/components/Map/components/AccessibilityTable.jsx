@@ -14,7 +14,7 @@ import { httpService } from '../../../services/http/httpService';
 import { mapCustomTypeToReactComponent } from '../../MarkerPopup/mapCustomTypeToReactComponent';
 import { useCategories } from '../../Categories/CategoriesContext';
 
-const AccessibilityTable = ({ userPosition, setIsAccessibilityTableOpen }) => {
+const AccessibilityTable = ({ userPosition, setIsAccessibilityTableOpen, setIsTableLoaded }) => {
     const { categories } = useCategories();
     const { t } = useTranslation();
 
@@ -82,6 +82,7 @@ const AccessibilityTable = ({ userPosition, setIsAccessibilityTableOpen }) => {
                 rowsLocal.push(row);
             });
             setRows(rowsLocal);
+            setIsTableLoaded(true);
         } catch (error) {
             console.log('AccessibilityTable: ', error);
         }
