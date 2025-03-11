@@ -75,7 +75,7 @@ describe('MarkerPopup', () => {
     it('should show loading screen while fetching data', () => {
         const marker = screen.getByAltText(/marker/i);
         fireEvent.click(marker);
-        const loading = screen.getByRole('img', {alt: "Loading..."});
+        const loading = screen.getByRole('img', { alt: 'Loading...' });
         expect(loading).toBeInTheDocument();
         return waitFor(() => {
             expect(document.querySelector('.leaflet-popup')).toBeInTheDocument();
