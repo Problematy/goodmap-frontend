@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import Control from 'react-leaflet-custom-control';
 import { LocationControl } from './components/LocationControl';
@@ -15,6 +16,12 @@ import { useTranslation } from 'react-i18next';
 import { AppToaster } from '../common/AppToaster';
 import { Markers } from './components/Markers';
 import { LoadingScreen } from '../LoadingScreen/LoadingScreen';
+
+const StyledLoadingScreen = styled(LoadingScreen)`
+    position: absolute;
+    width: 84%;
+    height: 100%;
+`;
 
 export const MapComponent = () => {
     const { t } = useTranslation();
@@ -36,7 +43,7 @@ export const MapComponent = () => {
     if (isListViewOpen) {
         return (
             <>
-                {!isTableLoaded && <LoadingScreen />}
+                {!isTableLoaded && <StyledLoadingScreen />}
                 <AccessibilityTable
                     userPosition={userPosition}
                     setIsAccessibilityTableOpen={setIsListViewOpen}
@@ -48,7 +55,7 @@ export const MapComponent = () => {
 
     return (
         <>
-            {!areMarkersLoaded && <LoadingScreen />}
+            {!areMarkersLoaded && <StyledLoadingScreen />}
             <AppToaster />
             <MapContainer
                 center={mapConfig.initialMapCoordinates}

@@ -1,21 +1,18 @@
 import React from 'react';
-import styled from 'styled-components';
 
-export const LoadingScreen = () => {
+export const LoadingScreen = ({ className }) => {
     return (
-        <LoadingBackground>
-            <img src={window.LOADING_GIF} alt="Loading..." />
-        </LoadingBackground>
+        <div
+            className={className}
+            style={{
+                zIndex: 99999999,
+                backgroundColor: 'rgba(50, 50, 50, 0.7)',
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+            }}
+        >
+            <img src={window.LOADING_GIF} alt="Loading..." style={{ maxWidth: '30%' }} />
+        </div>
     );
 };
-
-const LoadingBackground = styled.div`
-    z-index: 99999999;
-    width: inherit;
-    height: inherit;
-    background-color: rgba(50, 50, 50, 0.7);
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-`;
