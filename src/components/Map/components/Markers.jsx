@@ -15,7 +15,7 @@ const getMarkers = locations => {
             return <MarkerPopup place={location} key={location.uuid} />;
         });
     }
-    return locations.map(location => <MarkerPopup place={location} key={location.UUID} />);
+    return locations.map(location => <MarkerPopup place={location} key={location.uuid} />);
 };
 
 export const Markers = () => {
