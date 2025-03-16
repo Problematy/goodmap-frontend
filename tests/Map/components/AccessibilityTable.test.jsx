@@ -15,7 +15,7 @@ const examplePlaces = [
             ['type_of_place', 'big bridge'],
         ],
         metadata: {
-            uuid: 'hidden',
+            UUID: 'hidden',
         },
         position: [51.1095, 17.0525],
         subtitle: 'big bridge',
@@ -27,7 +27,7 @@ const examplePlaces = [
             ['type_of_place', 'small bridge'],
         ],
         metadata: {
-            uuid: 'dattarro',
+            UUID: 'dattarro',
         },
         position: [51.10655, 17.0555],
         subtitle: 'small bridge',
