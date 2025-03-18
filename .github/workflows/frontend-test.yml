@@ -43,6 +43,7 @@ jobs:
 
  e2e-tests:
    needs: frontend-test
+   
    uses: raven-wing/goodmap-e2e-tests/.github/workflows/test-base.yml@tests
    with:
      goodmap-version: 'main'
