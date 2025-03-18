@@ -41,11 +41,9 @@ jobs:
           path-to-lcov: './coverage/lcov.info'
           github-token: ${{ secrets.GITHUB_TOKEN }}
       - name: Run e2e tests
-        uses: problematy/goodmap-e2e-tests@main
+        uses: problematy/goodmap-e2e-tests/.github/workflows/test-base.yml@main
         with:
           goodmap-version: 'main'
           goodmap-repository: problematy/goodmap
-          # current version of this repository
           goodmap-frontend-version: ${{ github.sha }}
-          # current repository that is being tested
           goodmap-frontend-repository: ${{ github.repository }}
