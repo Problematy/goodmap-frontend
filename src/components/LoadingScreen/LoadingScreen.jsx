@@ -6,7 +6,7 @@ export const LoadingScreen = ({ className }) => {
             className={className}
             style={{
                 zIndex: 99999999,
-                backgroundColor: 'rgba(50, 50, 50, 0.7)',
+                backgroundColor: 'rgba(36, 84, 102, 0.4)',
                 display: 'flex',
                 justifyContent: 'center',
                 alignItems: 'center',

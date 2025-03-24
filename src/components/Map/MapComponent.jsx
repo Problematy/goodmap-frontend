@@ -19,7 +19,8 @@ import { LoadingScreen } from '../LoadingScreen/LoadingScreen';
 
 const StyledLoadingScreen = styled(LoadingScreen)`
     position: absolute;
-    width: 84%;
+    left: 0;
+    width: 100%;
     height: 100%;
 `;
 
