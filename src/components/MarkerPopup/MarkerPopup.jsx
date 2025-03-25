@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import { Marker } from 'react-leaflet';
 import { isMobile } from 'react-device-detect';
@@ -7,6 +8,12 @@ import { httpService } from '../../services/http/httpService';
 import { LocationDetailsBox } from './LocationDetails';
 import { MobilePopup } from './MobilePopup';
 import { DesktopPopup } from './DesktopPopup';
+import { LoadingScreen } from '../LoadingScreen/LoadingScreen';
+
+const StyledLoadingScreen = styled(LoadingScreen)`
+    position: relative;
+    height: 200px;
+`;
 
 const LocationDetailsBoxWrapper = ({ theplace }) => {
     const [place, setPlace] = useState(null);
@@ -22,7 +29,7 @@ const LocationDetailsBoxWrapper = ({ theplace }) => {
 
     return (
         <ChosenPopup>
-            {place ? <LocationDetailsBox place={place} /> : <p>Loading...</p>}
+            {place ? <LocationDetailsBox place={place} /> : <StyledLoadingScreen />}
         </ChosenPopup>
     );
 };

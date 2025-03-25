@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
+import React, { useState } from 'react';
+import { MapContainer, TileLayer } from 'react-leaflet';
+import styled from 'styled-components';
 import PropTypes from 'prop-types';
 import Control from 'react-leaflet-custom-control';
 import { LocationControl } from './components/LocationControl';
@@ -14,32 +15,48 @@ import { toast } from '../../utils/toast';
 import { useTranslation } from 'react-i18next';
 import { AppToaster } from '../common/AppToaster';
 import { Markers } from './components/Markers';
+import { LoadingScreen } from '../LoadingScreen/LoadingScreen';
+
+const StyledLoadingScreen = styled(LoadingScreen)`
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 100%;
+`;
 
 export const MapComponent = () => {
     const { t } = useTranslation();
 
     const [userPosition, setUserPosition] = useState(null);
     const [isListViewOpen, setIsListViewOpen] = useState(false);
+    const [areMarkersLoaded, setAreMarkersLoaded] = useState(false);
+    const [isTableLoaded, setIsTableLoaded] = useState(true);
 
     const handleListViewButtonClick = () => {
         if (!userPosition) {
             toast.error(t('listViewButtonUserLocation'));
             return;
         }
+        setIsTableLoaded(false);
         setIsListViewOpen(!isListViewOpen);
     };
 
     if (isListViewOpen) {
         return (
-            <AccessibilityTable
-                userPosition={userPosition}
-                setIsAccessibilityTableOpen={setIsListViewOpen}
-            />
+            <>
+                {!isTableLoaded && <StyledLoadingScreen />}
+                <AccessibilityTable
+                    userPosition={userPosition}
+                    setIsAccessibilityTableOpen={setIsListViewOpen}
+                    setIsTableLoaded={setIsTableLoaded}
+                />
+            </>
         );
     }
 
     return (
         <>
+            {!areMarkersLoaded && <StyledLoadingScreen />}
             <AppToaster />
             <MapContainer
                 center={mapConfig.initialMapCoordinates}
@@ -59,7 +76,9 @@ export const MapComponent = () => {
                         <SuggestNewPointButton />
                     </Control>
                 )}
-                {!window.USE_SERVER_SIDE_CLUSTERING && <Markers />}
+                {!window.USE_SERVER_SIDE_CLUSTERING && (
+                    <Markers setAreMarkersLoaded={setAreMarkersLoaded} />
+                )}
                 {window.USE_SERVER_SIDE_CLUSTERING && markers}
                 <LocationControl setUserPosition={setUserPosition} />
                 <CustomZoomControl position="topright" />
