@@ -10,6 +10,7 @@ jest.mock('../../src/services/http/httpService');
 const location = {
     position: [51.1095, 17.0525],
     uuid: '21231',
+    remark: false,
 };
 
 const locationData = {
@@ -70,5 +71,23 @@ describe('MarkerPopup', () => {
             expect(document.querySelector('.leaflet-popup')).toBeInTheDocument();
             expect(screen.queryByText(locationData.title)).toBeInTheDocument();
         });
+    });
+
+    it('should render marker popup without asterisks when remark is false', () => {
+        expect(screen.getByAltText(/Marker/i)).toBeInTheDocument();
+    });
+
+    it('should render marker popup without asterisks when remark is true', () => {
+        const locationWhenRemarkIsTrue = { ...location, remark: true };
+        render(
+            <MapContainer
+                center={locationWhenRemarkIsTrue.position}
+                zoom={10}
+                style={{ height: '100vh', width: '100%' }}
+            >
+                <MarkerPopup place={locationWhenRemarkIsTrue} key={locationWhenRemarkIsTrue.uuid} />
+            </MapContainer>,
+        );
+        expect(screen.getByAltText(/Marker-Asterisk/i)).toBeInTheDocument();
     });
 });
