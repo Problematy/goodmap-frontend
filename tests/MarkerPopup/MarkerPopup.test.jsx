@@ -77,7 +77,7 @@ describe('MarkerPopup', () => {
         expect(screen.getByAltText(/Marker/i)).toBeInTheDocument();
     });
 
-    it('should render marker popup without asterisks when remark is true', () => {
+    it('should render marker popup with asterisks when remark is true', () => {
         const locationWhenRemarkIsTrue = { ...location, remark: true };
         render(
             <MapContainer
