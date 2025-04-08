@@ -4,6 +4,7 @@ import { useCategories } from '../Categories/CategoriesContext';
 import useDebounce from '../../utils/hooks/useDebounce';
 import { httpService } from '../../services/http/httpService';
 import { useMapStore } from '../Map/store/map.store';
+import FiltersTooltip from './FiltersTooltip';
 
 export const FiltersForm = () => {
     const { setCategories } = useCategories();
@@ -57,6 +58,11 @@ export const FiltersForm = () => {
             <span id={`filter-label-${filtersData[0][0]}-${filtersData[0][1]}`}>
                 {filtersData[0][1]}
             </span>
+            {filtersData[2].find(it => it[filtersData[0][0]]) && (
+                <FiltersTooltip
+                    text={filtersData[2].find(it => it[filtersData[0][0]])[filtersData[0][0]]}
+                />
+            )}
             {filtersData[1].map(([name, translation]) => (
                 <div className="form-check" key={`${filtersData[0][0]}-${name}`}>
                     <label htmlFor={name}>
@@ -69,6 +75,9 @@ export const FiltersForm = () => {
                             id={name}
                             value={name}
                         />
+                        {filtersData[3].find(it => it[name]) && (
+                            <FiltersTooltip text={filtersData[3].find(it => it[name])[name]} />
+                        )}
                     </label>
                 </div>
             ))}
