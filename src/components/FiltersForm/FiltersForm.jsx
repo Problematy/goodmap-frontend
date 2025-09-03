@@ -50,39 +50,44 @@ export const FiltersForm = () => {
         fetchCategories();
     }, []);
 
-    const sections = categoriesData.map(filtersData => (
-        <div
-            key={`${filtersData[0][0]}-${filtersData[0][1]}`}
-            aria-labelledby={`filter-label-${filtersData[0][0]}-${filtersData[0][1]}`}
-        >
-            <span id={`filter-label-${filtersData[0][0]}-${filtersData[0][1]}`}>
-                {filtersData[0][1]}
-            </span>
-            {filtersData[2].find(it => it[filtersData[0][0]]) && (
-                <FiltersTooltip
-                    text={filtersData[2].find(it => it[filtersData[0][0]])[filtersData[0][0]]}
-                />
-            )}
-            {filtersData[1].map(([name, translation]) => (
-                <div className="form-check" key={`${filtersData[0][0]}-${name}`}>
+      const renderFilterOptions = (filters, category) =>
+          filters[1].map(([name, translation]) => {
+              const tooltipData = window.FEATURE_FLAGS.CATEGORIES_HELP ? filters[3].find(it => it[name]): "";
+              return (
+                  <div className="form-check" key={`${category}-${name}`}>
                     <label htmlFor={name}>
                         {translation}
-                        <input
-                            onChange={handleCheckboxChange}
-                            className={`form-check-input filter`}
-                            data-category={filtersData[0][0]}
-                            type="checkbox"
-                            id={name}
-                            value={name}
-                        />
-                        {filtersData[3].find(it => it[name]) && (
-                            <FiltersTooltip text={filtersData[3].find(it => it[name])[name]} />
-                        )}
-                    </label>
-                </div>
-            ))}
-        </div>
-    ));
+                          <input
+                              onChange={handleCheckboxChange}
+                              className="form-check-input filter"
+                              data-category={category}
+                              type="checkbox"
+                              id={name}
+                              value={name}
+                          />
+                          {tooltipData && <FiltersTooltip text={tooltipData[name]} />}
+                      </label>
+                  </div>
+              );
+          });
 
-    return <form>{sections}</form>;
+      const sections = categoriesData.map(filtersData => (
+          <div
+              key={`${filtersData[0][0]}-${filtersData[0][1]}`}
+              aria-labelledby={`filter-label-${filtersData[0][0]}-${filtersData[0][1]}`}
+          >
+              <span id={`filter-label-${filtersData[0][0]}-${filtersData[0][1]}`}>
+                  {filtersData[0][1]}
+              </span>
+              {window.FEATURE_FLAGS.CATEGORIES_HELP &&
+                  filtersData[2].find(it => it[filtersData[0][0]]) && (
+                      <FiltersTooltip
+                          text={filtersData[2].find(it => it[filtersData[0][0]])[filtersData[0][0]]}
+                      />
+                  )}
+              {renderFilterOptions(filtersData, filtersData[0][0])}
+          </div>
+      ));
+
+      return <form>{sections}</form>;
 };

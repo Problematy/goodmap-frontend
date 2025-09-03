@@ -14,4 +14,9 @@ module.exports = {
         '\\.(css|less)$': '<rootDir>/__mocks__/styleMock.js',
         '\\.(png|jpg|jpeg|gif|svg)$': '<rootDir>/__mocks__/fileMock.js',
     },
+    testEnvironment: 'jest-environment-jsdom-sixteen',
+    testEnvironmentOptions: {
+        url: 'http://localhost/', // Provide a valid origin
+    },
+
 };

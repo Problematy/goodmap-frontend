@@ -17,6 +17,11 @@ import { Markers } from './components/Markers';
 
 export const MapComponent = () => {
     const { t } = useTranslation();
+    console.log('MapComponent');
+
+    useEffect(() => {
+        console.log("dupa");
+    }, []);
 
     const [userPosition, setUserPosition] = useState(null);
     const [isListViewOpen, setIsListViewOpen] = useState(false);
@@ -54,19 +59,19 @@ export const MapComponent = () => {
                     attribution='&amp;copy <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
                     maxZoom={mapConfig.maxMapZoom}
                 />
-                {window.SHOW_SUGGEST_NEW_POINT_BUTTON && (
+                {window.FEATURE_FLAGS.SHOW_SUGGEST_NEW_POINT_BUTTON && (
                     <Control position="bottomright" prepend>
                         <SuggestNewPointButton />
                     </Control>
                 )}
-                {!window.USE_SERVER_SIDE_CLUSTERING && <Markers />}
-                {window.USE_SERVER_SIDE_CLUSTERING && markers}
+                {!window.FEATURE_FLAGS.USE_SERVER_SIDE_CLUSTERING && <Markers />}
+                {window.FEATURE_FLAGS.USE_SERVER_SIDE_CLUSTERING && markers}
                 <LocationControl setUserPosition={setUserPosition} />
                 <CustomZoomControl position="topright" />
-                {window.SHOW_ACCESSIBILITY_TABLE && (
+                {window.FEATURE_FLAGS.SHOW_ACCESSIBILITY_TABLE && (
                     <ListViewButton onClick={handleListViewButtonClick} />
                 )}
-                {window.SHOW_SEARCH_BAR && <MapAutocomplete />}
+                {window.FEATURE_FLAGS.SHOW_SEARCH_BAR && <MapAutocomplete />}
             </MapContainer>
         </>
     );

@@ -14,7 +14,7 @@ function filtersToQuery(filters) {
         .map(([key, values]) => values.map(value => `${key}=${value}`).join('&'))
         .join('&');
 
-    if (window.USE_SERVER_SIDE_CLUSTERING) {
+    if (window.FEATURE_FLAGS.USE_SERVER_SIDE_CLUSTERING) {
         const mapConfigurationData = useMapStore.getState().mapConfiguration;
         if (mapConfigurationData) {
             const mapConfigQueryString = Object.entries(mapConfigurationData)
@@ -34,20 +34,29 @@ export const httpService = {
 
     getCategoriesData: async () => {
         const categories = await httpService.getCategories();
-        const subcategoriesPromises = categories.categories.map(([categoryName, _translation]) =>
+        const categories_ = window.FEATURE_FLAGS.CATEGORIES_HELP ? categories.categories : categories
+
+        const subcategoriesPromises = categories_.map(([categoryName, _translation]) =>
             httpService.getSubcategories(categoryName),
         );
         const subcategoriesResponse = Promise.all(subcategoriesPromises);
 
         const mainResponse = subcategoriesResponse.then(subcategories => {
-            return categories.categories.map((subcategory, index) => [
-                subcategory,
-                subcategories[index].categories_options ?? null,
-                categories.categories_help,
-                subcategories[index].categories_options_help ?? null,
-            ])
-        }
-        );
+            if (window.FEATURE_FLAGS.CATEGORIES_HELP) {
+                return categories_.map((subcategory, index) => [
+                    subcategory,
+                    subcategories[index].categories_options ?? null,
+                    categories.categories_help,
+                    subcategories[index].categories_options_help ?? null,
+                ])
+                } else {
+                    return categories_.map((subcategory, index) => [
+                        subcategory,
+                        subcategories[index] ?? null,
+                ])
+            }
+        });
+
         return mainResponse;
     },
 
@@ -55,7 +64,7 @@ export const httpService = {
         const filtersUrlParams = filtersToQuery(filters);
 
         let ENDPOINT = LOCATIONS;
-        if (window.USE_SERVER_SIDE_CLUSTERING) {
+        if (window.FEATURE_FLAGS.USE_SERVER_SIDE_CLUSTERING) {
             ENDPOINT = LOCATIONS_CLUSTERED;
         }
 
