@@ -19,10 +19,6 @@ export const MapComponent = () => {
     const { t } = useTranslation();
     console.log('MapComponent');
 
-    useEffect(() => {
-        console.log("dupa");
-    }, []);
-
     const [userPosition, setUserPosition] = useState(null);
     const [isListViewOpen, setIsListViewOpen] = useState(false);
 
@@ -76,7 +72,3 @@ export const MapComponent = () => {
         </>
     );
 };
-//
-// MapComponent.propTypes = {
-//     markers: PropTypes.arrayOf(PropTypes.element).isRequired,
-// };
