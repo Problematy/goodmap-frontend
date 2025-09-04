@@ -52,27 +52,27 @@ export const FiltersForm = () => {
 
     const renderFilterOptions = (filters, category) =>
         filters[1].map(([name, translation]) => {
-            const tooltipData = window.FEATURE_FLAGS.CATEGORIES_HELP
-                ? filters[3].find(it => it[name])
-                : '';
+            const optionHelp =
+                window.FEATURE_FLAGS?.CATEGORIES_HELP && Array.isArray(filters[3])
+                    ? (filters[3].find(it => it && it[name]) || {})[name]
+                    : undefined;
             return (
                 <div className="form-check" key={`${category}-${name}`}>
-                    <label htmlFor={name}>
+                    <label htmlFor={`${category}-${name}`}>
                         {translation}
                         <input
                             onChange={handleCheckboxChange}
                             className="form-check-input filter"
                             data-category={category}
                             type="checkbox"
-                            id={name}
+                            id={`${category}-${name}`}
                             value={name}
                         />
-                        {tooltipData && <FiltersTooltip text={tooltipData[name]} />}
+                        {optionHelp && <FiltersTooltip text={optionHelp} />}
                     </label>
                 </div>
             );
         });
-
     const sections = categoriesData.map(filtersData => (
         <div
             key={`${filtersData[0][0]}-${filtersData[0][1]}`}
