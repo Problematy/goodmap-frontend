@@ -5,7 +5,7 @@ module.exports = {
     setupFilesAfterEnv: ['<rootDir>/jest.setup.js'],
     collectCoverageFrom: ['src/components/**/*.jsx'],
     transform: {
-        '^.+\\.jsx?$': 'babel-jest',
+        '^.+\\.(js|jsx)$': 'babel-jest',
     },
     transformIgnorePatterns: [
         'node_modules/(?!(react-leaflet|@react-leaflet/core|react-leaflet-custom-control|@adamscybot/react-leaflet-component-marker)/)',

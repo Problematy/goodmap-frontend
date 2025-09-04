@@ -17,7 +17,6 @@ import { Markers } from './components/Markers';
 
 export const MapComponent = () => {
     const { t } = useTranslation();
-    console.log('MapComponent');
 
     const [userPosition, setUserPosition] = useState(null);
     const [isListViewOpen, setIsListViewOpen] = useState(false);

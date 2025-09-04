@@ -24,10 +24,7 @@ httpService.getCategoriesData.mockResolvedValue(categories);
 describe('Creates good filter_form box', () => {
     beforeAll(() => {
         global.window.FEATURE_FLAGS = {
-            SHOW_SUGGEST_NEW_POINT_BUTTON: true,
-            USE_SERVER_SIDE_CLUSTERING: false,
-            SHOW_ACCESSIBILITY_TABLE: true,
-            SHOW_SEARCH_BAR: true,
+            CATEGORIES_HELP: true,
         };
     });
     beforeEach(() => {
