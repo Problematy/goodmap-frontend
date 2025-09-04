@@ -59,8 +59,7 @@ export const MapComponent = () => {
                         <SuggestNewPointButton />
                     </Control>
                 )}
-                {!window.FEATURE_FLAGS.USE_SERVER_SIDE_CLUSTERING && <Markers />}
-                {window.FEATURE_FLAGS.USE_SERVER_SIDE_CLUSTERING && markers}
+                <Markers />
                 <LocationControl setUserPosition={setUserPosition} />
                 <CustomZoomControl position="topright" />
                 {window.FEATURE_FLAGS.SHOW_ACCESSIBILITY_TABLE && (
