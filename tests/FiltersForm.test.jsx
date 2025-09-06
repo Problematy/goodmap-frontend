@@ -23,9 +23,7 @@ httpService.getCategoriesData.mockResolvedValue(categories);
 
 describe('Creates good filter_form box', () => {
     beforeAll(() => {
-        global.window.FEATURE_FLAGS = {
-            CATEGORIES_HELP: true,
-        };
+        global.window.FEATURE_FLAGS = { CATEGORIES_HELP: true };
     });
     beforeEach(() => {
         jest.spyOn(global, 'fetch').mockResolvedValue({

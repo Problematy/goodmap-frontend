@@ -10,20 +10,19 @@ import {
 import { useMapStore } from '../../components/Map/store/map.store';
 
 function filtersToQuery(filters) {
-    const basicQuery = Object.entries(filters)
-        .map(([key, values]) => values.map(value => `${key}=${value}`).join('&'))
-        .join('&');
-
-    if (window.FEATURE_FLAGS.USE_SERVER_SIDE_CLUSTERING) {
+    const params = new URLSearchParams();
+    Object.entries(filters || {}).forEach(([key, values = []]) => {
+        values.forEach(value => params.append(key, String(value)));
+    });
+    if (window.FEATURE_FLAGS?.USE_SERVER_SIDE_CLUSTERING) {
         const mapConfigurationData = useMapStore.getState().mapConfiguration;
         if (mapConfigurationData) {
-            const mapConfigQueryString = Object.entries(mapConfigurationData)
-                .map(([key, value]) => `${encodeURIComponent(key)}=${encodeURIComponent(value)}`)
-                .join('&');
-            return `${basicQuery}&${mapConfigQueryString}`;
+            Object.entries(mapConfigurationData).forEach(([k, v]) =>
+                params.append(String(k), String(v)),
+            );
         }
     }
-    return basicQuery;
+    return params.toString();
 }
 
 export const httpService = {
