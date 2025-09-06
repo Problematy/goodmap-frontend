@@ -8,7 +8,6 @@ import FiltersTooltip from './FiltersTooltip';
 
 export const FiltersForm = () => {
     const { setCategories } = useCategories();
-    const [selectedFilters, setSelectedFilters] = useState({});
     const [categoriesData, setCategoriesData] = useState([]);
     const mapConfiguration = useMapStore(state => state.mapConfiguration);
     const mapConfigDebounced = useDebounce(mapConfiguration, 5000);
