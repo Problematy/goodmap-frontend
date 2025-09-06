@@ -51,7 +51,7 @@ export const FiltersForm = () => {
 
     const renderFilterOptions = (filters, category) =>
         filters[1].map(([name, translation]) => {
-            const tooltipData = window.FEATURE_FLAGS.CATEGORIES_HELP
+            const tooltipData = window.FEATURE_FLAGS?.CATEGORIES_HELP
                 ? filters[3].find(it => it[name])
                 : '';
             return (
@@ -80,7 +80,7 @@ export const FiltersForm = () => {
             <span id={`filter-label-${filtersData[0][0]}-${filtersData[0][1]}`}>
                 {filtersData[0][1]}
             </span>
-            {window.FEATURE_FLAGS.CATEGORIES_HELP &&
+            {window.FEATURE_FLAGS?.CATEGORIES_HELP &&
                 filtersData[2].find(it => it[filtersData[0][0]]) && (
                     <FiltersTooltip
                         text={filtersData[2].find(it => it[filtersData[0][0]])[filtersData[0][0]]}

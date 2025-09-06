@@ -54,7 +54,7 @@ export const MapComponent = () => {
                     attribution='&amp;copy <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
                     maxZoom={mapConfig.maxMapZoom}
                 />
-                {window.FEATURE_FLAGS.SHOW_SUGGEST_NEW_POINT_BUTTON && (
+                {window.FEATURE_FLAGS?.SHOW_SUGGEST_NEW_POINT_BUTTON && (
                     <Control position="bottomright" prepend>
                         <SuggestNewPointButton />
                     </Control>
@@ -62,10 +62,10 @@ export const MapComponent = () => {
                 <Markers />
                 <LocationControl setUserPosition={setUserPosition} />
                 <CustomZoomControl position="topright" />
-                {window.FEATURE_FLAGS.SHOW_ACCESSIBILITY_TABLE && (
+                {window.FEATURE_FLAGS?.SHOW_ACCESSIBILITY_TABLE && (
                     <ListViewButton onClick={handleListViewButtonClick} />
                 )}
-                {window.FEATURE_FLAGS.SHOW_SEARCH_BAR && <MapAutocomplete />}
+                {window.FEATURE_FLAGS?.SHOW_SEARCH_BAR && <MapAutocomplete />}
             </MapContainer>
         </>
     );

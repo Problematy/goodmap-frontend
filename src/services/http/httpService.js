@@ -33,7 +33,7 @@ export const httpService = {
 
     getCategoriesData: async () => {
         const categories = await httpService.getCategories();
-        const categories_ = window.FEATURE_FLAGS.CATEGORIES_HELP ? categories.categories : categories
+        const categories_ = window.FEATURE_FLAGS?.CATEGORIES_HELP ? categories.categories : categories
 
         const subcategoriesPromises = categories_.map(([categoryName, _translation]) =>
             httpService.getSubcategories(categoryName),
@@ -41,7 +41,7 @@ export const httpService = {
         const subcategoriesResponse = Promise.all(subcategoriesPromises);
 
         const mainResponse = subcategoriesResponse.then(subcategories => {
-            if (window.FEATURE_FLAGS.CATEGORIES_HELP) {
+            if (window.FEATURE_FLAGS?.CATEGORIES_HELP) {
                 return categories_.map((subcategory, index) => [
                     subcategory,
                     subcategories[index].categories_options ?? null,
@@ -63,7 +63,7 @@ export const httpService = {
         const filtersUrlParams = filtersToQuery(filters);
 
         let ENDPOINT = LOCATIONS;
-        if (window.FEATURE_FLAGS.USE_SERVER_SIDE_CLUSTERING) {
+        if (window.FEATURE_FLAGS?.USE_SERVER_SIDE_CLUSTERING) {
             ENDPOINT = LOCATIONS_CLUSTERED;
         }
 
