@@ -35,20 +35,25 @@ export const MarkerPopup = ({ place }) => {
         setIsClicked(true);
     };
 
-    if (place.remark) {
-        return (
-            <Marker
-                position={place.position}
-                eventHandlers={{
-                    click: handleMarkerClick,
-                }}
-                icon={asteriskIcon}
-                alt="Marker-Asterisk"
-            >
-                {isClicked && <LocationDetailsBoxWrapper theplace={place} />}
-            </Marker>
-        );
-    }
+export const MarkerPopup = ({ place }) => {
+    const [isClicked, setIsClicked] = useState(false);
+    const handleMarkerClick = e => {
+        setIsClicked(true);
+    };
+
+    return (
+        <Marker
+            position={place.position}
+            eventHandlers={{
+                click: handleMarkerClick,
+            }}
+            icon={place.remark ? asteriskIcon : undefined}
+            alt={place.remark ? "Marker-Asterisk" : "Marker"}
+        >
+            {isClicked && <LocationDetailsBoxWrapper theplace={place} />}
+        </Marker>
+    );
+};
 
     return (
         <Marker
