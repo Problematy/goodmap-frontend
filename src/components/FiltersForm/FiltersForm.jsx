@@ -6,6 +6,13 @@ import { httpService } from '../../services/http/httpService';
 import { useMapStore } from '../Map/store/map.store';
 import FiltersTooltip from './FiltersTooltip';
 
+/**
+ * Filters form component that allows users to filter map locations by categories.
+ * Fetches category data from the API and renders checkboxes for each filter option.
+ * Manages filter state through the Categories context and debounces map configuration updates.
+ *
+ * @returns {React.ReactElement} Form element containing categorized filter checkboxes with optional tooltips
+ */
 export const FiltersForm = () => {
     const { setCategories } = useCategories();
     const [categoriesData, setCategoriesData] = useState([]);

@@ -9,6 +9,12 @@ import Control from 'react-leaflet-custom-control';
 import { useTranslation } from 'react-i18next';
 import { buttonStyle } from '../../../styles/buttonStyle';
 
+/**
+ * Creates a custom Leaflet icon for displaying the user's location marker.
+ * Renders a MyLocationIcon as an SVG string and converts it to a Leaflet divIcon.
+ *
+ * @returns {L.DivIcon} Leaflet divIcon representing the user's location
+ */
 const createLocationIcon = () => {
     const locationIconJSX = <MyLocationIcon sx={{ color: 'black', fontSize: 22 }} />;
     const svgLocationIcon = ReactDOMServer.renderToString(locationIconJSX);
@@ -22,6 +28,16 @@ const createLocationIcon = () => {
     });
 };
 
+/**
+ * Location control component that displays and manages the user's current location on the map.
+ * Automatically requests geolocation on mount and displays a marker with accuracy circle.
+ * Provides a button to re-center the map on the user's location.
+ * Shows a snackbar notification if location services are denied or unavailable.
+ *
+ * @param {Object} props - Component props
+ * @param {Function} props.setUserPosition - Callback function to update user position in parent component
+ * @returns {React.ReactElement} Location markers and control button, or null if no position available
+ */
 const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
     const { t } = useTranslation();
     const [userPosition, setUserPosition] = useState(null);

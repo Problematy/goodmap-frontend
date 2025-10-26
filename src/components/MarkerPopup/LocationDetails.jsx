@@ -8,8 +8,22 @@ import { ReportProblemForm } from './ReportProblemForm';
 
 import React, { useState } from 'react';
 
+/**
+ * Checks if a value is a custom object type (not an array).
+ *
+ * @param {*} value - Value to check
+ * @returns {boolean} True if value is an object and not an array
+ */
 const isCustomValue = value => typeof value === 'object' && !(value instanceof Array);
 
+/**
+ * Component that renders a location detail value.
+ * Handles both standard values (strings, numbers, arrays) and custom typed values (hyperlinks, CTAs).
+ *
+ * @param {Object} props - Component props
+ * @param {string|number|Array|Object} props.valueToDisplay - Value to display, can be primitive or custom type object
+ * @returns {React.ReactElement} Paragraph element containing the formatted value
+ */
 const LocationDetailsValue = ({ valueToDisplay }) => {
     const value = isCustomValue(valueToDisplay)
         ? mapCustomTypeToReactComponent(valueToDisplay)
@@ -33,6 +47,16 @@ LocationDetailsValue.propTypes = {
     ]).isRequired,
 };
 
+/**
+ * Button component that opens native navigation apps with the location coordinates.
+ * Uses the 'geo:' URI scheme to trigger navigation on mobile devices.
+ * Only displayed on mobile devices.
+ *
+ * @param {Object} props - Component props
+ * @param {Object} props.place - Location data object
+ * @param {number[]} props.place.position - Coordinates [latitude, longitude]
+ * @returns {React.ReactElement} Anchor element styled as a button for navigation
+ */
 const NavigateMeButton = ({ place }) => {
     const { t } = useTranslation();
     return (
@@ -56,6 +80,18 @@ const NavigateMeButton = ({ place }) => {
     );
 };
 
+/**
+ * Component that renders location details including title, subtitle, and categorized data.
+ * Separates data into regular categories and CTA (Call-To-Action) categories.
+ * Displays data in a grid layout with category labels and values.
+ *
+ * @param {Object} props - Component props
+ * @param {Object} props.place - Location data object
+ * @param {string} props.place.title - Location title
+ * @param {string} props.place.subtitle - Location subtitle
+ * @param {Array<[string, *]>} props.place.data - Array of [category, value] tuples
+ * @returns {React.ReactElement} Div containing formatted location details
+ */
 const LocationDetails = ({ place }) => {
     const categoriesWithSubcategories = place.data.filter(([category]) => !(category === 'CTA'));
     // TODO CTA should be handled like website is
@@ -122,6 +158,21 @@ const LocationDetails = ({ place }) => {
     );
 };
 
+/**
+ * Main component that wraps location details with additional features.
+ * Includes location details, optional navigation button (mobile only), and report problem form.
+ * Manages the visibility state of the problem reporting form.
+ *
+ * @param {Object} props - Component props
+ * @param {Object} props.place - Location data object
+ * @param {string} props.place.title - Location title
+ * @param {string} props.place.subtitle - Location subtitle
+ * @param {Array<[string, *]>} props.place.data - Array of [category, value] tuples
+ * @param {number[]} props.place.position - Coordinates [latitude, longitude]
+ * @param {Object} props.place.metadata - Metadata object
+ * @param {string} props.place.metadata.uuid - Unique identifier for the location
+ * @returns {React.ReactElement} Fragment containing location details, navigation button, and report form
+ */
 export const LocationDetailsBox = ({ place }) => {
     const { t } = useTranslation();
     const [showForm, setShowForm] = useState(false);

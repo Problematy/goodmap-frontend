@@ -4,6 +4,17 @@ import { Marker } from '@adamscybot/react-leaflet-component-marker';
 import styled from 'styled-components';
 import { useMap } from 'react-leaflet';
 
+/**
+ * Marker component for displaying server-side clustered locations.
+ * When clicked, zooms in by 5 levels to reveal individual markers within the cluster.
+ * Displays the cluster count in a circular blue icon.
+ *
+ * @param {Object} props - Component props
+ * @param {Object} props.cluster - Cluster data object
+ * @param {number[]} props.cluster.position - Coordinates [latitude, longitude] of cluster center
+ * @param {number} props.cluster.cluster_count - Number of markers in this cluster
+ * @returns {React.ReactElement} Marker component with custom cluster icon
+ */
 export const ClusterMarker = ({ cluster }) => {
     const map = useMap();
     const handleClusterClick = () => {
@@ -21,6 +32,15 @@ export const ClusterMarker = ({ cluster }) => {
     );
 };
 
+/**
+ * Icon component that renders the visual representation of a cluster.
+ * Displays the cluster count inside a circular blue container.
+ *
+ * @param {Object} props - Component props
+ * @param {Object} props.cluster - Cluster data object
+ * @param {number} props.cluster.cluster_count - Number of markers in this cluster
+ * @returns {React.ReactElement} Styled circular icon with cluster count
+ */
 const ClusterMarkerIcon = ({ cluster }) => {
     return (
         <ClusterMarkerContainer>
@@ -29,6 +49,10 @@ const ClusterMarkerIcon = ({ cluster }) => {
     );
 };
 
+/**
+ * Styled container for the cluster marker icon.
+ * Creates a circular blue container with centered white text.
+ */
 const ClusterMarkerContainer = styled.div`
     width: 30px;
     height: 30px;

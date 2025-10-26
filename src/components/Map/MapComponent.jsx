@@ -15,6 +15,14 @@ import { useTranslation } from 'react-i18next';
 import { AppToaster } from '../common/AppToaster';
 import { Markers } from './components/Markers';
 
+/**
+ * Main map component that renders an interactive Leaflet map with various controls and features.
+ * Manages user position state and toggles between map view and accessibility table view.
+ * Includes controls for location tracking, zoom, search, list view, and marker display.
+ * Features are conditionally rendered based on window.FEATURE_FLAGS configuration.
+ *
+ * @returns {React.ReactElement} MapContainer with markers and controls, or AccessibilityTable when list view is active
+ */
 export const MapComponent = () => {
     const { t } = useTranslation();
 

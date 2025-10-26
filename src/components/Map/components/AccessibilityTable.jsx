@@ -14,6 +14,19 @@ import { httpService } from '../../../services/http/httpService';
 import { mapCustomTypeToReactComponent } from '../../MarkerPopup/mapCustomTypeToReactComponent';
 import { useCategories } from '../../Categories/CategoriesContext';
 
+/**
+ * Accessibility table component that displays location data in a tabular format.
+ * Fetches location data based on user position and selected categories.
+ * Dynamically builds table headers from all unique data fields across all locations.
+ * Provides a back button to return to map view.
+ *
+ * @param {Object} props - Component props
+ * @param {Object} props.userPosition - User's current position
+ * @param {number} props.userPosition.lat - Latitude coordinate
+ * @param {number} props.userPosition.lng - Longitude coordinate
+ * @param {Function} props.setIsAccessibilityTableOpen - Callback to close the table and return to map view
+ * @returns {React.ReactElement} Table container with location data and back button
+ */
 const AccessibilityTable = ({ userPosition, setIsAccessibilityTableOpen }) => {
     const { categories } = useCategories();
     const { t } = useTranslation();

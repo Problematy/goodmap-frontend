@@ -1,8 +1,26 @@
 import React from 'react';
 import { MarkerCTAButtonStyle } from '../../styles/buttonStyle';
 
+/**
+ * Converts data to a string representation.
+ * Arrays are joined with comma-space separator, other values are returned as-is.
+ *
+ * @param {*} data - Data to convert to string
+ * @returns {string|*} Joined string if array, otherwise the original data
+ */
 export const getContentAsString = data => (Array.isArray(data) ? data.join(', ') : data);
 
+/**
+ * Maps custom typed values to appropriate React components.
+ * Supports hyperlinks and CTA (Call-To-Action) buttons.
+ *
+ * @param {Object} customValue - Custom value object with type and value properties
+ * @param {string} customValue.type - Type of custom value ('hyperlink' or 'CTA')
+ * @param {string} customValue.value - URL or value to use
+ * @param {string} [customValue.displayValue] - Optional display text (falls back to value)
+ * @returns {React.ReactElement|string} React component for the custom type or string content
+ * @throws {Error} If customValue is missing type or value properties
+ */
 export const mapCustomTypeToReactComponent = customValue => {
     if (!customValue.type || !customValue.value) {
         throw new Error('Custom value must have type and value properties');

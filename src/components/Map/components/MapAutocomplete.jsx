@@ -3,6 +3,13 @@ import styled from 'styled-components';
 import { useMap } from 'react-leaflet';
 import Autocomplete from '../../common/Autocomplete';
 
+/**
+ * Map autocomplete search component that allows users to search for locations.
+ * When a location is selected, the map flies to that location with zoom level 13.
+ * Positioned in the top-left corner of the map with responsive width.
+ *
+ * @returns {React.ReactElement} Autocomplete component wrapped in a positioned container
+ */
 const MapAutocomplete = () => {
     const map = useMap();
 
@@ -17,6 +24,11 @@ const MapAutocomplete = () => {
     );
 };
 
+/**
+ * Styled wrapper container for the autocomplete component.
+ * Positioned absolutely in the top-left corner with responsive width.
+ * Ensures autocomplete appears above map controls with high z-index.
+ */
 const Wrapper = styled.div`
     position: absolute;
     width: 300px;

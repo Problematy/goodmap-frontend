@@ -6,6 +6,14 @@ import { MarkerPopup } from '../../MarkerPopup/MarkerPopup';
 import { useCategories } from '../../Categories/CategoriesContext';
 import { ClusterMarker } from '../../MarkerPopup/ClusterMarker';
 
+/**
+ * Converts location data into marker components.
+ * Supports both server-side clustering (ClusterMarker) and client-side clustering (MarkerPopup).
+ * Behavior is controlled by window.FEATURE_FLAGS?.USE_SERVER_SIDE_CLUSTERING.
+ *
+ * @param {Array<Object>} locations - Array of location objects to render as markers
+ * @returns {Array<React.ReactElement>} Array of marker components
+ */
 const getMarkers = locations => {
     if (window.FEATURE_FLAGS?.USE_SERVER_SIDE_CLUSTERING) {
         return locations.map(location => {
@@ -18,6 +26,14 @@ const getMarkers = locations => {
     return locations.map(location => <MarkerPopup place={location} key={location.uuid} />);
 };
 
+/**
+ * Component that fetches and renders map markers based on selected category filters.
+ * Wraps markers in a MarkerClusterGroup for automatic clustering of nearby markers.
+ * Changes the map cursor to 'progress' while markers are loading.
+ * Re-fetches markers whenever the selected categories change.
+ *
+ * @returns {React.ReactElement|Array} MarkerClusterGroup containing location markers, or empty array while loading
+ */
 export const Markers = () => {
     const { categories } = useCategories();
     const [markers, setMarkers] = useState([]);
