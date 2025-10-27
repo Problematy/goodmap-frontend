@@ -14,7 +14,8 @@ import React, { useState } from 'react';
  * @param {*} value - Value to check
  * @returns {boolean} True if value is an object, not null, and not an array
  */
-const isCustomValue = value => value !== null && typeof value === 'object' && !(value instanceof Array);
+const isCustomValue = value =>
+    value !== null && typeof value === 'object' && !(value instanceof Array);
 
 /**
  * Component that renders a location detail value.
