@@ -1,4 +1,4 @@
-import i18n from 'i18next';
+import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
 import getGlobalObject from './utils/globalCompat';
 
@@ -8,7 +8,10 @@ import uaMap from './locales/ua/map.json';
 
 const globalObj = getGlobalObject();
 
-i18n.use(initReactI18next).init({
+// Configure i18next instance
+const i18n = i18next.use(initReactI18next);
+
+i18n.init({
     resources: {
         en: {
             map: enMap,

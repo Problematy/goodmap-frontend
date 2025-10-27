@@ -78,8 +78,8 @@ const AccessibilityTable = ({ userPosition, setIsAccessibilityTableOpen }) => {
                 const row = [];
                 const place = it.data;
                 row.push(it.title);
-                for (let i = 1; i < orderedKeysArray.length; i += 1) {
-                    const key = orderedKeysArray[i];
+                // Skip first element (title) and iterate over remaining keys
+                for (const key of orderedKeysArray.slice(1)) {
                     const values = getArr(place, key);
                     if (values === undefined) {
                         continue;
