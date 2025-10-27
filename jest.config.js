@@ -8,7 +8,7 @@ module.exports = {
         '^.+\\.(js|jsx)$': 'babel-jest',
     },
     transformIgnorePatterns: [
-        'node_modules/(?!(react-leaflet|@react-leaflet/core|react-leaflet-custom-control|uuid)/)',
+        'node_modules/(?!(react-leaflet|@react-leaflet/core|react-leaflet-custom-control|react-leaflet-cluster|uuid)/)',
     ],
     moduleNameMapper: {
         '\\.(css|less)$': '<rootDir>/__mocks__/styleMock.js',

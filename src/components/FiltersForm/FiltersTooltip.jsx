@@ -8,14 +8,14 @@ import help from '../../res/svg/help.svg';
 /**
  * Tooltip component that displays helpful information for filter options.
  * Renders a help icon that shows explanatory text when hovered.
- * Uses a unique ID to link the anchor and tooltip elements.
+ * Uses a stable unique ID to link the anchor and tooltip elements throughout the component's lifetime.
  *
  * @param {Object} props - Component props
  * @param {string} props.text - The help text to display in the tooltip
  * @returns {React.ReactElement} Help icon with attached tooltip
  */
 const FiltersTooltip = ({ text }) => {
-    const id = useMemo(() => `anchor-${uuidv4()}`, [text]);
+    const id = useMemo(() => `anchor-${uuidv4()}`, []);
 
     return (
         <>

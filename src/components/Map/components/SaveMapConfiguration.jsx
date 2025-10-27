@@ -3,8 +3,9 @@ import { useMap } from 'react-leaflet';
 import { useMapStore } from '../store/map.store';
 
 /**
- * Component that saves the current map configuration (zoom level and bounds) to the map store.
+ * Component that saves the current map configuration (zoom level) to the map store.
  * Listens to map movement events and updates the store whenever the map stops moving.
+ * Note: Bounds calculation is prepared but not currently persisted (see commented fields below).
  * Automatically cleans up event listeners on unmount.
  *
  * @returns {null} This component doesn't render any UI elements

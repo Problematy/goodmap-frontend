@@ -33,7 +33,13 @@ export const LOCATIONS = '/api/locations';
 export const LOCATIONS_CLUSTERED = '/api/locations-clustered';
 
 /**
- * External API endpoint for address search using OpenStreetMap Nominatim.
- * Supports geocoding and reverse geocoding.
+ * External API endpoint for address search (forward geocoding) using OpenStreetMap Nominatim.
+ * Converts addresses/place names to geographic coordinates.
  */
 export const SEARCH_ADDRESS = 'https://nominatim.openstreetmap.org/search';
+
+/**
+ * External API endpoint for reverse geocoding using OpenStreetMap Nominatim.
+ * Converts geographic coordinates to addresses/place names.
+ */
+export const REVERSE_ADDRESS = 'https://nominatim.openstreetmap.org/reverse';
