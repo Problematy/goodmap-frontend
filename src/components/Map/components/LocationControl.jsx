@@ -50,8 +50,9 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
     };
 
     const handleLocationFound = e => {
-        setUserPosition(e.latlng);
-        setUserPositionProp(e.latlng);
+        const position = { ...e.latlng, accuracy: e.accuracy };
+        setUserPosition(position);
+        setUserPositionProp(position);
     };
 
     const handleLocationError = e => {
@@ -82,7 +83,8 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
                 position => {
                     const lat = position.coords.latitude;
                     const lng = position.coords.longitude;
-                    handleLocationFound({ latlng: { lat, lng } });
+                    const accuracy = position.coords.accuracy;
+                    handleLocationFound({ latlng: { lat, lng }, accuracy });
                 },
                 () => {
                     handleLocationError({ code: 1 });
@@ -118,7 +120,7 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
                     open={snackbarOpen}
                     autoHideDuration={4000}
                     onClose={handleSnackbarClose}
-                    message="Please enable location services to see your location on the map."
+                    message={t('locationServicesDisabled')}
                 />
             </Control>
         </>

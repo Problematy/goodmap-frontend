@@ -35,6 +35,8 @@ const SaveMapConfiguration = () => {
             map.off('moveend', updateMapState);
         };
     }, [map]);
+
+    return null;
 };
 
 export default SaveMapConfiguration;

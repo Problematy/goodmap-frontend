@@ -31,7 +31,7 @@ export const mapCustomTypeToReactComponent = customValue => {
     switch (customValue.type) {
         case 'hyperlink':
             return (
-                <a href={customValue.value} rel="noreferrer" target="_blank">
+                <a href={customValue.value} rel="noreferrer noopener" target="_blank">
                     {valueToDisplay}
                 </a>
             );
@@ -40,7 +40,12 @@ export const mapCustomTypeToReactComponent = customValue => {
                 window.open(customValue.value, '_blank');
             };
             return (
-                <button onClick={handleRedirect} style={MarkerCTAButtonStyle} variant="contained">
+                <button
+                    type="button"
+                    onClick={handleRedirect}
+                    style={MarkerCTAButtonStyle}
+                    variant="contained"
+                >
                     {valueToDisplay}
                 </button>
             );

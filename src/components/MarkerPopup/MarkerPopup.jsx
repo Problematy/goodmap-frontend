@@ -24,11 +24,20 @@ const LocationDetailsBoxWrapper = ({ theplace }) => {
     const ChosenPopup = isMobile ? MobilePopup : DesktopPopup;
 
     useEffect(() => {
+        let isMounted = true;
+
         const fetchPlace = async () => {
             const fetchedPlace = await httpService.getLocation(theplace.uuid);
-            setPlace(fetchedPlace);
+            if (isMounted) {
+                setPlace(fetchedPlace);
+            }
         };
+
         fetchPlace();
+
+        return () => {
+            isMounted = false;
+        };
     }, [theplace.uuid]);
 
     return (
