@@ -14,7 +14,6 @@ import { toast } from '../../utils/toast';
 import { useTranslation } from 'react-i18next';
 import { AppToaster } from '../common/AppToaster';
 import { Markers } from './components/Markers';
-import getGlobalObject from '../../utils/globalCompat';
 
 /**
  * Main map component that renders an interactive Leaflet map with various controls and features.
@@ -26,7 +25,6 @@ import getGlobalObject from '../../utils/globalCompat';
  */
 export const MapComponent = () => {
     const { t } = useTranslation();
-    const globalObj = getGlobalObject();
 
     const [userPosition, setUserPosition] = useState(null);
     const [isListViewOpen, setIsListViewOpen] = useState(false);
@@ -64,7 +62,7 @@ export const MapComponent = () => {
                     attribution='&amp;copy <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
                     maxZoom={mapConfig.maxMapZoom}
                 />
-                {globalObj.FEATURE_FLAGS?.SHOW_SUGGEST_NEW_POINT_BUTTON && (
+                {globalThis.FEATURE_FLAGS?.SHOW_SUGGEST_NEW_POINT_BUTTON && (
                     <Control position="bottomright" prepend>
                         <SuggestNewPointButton />
                     </Control>
@@ -72,10 +70,10 @@ export const MapComponent = () => {
                 <Markers />
                 <LocationControl setUserPosition={setUserPosition} />
                 <CustomZoomControl position="topright" />
-                {globalObj.FEATURE_FLAGS?.SHOW_ACCESSIBILITY_TABLE && (
+                {globalThis.FEATURE_FLAGS?.SHOW_ACCESSIBILITY_TABLE && (
                     <ListViewButton onClick={handleListViewButtonClick} />
                 )}
-                {globalObj.FEATURE_FLAGS?.SHOW_SEARCH_BAR && <MapAutocomplete />}
+                {globalThis.FEATURE_FLAGS?.SHOW_SEARCH_BAR && <MapAutocomplete />}
             </MapContainer>
         </>
     );

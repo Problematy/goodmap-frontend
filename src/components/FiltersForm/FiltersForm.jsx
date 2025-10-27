@@ -5,7 +5,6 @@ import useDebounce from '../../utils/hooks/useDebounce';
 import { httpService } from '../../services/http/httpService';
 import { useMapStore } from '../Map/store/map.store';
 import FiltersTooltip from './FiltersTooltip';
-import getGlobalObject from '../../utils/globalCompat';
 
 /**
  * Filters form component that allows users to filter map locations by categories.
@@ -58,9 +57,8 @@ export const FiltersForm = () => {
     }, []);
 
     const renderFilterOptions = (filters, category) => {
-        const globalObj = getGlobalObject();
         return filters[1].map(([name, translation]) => {
-            const tooltipData = globalObj.FEATURE_FLAGS?.CATEGORIES_HELP
+            const tooltipData = globalThis.FEATURE_FLAGS?.CATEGORIES_HELP
                 ? filters[3].find(it => it[name])
                 : '';
             return (
@@ -82,7 +80,6 @@ export const FiltersForm = () => {
         });
     };
 
-    const globalObj = getGlobalObject();
     const sections = categoriesData.map(filtersData => (
         <div
             key={`${filtersData[0][0]}-${filtersData[0][1]}`}
@@ -91,7 +88,7 @@ export const FiltersForm = () => {
             <span id={`filter-label-${filtersData[0][0]}-${filtersData[0][1]}`}>
                 {filtersData[0][1]}
             </span>
-            {globalObj.FEATURE_FLAGS?.CATEGORIES_HELP &&
+            {globalThis.FEATURE_FLAGS?.CATEGORIES_HELP &&
                 filtersData[2].find(it => it[filtersData[0][0]]) && (
                     <FiltersTooltip
                         text={filtersData[2].find(it => it[filtersData[0][0]])[filtersData[0][0]]}

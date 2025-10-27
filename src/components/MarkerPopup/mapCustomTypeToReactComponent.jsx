@@ -1,6 +1,5 @@
 import React from 'react';
 import { MarkerCTAButtonStyle } from '../../styles/buttonStyle';
-import { getGlobalObject } from '../../utils/globalCompat';
 
 /**
  * Converts data to a string representation.
@@ -63,8 +62,7 @@ export const mapCustomTypeToReactComponent = customValue => {
             const handleRedirect = () => {
                 const safe = sanitizeUrl(customValue.value);
                 if (!safe) return;
-                const globalObj = getGlobalObject();
-                globalObj.open(safe, '_blank');
+                globalThis.open(safe, '_blank');
             };
             return (
                 <button

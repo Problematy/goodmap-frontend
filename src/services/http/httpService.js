@@ -8,7 +8,6 @@ import {
     LOCATIONS_CLUSTERED,
 } from './endpoints';
 import { useMapStore } from '../../components/Map/store/map.store';
-import getGlobalObject from '../../utils/globalCompat';
 
 /**
  * Converts filter object to URL query string parameters.
@@ -24,8 +23,7 @@ function filtersToQuery(filters) {
             params.append(key, String(value));
         }
     }
-    const globalObj = getGlobalObject();
-    if (globalObj.FEATURE_FLAGS?.USE_SERVER_SIDE_CLUSTERING) {
+    if (globalThis.FEATURE_FLAGS?.USE_SERVER_SIDE_CLUSTERING) {
         const mapConfigurationData = useMapStore.getState().mapConfiguration;
         if (mapConfigurationData) {
             for (const [k, v] of Object.entries(mapConfigurationData)) {
@@ -65,8 +63,7 @@ export const httpService = {
      */
     getCategoriesData: async () => {
         const categories = await httpService.getCategories();
-        const globalObj = getGlobalObject();
-        const categories_ = globalObj.FEATURE_FLAGS?.CATEGORIES_HELP ? categories.categories : categories
+        const categories_ = globalThis.FEATURE_FLAGS?.CATEGORIES_HELP ? categories.categories : categories
 
         const subcategoriesPromises = categories_.map(([categoryName, _translation]) =>
             httpService.getSubcategories(categoryName),
@@ -74,7 +71,7 @@ export const httpService = {
         const subcategoriesResponse = Promise.all(subcategoriesPromises);
 
         const mainResponse = subcategoriesResponse.then(subcategories => {
-            if (globalObj.FEATURE_FLAGS?.CATEGORIES_HELP) {
+            if (globalThis.FEATURE_FLAGS?.CATEGORIES_HELP) {
                 return categories_.map((subcategory, index) => [
                     subcategory,
                     subcategories[index].categories_options ?? null,
@@ -102,9 +99,8 @@ export const httpService = {
     getLocations: async filters => {
         const filtersUrlParams = filtersToQuery(filters);
 
-        const globalObj = getGlobalObject();
         let ENDPOINT = LOCATIONS;
-        if (globalObj.FEATURE_FLAGS?.USE_SERVER_SIDE_CLUSTERING) {
+        if (globalThis.FEATURE_FLAGS?.USE_SERVER_SIDE_CLUSTERING) {
             ENDPOINT = LOCATIONS_CLUSTERED;
         }
 
@@ -192,12 +188,11 @@ export const httpService = {
      * @returns {Promise<Array>} Promise resolving to array of address search results
      */
     getSearchAddress: search => {
-        const globalObj = getGlobalObject();
         const params = {
             format: 'json',
             limit: 5,
             q: search,
-            'accept-language': globalObj.APP_LANG || 'pl',
+            'accept-language': globalThis.APP_LANG || 'pl',
         };
 
         const queryString = new URLSearchParams(params).toString();

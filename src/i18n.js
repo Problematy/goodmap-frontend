@@ -1,12 +1,9 @@
 import i18next from 'i18next';
 import { initReactI18next } from 'react-i18next';
-import getGlobalObject from './utils/globalCompat';
 
 import enMap from './locales/en/map.json';
 import plMap from './locales/pl/map.json';
 import uaMap from './locales/ua/map.json';
-
-const globalObj = getGlobalObject();
 
 // Configure i18next instance
 const i18n = i18next.use(initReactI18next);
@@ -23,7 +20,7 @@ i18n.init({
             map: uaMap,
         },
     },
-    lng: globalObj.APP_LANG,
+    lng: globalThis.APP_LANG,
     fallbackLng: 'en',
     ns: ['map'],
     defaultNS: 'map',
