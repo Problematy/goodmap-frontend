@@ -55,7 +55,7 @@ describe('MarkerPopup', () => {
     });
 
     afterEach(() => {
-        global.fetch.mockRestore();
+        globalThis.fetch.mockRestore();
     });
 
     it('should render marker without popup', () => {
