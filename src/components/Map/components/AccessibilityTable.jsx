@@ -50,15 +50,17 @@ const AccessibilityTable = ({ userPosition, setIsAccessibilityTableOpen }) => {
                 return;
             }
             uniqueHeadersSet.add(t('title'));
-            data.forEach(place => {
-                place.data.forEach(item => {
+            for (const place of data) {
+                for (const item of place.data) {
                     uniqueHeadersSet.add(item[0]);
-                });
-            });
+                }
+            }
             const uniqueNumberedKeys = {};
-            Array.from(uniqueHeadersSet).forEach((key, index) => {
+            let index = 0;
+            for (const key of Array.from(uniqueHeadersSet)) {
                 uniqueNumberedKeys[key] = index;
-            });
+                index += 1;
+            }
             const orderedKeysArray = Object.keys(uniqueNumberedKeys).sort(
                 (a, b) => uniqueNumberedKeys[a] - uniqueNumberedKeys[b],
             );
@@ -74,7 +76,7 @@ const AccessibilityTable = ({ userPosition, setIsAccessibilityTableOpen }) => {
                 return item;
             };
 
-            data.forEach(it => {
+            for (const it of data) {
                 const row = [];
                 const place = it.data;
                 row.push(it.title);
@@ -93,7 +95,7 @@ const AccessibilityTable = ({ userPosition, setIsAccessibilityTableOpen }) => {
                     row.push(value);
                 }
                 rowsLocal.push(row);
-            });
+            }
             setRows(rowsLocal);
         } catch (error) {
             console.log('AccessibilityTable: ', error);

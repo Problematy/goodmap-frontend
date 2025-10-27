@@ -19,16 +19,18 @@ import getGlobalObject from '../../utils/globalCompat';
  */
 function filtersToQuery(filters) {
     const params = new URLSearchParams();
-    Object.entries(filters || {}).forEach(([key, values = []]) => {
-        values.forEach(value => params.append(key, String(value)));
-    });
+    for (const [key, values = []] of Object.entries(filters || {})) {
+        for (const value of values) {
+            params.append(key, String(value));
+        }
+    }
     const globalObj = getGlobalObject();
     if (globalObj.FEATURE_FLAGS?.USE_SERVER_SIDE_CLUSTERING) {
         const mapConfigurationData = useMapStore.getState().mapConfiguration;
         if (mapConfigurationData) {
-            Object.entries(mapConfigurationData).forEach(([k, v]) =>
-                params.append(String(k), String(v)),
-            );
+            for (const [k, v] of Object.entries(mapConfigurationData)) {
+                params.append(String(k), String(v));
+            }
         }
     }
     return params.toString();

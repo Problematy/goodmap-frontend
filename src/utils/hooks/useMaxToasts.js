@@ -12,9 +12,11 @@ export function useMaxToasts(max = 1) {
     const { toasts } = useToasterStore();
   
     useEffect(() => {
-      toasts
-        .filter((t) => t.visible)
-        .filter((_, i) => i >= max) 
-        .forEach((t) => toast.dismiss(t.id));
+        const excessToasts = toasts
+            .filter((t) => t.visible)
+            .filter((_, i) => i >= max);
+        for (const t of excessToasts) {
+            toast.dismiss(t.id);
+        }
     }, [toasts, max]);
 }
