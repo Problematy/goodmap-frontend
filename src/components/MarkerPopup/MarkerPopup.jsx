@@ -49,17 +49,17 @@ const LocationDetailsBoxWrapper = ({ theplace }) => {
         };
     }, [theplace.uuid]);
 
-    return (
-        <ChosenPopup>
-            {place?.error ? (
-                <p>{t('loadLocationError')}</p>
-            ) : place ? (
-                <LocationDetailsBox place={place} />
-            ) : (
-                <p>{t('loading')}</p>
-            )}
-        </ChosenPopup>
-    );
+    const renderContent = () => {
+        if (place?.error) {
+            return <p>{t('loadLocationError')}</p>;
+        }
+        if (place) {
+            return <LocationDetailsBox place={place} />;
+        }
+        return <p>{t('loading')}</p>;
+    };
+
+    return <ChosenPopup>{renderContent()}</ChosenPopup>;
 };
 
 /**
