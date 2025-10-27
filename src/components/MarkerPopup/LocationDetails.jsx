@@ -82,7 +82,19 @@ const NavigateMeButton = ({ place }) => {
 
 NavigateMeButton.propTypes = {
     place: PropTypes.shape({
-        position: PropTypes.arrayOf(PropTypes.number).isRequired,
+        position: ((props, propName, componentName) => {
+            const position = props[propName];
+            if (!Array.isArray(position)) {
+                return new Error(`Invalid prop '${propName}' supplied to '${componentName}'. Expected an array.`);
+            }
+            if (position.length < 2) {
+                return new Error(`Invalid prop '${propName}' supplied to '${componentName}'. Expected at least 2 elements.`);
+            }
+            if (!position.every(coord => typeof coord === 'number')) {
+                return new Error(`Invalid prop '${propName}' supplied to '${componentName}'. All elements must be numbers.`);
+            }
+            return null;
+        }).isRequired,
     }).isRequired,
 };
 
