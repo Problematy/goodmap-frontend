@@ -15,7 +15,7 @@ import deprecate from 'util-deprecate';
  */
 const getGlobalObject = () => {
     // Use globalThis if available (ES2020+), otherwise fall back to window
-    return typeof globalThis !== 'undefined' ? globalThis : window;
+    return typeof globalThis === 'undefined' ? window : globalThis;
 };
 
 // Wrap with deprecation warning using util-deprecate
