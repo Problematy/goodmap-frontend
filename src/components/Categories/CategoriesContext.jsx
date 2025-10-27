@@ -1,10 +1,11 @@
-import React, { useState, useContext, createContext } from 'react';
+import React, { useState, useContext, createContext, useMemo } from 'react';
 
 /**
  * React Context for managing categories state across the application.
  * Provides categories data and setter function to all child components.
  */
 const CategoriesContext = createContext();
+CategoriesContext.displayName = 'CategoriesContext';
 
 /**
  * Provider component that wraps the application to provide categories context.
@@ -16,12 +17,9 @@ const CategoriesContext = createContext();
  */
 export const CategoriesProvider = ({ children }) => {
     const [categories, setCategories] = useState([]);
-    console.log('CategoriesProvider rendered with categories:', categories);
-    return (
-        <CategoriesContext.Provider value={{ categories, setCategories }}>
-            {children}
-        </CategoriesContext.Provider>
-    );
+    const value = useMemo(() => ({ categories, setCategories }), [categories]);
+
+    return <CategoriesContext.Provider value={value}>{children}</CategoriesContext.Provider>;
 };
 
 /**

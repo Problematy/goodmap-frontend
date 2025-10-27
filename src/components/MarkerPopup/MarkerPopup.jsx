@@ -27,9 +27,16 @@ const LocationDetailsBoxWrapper = ({ theplace }) => {
         let isMounted = true;
 
         const fetchPlace = async () => {
-            const fetchedPlace = await httpService.getLocation(theplace.uuid);
-            if (isMounted) {
-                setPlace(fetchedPlace);
+            try {
+                const fetchedPlace = await httpService.getLocation(theplace.uuid);
+                if (isMounted) {
+                    setPlace(fetchedPlace);
+                }
+            } catch (error) {
+                if (isMounted) {
+                    console.error('Failed to fetch location:', error);
+                    setPlace({ error: true });
+                }
             }
         };
 
@@ -42,7 +49,13 @@ const LocationDetailsBoxWrapper = ({ theplace }) => {
 
     return (
         <ChosenPopup>
-            {place ? <LocationDetailsBox place={place} /> : <p>Loading...</p>}
+            {place?.error ? (
+                <p>Failed to load location details.</p>
+            ) : place ? (
+                <LocationDetailsBox place={place} />
+            ) : (
+                <p>Loading...</p>
+            )}
         </ChosenPopup>
     );
 };
@@ -53,8 +66,6 @@ const LocationDetailsBoxWrapper = ({ theplace }) => {
  */
 const asteriskIcon = new Icon({
     iconUrl: iconAsterisk,
-    // iconUrl: 'https://cdn-icons-png.flaticon.com/512/5650/5650380.png',
-    // iconUrl: 'https://img.icons8.com/external-icongeek26-linear-colour-icongeek26/64/external-legal-business-and-finance-icongeek26-linear-colour-icongeek26.png',
     iconSize: [40, 48], // size of the icon
     iconAnchor: [19, 46], // point of the icon which will correspond to marker's location
     popupAnchor: [0, -40], // point from which the popup should open relative to the iconAnchor

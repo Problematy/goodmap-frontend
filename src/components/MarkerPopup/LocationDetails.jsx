@@ -31,7 +31,7 @@ const LocationDetailsValue = ({ valueToDisplay }) => {
         : valueToDisplay;
     return (
         <p className="m-0">
-            <b>{getContentAsString(value)}</b>
+            {isCustomValue(valueToDisplay) ? value : <b>{getContentAsString(value)}</b>}
         </p>
     );
 };
@@ -207,7 +207,19 @@ export const LocationDetailsBox = ({ place }) => {
             >
                 {t('ReportIssueButton')}
             </p>
-            {showForm && <ReportProblemForm placeId={place.metadata.uuid} />}
+            {showForm && place.metadata && <ReportProblemForm placeId={place.metadata.uuid} />}
         </React.Fragment>
     );
+};
+
+LocationDetailsBox.propTypes = {
+    place: PropTypes.shape({
+        title: PropTypes.string.isRequired,
+        subtitle: PropTypes.string,
+        data: PropTypes.arrayOf(PropTypes.array).isRequired,
+        position: PropTypes.arrayOf(PropTypes.number).isRequired,
+        metadata: PropTypes.shape({
+            uuid: PropTypes.string.isRequired,
+        }).isRequired,
+    }).isRequired,
 };

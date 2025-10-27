@@ -93,7 +93,8 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
         } else {
             handleLocationError({ code: 1 });
         }
-    }, [navigator]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
 
     const { lat, lng } = userPosition || {};
     const radius = (userPosition && userPosition.accuracy / 2) || 0;
