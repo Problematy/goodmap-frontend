@@ -45,7 +45,7 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
     const map = useMap();
 
     const flyToLocation = (location, mapInstance) => {
-        const zoomLevel = mapInstance.getZoom() < 16 ? 16 : mapInstance.getZoom();
+        const zoomLevel = Math.max(mapInstance.getZoom(), 16);
         mapInstance.flyTo(location, zoomLevel);
     };
 
