@@ -56,10 +56,8 @@ const AccessibilityTable = ({ userPosition, setIsAccessibilityTableOpen }) => {
                 }
             }
             const uniqueNumberedKeys = {};
-            let index = 0;
-            for (const key of Array.from(uniqueHeadersSet)) {
+            for (const [index, key] of Array.from(uniqueHeadersSet).entries()) {
                 uniqueNumberedKeys[key] = index;
-                index += 1;
             }
             const orderedKeysArray = Object.keys(uniqueNumberedKeys).sort(
                 (a, b) => uniqueNumberedKeys[a] - uniqueNumberedKeys[b],
