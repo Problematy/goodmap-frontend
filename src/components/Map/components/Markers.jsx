@@ -32,7 +32,9 @@ const getMarkers = locations => {
 
 /**
  * Component that fetches and renders map markers based on selected category filters.
- * Wraps markers in a MarkerClusterGroup for automatic clustering of nearby markers.
+ * Conditionally wraps markers in a MarkerClusterGroup for client-side clustering
+ * when server-side clustering is disabled. With server-side clustering enabled,
+ * markers and clusters are rendered directly.
  * Changes the map cursor to 'progress' while markers are loading.
  * Re-fetches markers whenever the selected categories change.
  *
