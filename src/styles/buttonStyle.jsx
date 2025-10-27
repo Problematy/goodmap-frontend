@@ -1,5 +1,5 @@
 const commonStyle = {
-    backgroundColor: window.SECONDARY_COLOR,
+    backgroundColor: globalThis.SECONDARY_COLOR,
     color: 'white',
     textAlign: 'center',
     cursor: 'pointer',

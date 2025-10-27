@@ -21,7 +21,9 @@ export const getContentAsString = data =>
  */
 const sanitizeUrl = raw => {
     try {
-        const url = new URL(String(raw), window.location.origin);
+        // Use globalThis.location.origin as base, with fallback for non-browser environments
+        const base = globalThis.location?.origin || 'http://localhost';
+        const url = new URL(String(raw), base);
         const allowed = new Set(['http:', 'https:', 'mailto:', 'tel:']);
         return allowed.has(url.protocol) ? url.href : null;
     } catch {
