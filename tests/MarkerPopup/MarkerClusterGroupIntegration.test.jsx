@@ -8,7 +8,8 @@ import { MarkerPopup } from '../../src/components/MarkerPopup/MarkerPopup';
 /**
  * Integration test for MarkerPopup with MarkerClusterGroup
  *
- * This test ensures that the bug fix for "Cannot read properties of undefined (reading 'createIcon')"
+ * This test ensures that the bug fix for
+ * "Cannot read properties of undefined (reading 'createIcon')"
  * is working correctly. The bug occurred when:
  * 1. Markers were wrapped in MarkerClusterGroup
  * 2. MarkerPopup was passing icon={undefined} for markers without remarks
@@ -38,7 +39,8 @@ describe('MarkerPopup integration with MarkerClusterGroup', () => {
     ];
 
     it('should render markers without errors when wrapped in MarkerClusterGroup', () => {
-        // This test verifies that the fix for the "Cannot read properties of undefined (reading 'createIcon')" bug works
+        // This test verifies that the fix for the
+        // "Cannot read properties of undefined (reading 'createIcon')" bug works
         // The bug occurred because icon={undefined} was being passed to markers
         // Now, the icon prop is only included when there's a custom icon (remark=true)
         const { container } = render(

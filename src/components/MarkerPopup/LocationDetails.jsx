@@ -14,8 +14,7 @@ import React, { useState } from 'react';
  * @param {*} value - Value to check
  * @returns {boolean} True if value is an object, not null, and not an array
  */
-const isCustomValue = value =>
-    value !== null && typeof value === 'object' && !(value instanceof Array);
+const isCustomValue = value => value !== null && typeof value === 'object' && !Array.isArray(value);
 
 /**
  * Component that renders a location detail value.
@@ -81,6 +80,12 @@ const NavigateMeButton = ({ place }) => {
     );
 };
 
+NavigateMeButton.propTypes = {
+    place: PropTypes.shape({
+        position: PropTypes.arrayOf(PropTypes.number).isRequired,
+    }).isRequired,
+};
+
 /**
  * Component that renders location details including title, subtitle, and categorized data.
  * Separates data into regular categories and CTA (Call-To-Action) categories.
@@ -126,7 +131,7 @@ const LocationDetails = ({ place }) => {
             >
                 {categoriesWithSubcategories.map(([category, value]) => (
                     <React.Fragment key={category}>
-                        <p key={`${category}-label`} className="m-0" style={{ margin: 0 }}>
+                        <p key={`${category}-label`} className="m-0">
                             {`${category}:`}
                         </p>
                         <div
