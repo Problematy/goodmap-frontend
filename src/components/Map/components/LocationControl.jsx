@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
 import { Marker, CircleMarker, useMap } from 'react-leaflet';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
@@ -49,20 +49,26 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
         mapInstance.flyTo(location, zoomLevel);
     };
 
-    const handleLocationFound = e => {
-        const position = { ...e.latlng, accuracy: e.accuracy };
-        setUserPosition(position);
-        setUserPositionProp(position);
-    };
+    const handleLocationFound = useCallback(
+        e => {
+            const position = { ...e.latlng, accuracy: e.accuracy };
+            setUserPosition(position);
+            setUserPositionProp(position);
+        },
+        [setUserPositionProp],
+    );
 
-    const handleLocationError = e => {
-        if (e.code === 1) {
-            // User denied Geolocation
-            setSnackbarOpen(true);
-            setUserPosition(null);
-        }
-        map.stopLocate();
-    };
+    const handleLocationError = useCallback(
+        e => {
+            if (e.code === 1) {
+                // User denied Geolocation
+                setSnackbarOpen(true);
+                setUserPosition(null);
+            }
+            map.stopLocate();
+        },
+        [map],
+    );
 
     const handleSnackbarClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -93,8 +99,7 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
         } else {
             handleLocationError({ code: 1 });
         }
-        // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, []);
+    }, [handleLocationFound, handleLocationError]);
 
     const { lat, lng } = userPosition || {};
     const radius = (userPosition && userPosition.accuracy / 2) || 0;
