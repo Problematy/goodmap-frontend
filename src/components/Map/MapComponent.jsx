@@ -14,17 +14,19 @@ import { toast } from '../../utils/toast';
 import { useTranslation } from 'react-i18next';
 import { AppToaster } from '../common/AppToaster';
 import { Markers } from './components/Markers';
+import getGlobalObject from '../../utils/globalCompat';
 
 /**
  * Main map component that renders an interactive Leaflet map with various controls and features.
  * Manages user position state and toggles between map view and accessibility table view.
  * Includes controls for location tracking, zoom, search, list view, and marker display.
- * Features are conditionally rendered based on window.FEATURE_FLAGS configuration.
+ * Features are conditionally rendered based on FEATURE_FLAGS configuration.
  *
  * @returns {React.ReactElement} MapContainer with markers and controls, or AccessibilityTable when list view is active
  */
 export const MapComponent = () => {
     const { t } = useTranslation();
+    const globalObj = getGlobalObject();
 
     const [userPosition, setUserPosition] = useState(null);
     const [isListViewOpen, setIsListViewOpen] = useState(false);
@@ -62,7 +64,7 @@ export const MapComponent = () => {
                     attribution='&amp;copy <a href="https://www.openstreetmap.org/">OpenStreetMap</a> contributors'
                     maxZoom={mapConfig.maxMapZoom}
                 />
-                {window.FEATURE_FLAGS?.SHOW_SUGGEST_NEW_POINT_BUTTON && (
+                {globalObj.FEATURE_FLAGS?.SHOW_SUGGEST_NEW_POINT_BUTTON && (
                     <Control position="bottomright" prepend>
                         <SuggestNewPointButton />
                     </Control>
@@ -70,10 +72,10 @@ export const MapComponent = () => {
                 <Markers />
                 <LocationControl setUserPosition={setUserPosition} />
                 <CustomZoomControl position="topright" />
-                {window.FEATURE_FLAGS?.SHOW_ACCESSIBILITY_TABLE && (
+                {globalObj.FEATURE_FLAGS?.SHOW_ACCESSIBILITY_TABLE && (
                     <ListViewButton onClick={handleListViewButtonClick} />
                 )}
-                {window.FEATURE_FLAGS?.SHOW_SEARCH_BAR && <MapAutocomplete />}
+                {globalObj.FEATURE_FLAGS?.SHOW_SEARCH_BAR && <MapAutocomplete />}
             </MapContainer>
         </>
     );

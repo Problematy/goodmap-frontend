@@ -5,17 +5,19 @@ import { httpService } from '../../../services/http/httpService';
 import { MarkerPopup } from '../../MarkerPopup/MarkerPopup';
 import { useCategories } from '../../Categories/CategoriesContext';
 import { ClusterMarker } from '../../MarkerPopup/ClusterMarker';
+import getGlobalObject from '../../../utils/globalCompat';
 
 /**
  * Converts location data into marker components.
  * Supports both server-side clustering (ClusterMarker) and client-side clustering (MarkerPopup).
- * Behavior is controlled by window.FEATURE_FLAGS?.USE_SERVER_SIDE_CLUSTERING.
+ * Behavior is controlled by FEATURE_FLAGS?.USE_SERVER_SIDE_CLUSTERING.
  *
  * @param {Array<Object>} locations - Array of location objects to render as markers
  * @returns {Array<React.ReactElement>} Array of marker components
  */
 const getMarkers = locations => {
-    if (window.FEATURE_FLAGS?.USE_SERVER_SIDE_CLUSTERING) {
+    const globalObj = getGlobalObject();
+    if (globalObj.FEATURE_FLAGS?.USE_SERVER_SIDE_CLUSTERING) {
         return locations.map(location => {
             if (location.type === 'cluster') {
                 return <ClusterMarker cluster={location} key={location.cluster_uuid} />;
@@ -51,8 +53,9 @@ export const Markers = () => {
 
             const markersToAdd = getMarkers(locations);
 
+            const globalObj = getGlobalObject();
             const useServerSideClustering =
-                window.FEATURE_FLAGS?.USE_SERVER_SIDE_CLUSTERING === true;
+                globalObj.FEATURE_FLAGS?.USE_SERVER_SIDE_CLUSTERING === true;
 
             // Only use client-side clustering when server-side clustering is disabled
             const markerCluster = useServerSideClustering ? (
