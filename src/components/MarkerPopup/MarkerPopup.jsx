@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 import { Marker } from 'react-leaflet';
 import { isMobile } from 'react-device-detect';
 import { Icon } from 'leaflet';
+import { useTranslation } from 'react-i18next';
 import { httpService } from '../../services/http/httpService';
 
 import { LocationDetailsBox } from './LocationDetails';
@@ -20,6 +21,7 @@ import iconAsterisk from '../../res/img/marker-icon-asterisk.png';
  * @returns {React.ReactElement} Popup component with location details or loading state
  */
 const LocationDetailsBoxWrapper = ({ theplace }) => {
+    const { t } = useTranslation();
     const [place, setPlace] = useState(null);
     const ChosenPopup = isMobile ? MobilePopup : DesktopPopup;
 
@@ -50,11 +52,11 @@ const LocationDetailsBoxWrapper = ({ theplace }) => {
     return (
         <ChosenPopup>
             {place?.error ? (
-                <p>Failed to load location details.</p>
+                <p>{t('loadLocationError')}</p>
             ) : place ? (
                 <LocationDetailsBox place={place} />
             ) : (
-                <p>Loading...</p>
+                <p>{t('loading')}</p>
             )}
         </ChosenPopup>
     );
@@ -111,5 +113,7 @@ export const MarkerPopup = ({ place }) => {
 MarkerPopup.propTypes = {
     place: PropTypes.shape({
         position: PropTypes.arrayOf(PropTypes.number).isRequired,
+        remark: PropTypes.bool,
+        uuid: PropTypes.string.isRequired,
     }).isRequired,
 };
