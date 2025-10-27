@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, ZoomControl, useMap } from 'react-leaflet';
+import { useMap } from 'react-leaflet';
 import MarkerClusterGroup from 'react-leaflet-cluster';
 import { httpService } from '../../../services/http/httpService';
 import { MarkerPopup } from '../../MarkerPopup/MarkerPopup';
@@ -23,7 +23,11 @@ const getMarkers = locations => {
             return <MarkerPopup place={location} key={location.uuid} />;
         });
     }
-    return locations.map(location => <MarkerPopup place={location} key={location.uuid} />);
+    // When server-side clustering is disabled, filter out any cluster objects
+    // that the backend might still be sending, and only render actual locations
+    return locations
+        .filter(location => location.type !== 'cluster')
+        .map(location => <MarkerPopup place={location} key={location.uuid} />);
 };
 
 /**
@@ -47,7 +51,12 @@ export const Markers = () => {
 
             const markersToAdd = getMarkers(locations);
 
-            const markerCluster = (
+            const useServerSideClustering = window.FEATURE_FLAGS?.USE_SERVER_SIDE_CLUSTERING === true;
+
+            // Only use client-side clustering when server-side clustering is disabled
+            const markerCluster = useServerSideClustering ? (
+                <>{markersToAdd}</>
+            ) : (
                 <MarkerClusterGroup
                     eventHandlers={{
                         add: () => {
@@ -60,6 +69,11 @@ export const Markers = () => {
             );
 
             setMarkers(markerCluster);
+
+            // If using server-side clustering, mark as loaded immediately
+            if (useServerSideClustering) {
+                setAreMarkersLoaded(true);
+            }
         };
 
         fetchMarkers();

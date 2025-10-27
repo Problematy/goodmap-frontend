@@ -67,15 +67,22 @@ export const MarkerPopup = ({ place }) => {
         setIsClicked(true);
     };
 
+    const markerProps = {
+        position: place.position,
+        eventHandlers: {
+            click: handleMarkerClick,
+        },
+        alt: place.remark ? "Marker-Asterisk" : "Marker",
+    };
+
+    // Only add icon prop if we have a custom icon (for remarks)
+    // This prevents passing undefined which can cause issues with MarkerClusterGroup
+    if (place.remark) {
+        markerProps.icon = asteriskIcon;
+    }
+
     return (
-        <Marker
-            position={place.position}
-            eventHandlers={{
-                click: handleMarkerClick,
-            }}
-            icon={place.remark ? asteriskIcon : undefined}
-            alt={place.remark ? "Marker-Asterisk" : "Marker"}
-        >
+        <Marker {...markerProps}>
             {isClicked && <LocationDetailsBoxWrapper theplace={place} />}
         </Marker>
     );

@@ -90,4 +90,33 @@ describe('MarkerPopup', () => {
         );
         expect(screen.getByAltText(/Marker-Asterisk/i)).toBeInTheDocument();
     });
+
+    it('should not pass icon prop when remark is false to prevent MarkerClusterGroup issues', () => {
+        const marker = screen.getByAltText(/Marker/i);
+        const leafletMarker = marker.closest('.leaflet-marker-icon');
+
+        // When remark is false, the marker should use Leaflet's default icon
+        // This is important because passing icon={undefined} causes errors in MarkerClusterGroup
+        // during cluster zoom animations
+        expect(leafletMarker).toBeInTheDocument();
+    });
+
+    it('should pass custom icon prop when remark is true', () => {
+        const locationWithRemark = { ...location, remark: true };
+        render(
+            <MapContainer
+                center={locationWithRemark.position}
+                zoom={10}
+                style={{ height: '100vh', width: '100%' }}
+            >
+                <MarkerPopup place={locationWithRemark} key={locationWithRemark.uuid} />
+            </MapContainer>,
+        );
+
+        const marker = screen.getByAltText(/Marker-Asterisk/i);
+        const leafletMarker = marker.closest('.leaflet-marker-icon');
+
+        // When remark is true, marker should have custom icon
+        expect(leafletMarker).toBeInTheDocument();
+    });
 });

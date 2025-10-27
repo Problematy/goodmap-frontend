@@ -1,8 +1,10 @@
 import PropTypes from 'prop-types';
-import React from 'react';
-import { Marker } from '@adamscybot/react-leaflet-component-marker';
-import styled from 'styled-components';
+import React, { useMemo } from 'react';
+import { Marker } from 'react-leaflet';
+import { DivIcon } from 'leaflet';
 import { useMap } from 'react-leaflet';
+import ReactDOMServer from 'react-dom/server';
+import styled from 'styled-components';
 
 /**
  * Marker component for displaying server-side clustered locations.
@@ -21,13 +23,23 @@ export const ClusterMarker = ({ cluster }) => {
         map.flyTo(cluster.position, map.getZoom() + 5);
     };
 
+    // Create a DivIcon with the rendered React component (memoized to prevent recreation)
+    const clusterIcon = useMemo(() => {
+        return new DivIcon({
+            html: ReactDOMServer.renderToString(<ClusterMarkerIcon cluster={cluster} />),
+            className: 'custom-cluster-icon',
+            iconSize: [30, 30],
+            iconAnchor: [15, 15],
+        });
+    }, [cluster.cluster_count]);
+
     return (
         <Marker
             position={cluster.position}
             eventHandlers={{
                 click: handleClusterClick,
             }}
-            icon={<ClusterMarkerIcon cluster={cluster} />}
+            icon={clusterIcon}
         />
     );
 };

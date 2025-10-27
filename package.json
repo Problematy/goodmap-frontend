@@ -59,7 +59,6 @@
         "webpack-dev-server": "^4.9.3"
     },
     "dependencies": {
-        "@adamscybot/react-leaflet-component-marker": "^2.0.1",
         "@emotion/react": "^11.11.1",
         "@emotion/styled": "^11.11.0",
         "@mui/icons-material": "^5.14.6",
