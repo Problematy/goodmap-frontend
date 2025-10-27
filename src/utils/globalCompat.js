@@ -26,4 +26,6 @@ const deprecatedGetGlobalObject = deprecate(
     'Use globalThis directly instead. This is a temporary compatibility shim that will be removed in the next major release.'
 );
 
+// Export as both named and default for compatibility
+export { deprecatedGetGlobalObject as getGlobalObject };
 export default deprecatedGetGlobalObject;

@@ -1,15 +1,33 @@
 import React from 'react';
 import { MarkerCTAButtonStyle } from '../../styles/buttonStyle';
-import getGlobalObject from '../../utils/globalCompat';
+import { getGlobalObject } from '../../utils/globalCompat';
 
 /**
  * Converts data to a string representation.
- * Arrays are joined with comma-space separator, other values are returned as-is.
+ * Arrays are joined with comma-space separator, other values are converted to string.
  *
  * @param {*} data - Data to convert to string
- * @returns {string|*} Joined string if array, otherwise the original data
+ * @returns {string} Joined string if array, otherwise the data converted to string
  */
-export const getContentAsString = data => (Array.isArray(data) ? data.join(', ') : data);
+export const getContentAsString = data =>
+    Array.isArray(data) ? data.join(', ') : String(data ?? '');
+
+/**
+ * Sanitizes URLs to prevent javascript: or data: injection attacks.
+ * Only allows http:, https:, mailto:, and tel: protocols.
+ *
+ * @param {*} raw - Raw URL to sanitize
+ * @returns {string|null} Sanitized URL or null if invalid/unsafe
+ */
+const sanitizeUrl = raw => {
+    try {
+        const url = new URL(String(raw), window.location.origin);
+        const allowed = new Set(['http:', 'https:', 'mailto:', 'tel:']);
+        return allowed.has(url.protocol) ? url.href : null;
+    } catch {
+        return null;
+    }
+};
 
 /**
  * Maps custom typed values to appropriate React components.
@@ -30,27 +48,33 @@ export const mapCustomTypeToReactComponent = customValue => {
     const valueToDisplay = customValue?.displayValue || customValue.value;
 
     switch (customValue.type) {
-        case 'hyperlink':
+        case 'hyperlink': {
+            const safe = sanitizeUrl(customValue.value);
+            if (!safe) return valueToDisplay;
             return (
-                <a href={customValue.value} rel="noreferrer noopener" target="_blank">
+                <a href={safe} rel="noreferrer noopener" target="_blank">
                     {valueToDisplay}
                 </a>
             );
-        case 'CTA':
+        }
+        case 'CTA': {
             const handleRedirect = () => {
+                const safe = sanitizeUrl(customValue.value);
+                if (!safe) return;
                 const globalObj = getGlobalObject();
-                globalObj.open(customValue.value, '_blank');
+                globalObj.open(safe, '_blank');
             };
             return (
                 <button
                     type="button"
                     onClick={handleRedirect}
                     style={MarkerCTAButtonStyle}
-                    variant="contained"
+                    data-variant="contained"
                 >
                     {valueToDisplay}
                 </button>
             );
+        }
         default:
             return getContentAsString(valueToDisplay);
     }
