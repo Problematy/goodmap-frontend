@@ -43,7 +43,7 @@ const AutoComplete = ({ onClick }) => {
                 />
             </InputBox>
 
-            {data.length > 0 && data.filter(it => it.display_name !== searchTerm).length > 0 && (
+            {data.length > 0 && data.some(it => it.display_name !== searchTerm) && (
                 <SuggestionList>
                     {data
                         .filter(it => it.display_name !== searchTerm)
