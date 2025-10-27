@@ -1,8 +1,7 @@
 import PropTypes from 'prop-types';
 import React, { useMemo } from 'react';
-import { Marker } from 'react-leaflet';
+import { useMap, Marker } from 'react-leaflet';
 import { DivIcon } from 'leaflet';
-import { useMap } from 'react-leaflet';
 import ReactDOMServer from 'react-dom/server';
 import styled from 'styled-components';
 
