@@ -51,7 +51,8 @@ export const Markers = () => {
 
             const markersToAdd = getMarkers(locations);
 
-            const useServerSideClustering = window.FEATURE_FLAGS?.USE_SERVER_SIDE_CLUSTERING === true;
+            const useServerSideClustering =
+                window.FEATURE_FLAGS?.USE_SERVER_SIDE_CLUSTERING === true;
 
             // Only use client-side clustering when server-side clustering is disabled
             const markerCluster = useServerSideClustering ? (

@@ -72,7 +72,7 @@ export const MarkerPopup = ({ place }) => {
         eventHandlers: {
             click: handleMarkerClick,
         },
-        alt: place.remark ? "Marker-Asterisk" : "Marker",
+        alt: place.remark ? 'Marker-Asterisk' : 'Marker',
     };
 
     // Only add icon prop if we have a custom icon (for remarks)
