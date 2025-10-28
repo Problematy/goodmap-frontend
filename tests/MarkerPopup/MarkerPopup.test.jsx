@@ -112,7 +112,10 @@ describe('MarkerPopup with remark', () => {
                     zoom={10}
                     style={{ height: '100vh', width: '100%' }}
                 >
-                    <MarkerPopup place={locationWhenRemarkIsTrue} key={locationWhenRemarkIsTrue.uuid} />
+                    <MarkerPopup
+                        place={locationWhenRemarkIsTrue}
+                        key={locationWhenRemarkIsTrue.uuid}
+                    />
                 </MapContainer>,
             );
         });
