@@ -89,7 +89,9 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
                     const lat = position.coords.latitude;
                     const lng = position.coords.longitude;
                     const accuracy = position.coords.accuracy;
-                    handleLocationFound({ latlng: { lat, lng }, accuracy });
+                    // Ensure accuracy is a valid number, default to 50 meters if not
+                    const validAccuracy = !Number.isNaN(Number(accuracy)) && accuracy != null ? accuracy : 50;
+                    handleLocationFound({ latlng: { lat, lng }, accuracy: validAccuracy });
                 },
                 () => {
                     handleLocationError({ code: 1 });
