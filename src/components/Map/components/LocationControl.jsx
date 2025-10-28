@@ -65,7 +65,6 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
                 setSnackbarOpen(true);
                 setUserPosition(null);
             }
-            map.stopLocate();
         },
         [map],
     );
