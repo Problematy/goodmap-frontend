@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback } from 'react';
 import PropTypes from 'prop-types';
-import { Marker, CircleMarker, useMap } from 'react-leaflet';
+import { Marker, Circle, useMap } from 'react-leaflet';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
 import ReactDOMServer from 'react-dom/server';
 import L from 'leaflet';
@@ -102,13 +102,12 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
     }, [handleLocationFound, handleLocationError]);
 
     const { lat, lng } = userPosition || {};
-    const radius = (userPosition && userPosition.accuracy / 2) || 0;
 
     return (
         <>
             {userPosition && (
                 <>
-                    <CircleMarker center={[lat, lng]} radius={radius} />
+                    <Circle center={[lat, lng]} radius={userPosition.accuracy} />
                     <Marker position={userPosition} icon={createLocationIcon()} />
                 </>
             )}

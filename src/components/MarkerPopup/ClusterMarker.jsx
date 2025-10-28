@@ -19,7 +19,8 @@ import styled from 'styled-components';
 export const ClusterMarker = ({ cluster }) => {
     const map = useMap();
     const handleClusterClick = () => {
-        map.flyTo(cluster.position, map.getZoom() + 5);
+        const targetZoom = Math.min(map.getZoom() + 5, map.getMaxZoom());
+        map.flyTo(cluster.position, targetZoom);
     };
 
     // Create a DivIcon with the rendered React component (memoized to prevent recreation)

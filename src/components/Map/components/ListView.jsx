@@ -26,7 +26,7 @@ const ListView = ({ onClick }) => {
                 id="listViewButton"
                 onClick={handleOnClick}
                 style={{
-                    backgroundColor: globalThis.SECONDARY_COLOR,
+                    backgroundColor: globalThis.SECONDARY_COLOR || '#0066CC',
                 }}
                 variant="contained"
             >

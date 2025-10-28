@@ -64,7 +64,7 @@ AutoComplete.propTypes = {
 
 const Box = styled.div`
     z-index: 999999999;
-    background-color: ${globalThis.SECONDARY_COLOR};
+    background-color: ${globalThis.SECONDARY_COLOR || '#0066CC'};
     border-radius: 5px;
 `;
 
@@ -81,7 +81,7 @@ const StyledInput = styled.input`
     white-space: nowrap;
     text-align: center;
     outline: none;
-    background-color: ${globalThis.SECONDARY_COLOR};
+    background-color: ${globalThis.SECONDARY_COLOR || '#0066CC'};
     color: white;
     border: none;
     border-radius: 5px;
