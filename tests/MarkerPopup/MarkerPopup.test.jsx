@@ -77,20 +77,6 @@ describe('MarkerPopup', () => {
         expect(screen.getByAltText(/Marker/i)).toBeInTheDocument();
     });
 
-    it('should render marker popup with asterisks when remark is true', () => {
-        const locationWhenRemarkIsTrue = { ...location, remark: true };
-        render(
-            <MapContainer
-                center={locationWhenRemarkIsTrue.position}
-                zoom={10}
-                style={{ height: '100vh', width: '100%' }}
-            >
-                <MarkerPopup place={locationWhenRemarkIsTrue} key={locationWhenRemarkIsTrue.uuid} />
-            </MapContainer>,
-        );
-        expect(screen.getByAltText(/Marker-Asterisk/i)).toBeInTheDocument();
-    });
-
     it('should not pass icon prop when remark is false to prevent MarkerClusterGroup issues', () => {
         const marker = screen.getByAltText(/Marker/i);
         const leafletMarker = marker.closest('.leaflet-marker-icon');
@@ -99,24 +85,63 @@ describe('MarkerPopup', () => {
         // This is important because passing icon={undefined} causes errors in MarkerClusterGroup
         // during cluster zoom animations
         expect(leafletMarker).toBeInTheDocument();
+
+        // Verify default Leaflet icon dimensions (25x41) are used, not custom asterisk icon (40x48)
+        const style = globalThis.getComputedStyle(leafletMarker);
+        expect(style.width).not.toBe('40px'); // Should NOT have asterisk icon width
+    });
+});
+
+describe('MarkerPopup with remark', () => {
+    beforeEach(() => {
+        jest.spyOn(global, 'fetch').mockResolvedValue({
+            json: jest.fn().mockResolvedValue(locationData),
+        });
+    });
+
+    afterEach(() => {
+        global.fetch.mockRestore();
+    });
+
+    it('should render marker popup with asterisks when remark is true', () => {
+        const locationWhenRemarkIsTrue = { ...location, remark: true };
+        act(() => {
+            render(
+                <MapContainer
+                    center={locationWhenRemarkIsTrue.position}
+                    zoom={10}
+                    style={{ height: '100vh', width: '100%' }}
+                >
+                    <MarkerPopup place={locationWhenRemarkIsTrue} key={locationWhenRemarkIsTrue.uuid} />
+                </MapContainer>,
+            );
+        });
+        expect(screen.getByAltText(/Marker-Asterisk/i)).toBeInTheDocument();
     });
 
     it('should pass custom icon prop when remark is true', () => {
         const locationWithRemark = { ...location, remark: true };
-        render(
-            <MapContainer
-                center={locationWithRemark.position}
-                zoom={10}
-                style={{ height: '100vh', width: '100%' }}
-            >
-                <MarkerPopup place={locationWithRemark} key={locationWithRemark.uuid} />
-            </MapContainer>,
-        );
+        act(() => {
+            render(
+                <MapContainer
+                    center={locationWithRemark.position}
+                    zoom={10}
+                    style={{ height: '100vh', width: '100%' }}
+                >
+                    <MarkerPopup place={locationWithRemark} key={locationWithRemark.uuid} />
+                </MapContainer>,
+            );
+        });
 
         const marker = screen.getByAltText(/Marker-Asterisk/i);
         const leafletMarker = marker.closest('.leaflet-marker-icon');
 
-        // When remark is true, marker should have custom icon
+        // When remark is true, marker should have custom asterisk icon
         expect(leafletMarker).toBeInTheDocument();
+
+        // Verify custom asterisk icon dimensions (40x48) are applied
+        const style = globalThis.getComputedStyle(leafletMarker);
+        expect(style.width).toBe('40px'); // asteriskIcon width
+        expect(style.height).toBe('48px'); // asteriskIcon height
     });
 });
