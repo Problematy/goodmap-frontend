@@ -38,7 +38,7 @@ httpService.getLocation.mockResolvedValue(locationData);
 
 describe('MarkerPopup', () => {
     beforeEach(() => {
-        jest.spyOn(global, 'fetch').mockResolvedValue({
+        jest.spyOn(globalThis, 'fetch').mockResolvedValue({
             json: jest.fn().mockResolvedValue(locationData),
         });
         return act(() =>
@@ -55,7 +55,7 @@ describe('MarkerPopup', () => {
     });
 
     afterEach(() => {
-        global.fetch.mockRestore();
+        globalThis.fetch.mockRestore();
     });
 
     it('should render marker without popup', () => {
@@ -96,13 +96,13 @@ describe('MarkerPopup', () => {
 
 describe('MarkerPopup with remark', () => {
     beforeEach(() => {
-        jest.spyOn(global, 'fetch').mockResolvedValue({
+        jest.spyOn(globalThis, 'fetch').mockResolvedValue({
             json: jest.fn().mockResolvedValue(locationData),
         });
     });
 
     afterEach(() => {
-        global.fetch.mockRestore();
+        globalThis.fetch.mockRestore();
     });
 
     it('should render marker popup with asterisks when remark is true', () => {
