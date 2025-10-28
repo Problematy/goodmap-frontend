@@ -73,8 +73,10 @@ describe('MarkerPopup', () => {
         });
     });
 
-    it('should render marker popup without asterisks when remark is false', () => {
-        expect(screen.getByAltText(/Marker/i)).toBeInTheDocument();
+    it('should use default alt text when remark is false', () => {
+        const marker = screen.getByAltText('Marker');
+        expect(marker).toBeInTheDocument();
+        expect(screen.queryByAltText('Marker-Asterisk')).not.toBeInTheDocument();
     });
 
     it('should not pass icon prop when remark is false to prevent MarkerClusterGroup issues', () => {
