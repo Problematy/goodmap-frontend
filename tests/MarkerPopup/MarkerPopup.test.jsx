@@ -89,7 +89,7 @@ describe('MarkerPopup', () => {
         expect(leafletMarker).toBeInTheDocument();
 
         // Verify default Leaflet icon dimensions (25x41) are used, not custom asterisk icon (40x48)
-        const style = globalThis.getComputedStyle(leafletMarker);
+        const style = window.getComputedStyle(leafletMarker);
         expect(style.width).not.toBe('40px'); // Should NOT have asterisk icon width
     });
 });
@@ -145,7 +145,7 @@ describe('MarkerPopup with remark', () => {
         expect(leafletMarker).toBeInTheDocument();
 
         // Verify custom asterisk icon dimensions (40x48) are applied
-        const style = globalThis.getComputedStyle(leafletMarker);
+        const style = window.getComputedStyle(leafletMarker);
         expect(style.width).toBe('40px'); // asteriskIcon width
         expect(style.height).toBe('48px'); // asteriskIcon height
     });
