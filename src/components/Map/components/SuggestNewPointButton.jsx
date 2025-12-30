@@ -145,12 +145,8 @@ export const SuggestNewPointButton = () => {
         setPhotoURL(URL.createObjectURL(file));
     };
 
-    const handleFieldChange = (fieldName, fieldType) => event => {
-        if (fieldType === 'list') {
-            setFormFields({ ...formFields, [fieldName]: event.target.value });
-        } else {
-            setFormFields({ ...formFields, [fieldName]: event.target.value });
-        }
+    const handleFieldChange = fieldName => event => {
+        setFormFields({ ...formFields, [fieldName]: event.target.value });
     };
 
     const handleConfirmNewPoint = async event => {
@@ -204,7 +200,7 @@ export const SuggestNewPointButton = () => {
                         labelId={`${fieldName}-label`}
                         multiple
                         value={formFields[fieldName] || []}
-                        onChange={handleFieldChange(fieldName, fieldType)}
+                        onChange={handleFieldChange(fieldName)}
                         input={<OutlinedInput label={fieldName} />}
                         renderValue={selected => selected.join(', ')}
                         data-testid={`${fieldName}-select`}
@@ -226,7 +222,7 @@ export const SuggestNewPointButton = () => {
                     <Select
                         labelId={`${fieldName}-label`}
                         value={formFields[fieldName] || ''}
-                        onChange={handleFieldChange(fieldName, fieldType)}
+                        onChange={handleFieldChange(fieldName)}
                         data-testid={`${fieldName}-select`}
                     >
                         {categoryOptions.map(option => (
@@ -244,7 +240,7 @@ export const SuggestNewPointButton = () => {
                     key={fieldName}
                     label={fieldName}
                     value={formFields[fieldName] || ''}
-                    onChange={handleFieldChange(fieldName, fieldType)}
+                    onChange={handleFieldChange(fieldName)}
                     fullWidth
                     margin="dense"
                     data-testid={`${fieldName}-input`}
