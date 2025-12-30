@@ -44,8 +44,8 @@ export const SuggestNewPointButton = () => {
     const [photo, setPhoto] = useState(null);
     const [photoURL, setPhotoURL] = useState(null);
 
-    // Read location schema from window object
-    const locationSchema = window.LOCATION_SCHEMA || { obligatory_fields: [], categories: {} };
+    // Read location schema from global object
+    const locationSchema = globalThis.LOCATION_SCHEMA || { obligatory_fields: [], categories: {} };
 
     // Initialize dynamic form fields based on schema
     const initializeFormFields = () => {
@@ -210,7 +210,7 @@ export const SuggestNewPointButton = () => {
                     >
                         {categoryOptions.map(option => (
                             <MenuItem key={option} value={option}>
-                                <Checkbox checked={formFields[fieldName].indexOf(option) > -1} />
+                                <Checkbox checked={formFields[fieldName].includes(option)} />
                                 <ListItemText primary={option} />
                             </MenuItem>
                         ))}

@@ -14,7 +14,7 @@ beforeEach(() => {
     document.head.appendChild(metaTag);
 
     // Mock location schema
-    window.LOCATION_SCHEMA = {
+    globalThis.LOCATION_SCHEMA = {
         obligatory_fields: [
             ['name', 'str'],
             ['accessible_by', 'list'],
@@ -30,9 +30,9 @@ beforeEach(() => {
 afterEach(() => {
     const metaTag = document.querySelector('meta[name="csrf-token"]');
     if (metaTag) {
-        document.head.removeChild(metaTag);
+        metaTag.remove();
     }
-    delete window.LOCATION_SCHEMA;
+    delete globalThis.LOCATION_SCHEMA;
 });
 
 const clickSuggestionsButton = () => {

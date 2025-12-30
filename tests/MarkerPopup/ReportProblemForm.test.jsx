@@ -18,7 +18,7 @@ beforeEach(() => {
 afterEach(() => {
     const metaTag = document.querySelector('meta[name="csrf-token"]');
     if (metaTag) {
-        document.head.removeChild(metaTag);
+        metaTag.remove();
     }
 });
 
