@@ -75,7 +75,7 @@ export const ReportProblemForm = ({ placeId }) => {
 
     const handleSubmit = async event => {
         event.preventDefault();
-        const csrfToken = getCsrfToken();
+        const csrfToken = await getCsrfToken();
 
         const response = await axios.post(
             '/api/report-location',

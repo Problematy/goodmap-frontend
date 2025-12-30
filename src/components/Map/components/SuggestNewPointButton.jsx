@@ -173,7 +173,7 @@ export const SuggestNewPointButton = () => {
         });
 
         try {
-            const csrfToken = getCsrfToken();
+            const csrfToken = await getCsrfToken();
             await axios.post('/api/suggest-new-point', formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data',
