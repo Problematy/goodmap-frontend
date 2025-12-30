@@ -154,7 +154,35 @@ export const SuggestNewPointButton = () => {
 
     const handleConfirmNewPoint = async event => {
         event.preventDefault();
-        setShowNewPointSuggestionBox(false);
+
+        // Validate user position is available
+        if (userPosition.lat === null || userPosition.lng === null) {
+            setSnackbarMessage(
+                'Location not available. Please enable location services and try again.',
+            );
+            setSnackbarOpen(true);
+            return;
+        }
+
+        // Validate required fields are filled
+        const emptyFields = [];
+        locationSchema.obligatory_fields.forEach(([fieldName, fieldType]) => {
+            if (fieldName === 'uuid') return; // Skip uuid - generated on backend
+
+            const value = formFields[fieldName];
+            const isEmpty =
+                fieldType === 'list' ? !value || value.length === 0 : !value || value.trim() === '';
+
+            if (isEmpty) {
+                emptyFields.push(fieldName);
+            }
+        });
+
+        if (emptyFields.length > 0) {
+            setSnackbarMessage(`Please fill in required fields: ${emptyFields.join(', ')}`);
+            setSnackbarOpen(true);
+            return;
+        }
 
         const formData = new FormData();
         // Convert position from {lat, lng} to [lat, lng] array format
@@ -182,10 +210,19 @@ export const SuggestNewPointButton = () => {
             });
             setSnackbarMessage('Location suggested successfully!');
             setSnackbarOpen(true);
+
+            // Reset form after successful submission
+            setFormFields(initializeFormFields());
+            setPhoto(null);
+            setPhotoURL(null);
+
+            // Close dialog only after successful submission
+            setShowNewPointSuggestionBox(false);
         } catch (error) {
             console.error('Error suggesting new point:', error);
             setSnackbarMessage('Error suggesting location. Please try again.');
             setSnackbarOpen(true);
+            // Dialog stays open on error so user can retry
         }
     };
 

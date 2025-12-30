@@ -146,7 +146,7 @@ describe('SuggestNewPointButton', () => {
         });
     });
 
-    it('submits new point suggestion when form is filled correctly', () => {
+    it('displays validation error when required fields are empty', () => {
         axios.post.mockResolvedValue({});
 
         globalThis.navigator.geolocation = {
@@ -162,23 +162,16 @@ describe('SuggestNewPointButton', () => {
         return waitFor(() => {
             expect(screen.getByRole('dialog')).toBeInTheDocument();
         }).then(() => {
-            // Upload a photo
-            mockUploadingFileWithSizeInMB(4);
-
-            // Submit the form (fields can be empty for this test)
+            // Try to submit without filling required fields
             fireEvent.click(screen.getByRole('button', { name: /submit/i }));
 
             return waitFor(() => {
-                expect(axios.post).toHaveBeenCalledWith(
-                    '/api/suggest-new-point',
-                    expect.any(FormData),
-                    {
-                        headers: {
-                            'Content-Type': 'multipart/form-data',
-                            'X-CSRFToken': 'test-csrf-token',
-                        },
-                    },
-                );
+                // Should show validation error
+                expect(screen.getByText(/Please fill in required fields/i)).toBeInTheDocument();
+                // Dialog should still be open
+                expect(screen.getByRole('dialog')).toBeInTheDocument();
+                // Should NOT have called axios.post
+                expect(axios.post).not.toHaveBeenCalled();
             });
         });
     });
