@@ -6,6 +6,35 @@ import { SuggestNewPointButton } from '../../../src/components/Map/components/Su
 
 jest.mock('axios');
 
+// Mock CSRF token meta tag and location schema
+beforeEach(() => {
+    const metaTag = document.createElement('meta');
+    metaTag.setAttribute('name', 'csrf-token');
+    metaTag.setAttribute('content', 'test-csrf-token');
+    document.head.appendChild(metaTag);
+
+    // Mock location schema
+    window.LOCATION_SCHEMA = {
+        obligatory_fields: [
+            ['name', 'str'],
+            ['accessible_by', 'list'],
+            ['type_of_place', 'str'],
+        ],
+        categories: {
+            accessible_by: ['bikes', 'cars', 'pedestrians'],
+            type_of_place: ['big bridge', 'small bridge'],
+        },
+    };
+});
+
+afterEach(() => {
+    const metaTag = document.querySelector('meta[name="csrf-token"]');
+    if (metaTag) {
+        document.head.removeChild(metaTag);
+    }
+    delete window.LOCATION_SCHEMA;
+});
+
 const clickSuggestionsButton = () => {
     fireEvent.click(screen.getByTestId('suggest-new-point'));
 };
@@ -92,7 +121,7 @@ describe('SuggestNewPointButton', () => {
         );
     });
 
-    it('submits new point suggestion when form is filled correctly', () => {
+    it('submits new point suggestion when form is filled correctly', async () => {
         axios.post.mockResolvedValue({});
 
         globalThis.navigator.geolocation = {
@@ -105,24 +134,39 @@ describe('SuggestNewPointButton', () => {
 
         clickSuggestionsButton();
 
-        return waitFor(() => {
-            mockUploadingFileWithSizeInMB(4);
-            fireEvent.change(screen.getByTestId('organization-select').querySelector('input'), {
-                target: { value: 'org-1' },
-            });
-            fireEvent.click(screen.getByRole('button', { name: /submit/i }));
-        }).then(() =>
-            waitFor(() => {
-                expect(axios.post).toHaveBeenCalledWith(
-                    '/api/suggest-new-point',
-                    expect.any(FormData),
-                    {
-                        headers: {
-                            'Content-Type': 'multipart/form-data',
-                        },
+        await waitFor(() => {
+            expect(screen.getByRole('dialog')).toBeInTheDocument();
+        });
+
+        // Fill in the name field
+        const nameInput = screen.getByTestId('name-input');
+        fireEvent.change(nameInput, { target: { value: 'Test Bridge' } });
+
+        // Select type_of_place
+        const typeSelect = screen.getByTestId('type_of_place-select');
+        fireEvent.mouseDown(typeSelect);
+        await waitFor(() => {
+            const option = screen.getByText('big bridge');
+            fireEvent.click(option);
+        });
+
+        // Upload a photo
+        mockUploadingFileWithSizeInMB(4);
+
+        // Submit the form
+        fireEvent.click(screen.getByRole('button', { name: /submit/i }));
+
+        await waitFor(() => {
+            expect(axios.post).toHaveBeenCalledWith(
+                '/api/suggest-new-point',
+                expect.any(FormData),
+                {
+                    headers: {
+                        'Content-Type': 'multipart/form-data',
+                        'X-CSRFToken': 'test-csrf-token',
                     },
-                );
-            }),
-        );
+                },
+            );
+        });
     });
 });
