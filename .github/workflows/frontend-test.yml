@@ -48,6 +48,5 @@ jobs:
     uses: problematy/goodmap-e2e-tests/.github/workflows/e2e-tests.yml@572c78cf1da91526c9f1139c7cc741f034f52ff6
     with:
       goodmap-version: 'main'
-      goodmap-repository: problematy/goodmap
       goodmap-frontend-version: ${{ github.sha }}
-      goodmap-frontend-repository: ${{ github.repository }}
+      calling-repo: 'goodmap-frontend'
