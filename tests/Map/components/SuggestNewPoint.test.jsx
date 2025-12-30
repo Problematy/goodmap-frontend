@@ -33,6 +33,7 @@ afterEach(() => {
         metaTag.remove();
     }
     delete globalThis.LOCATION_SCHEMA;
+    jest.clearAllMocks();
 });
 
 const clickSuggestionsButton = () => {
@@ -146,6 +147,42 @@ describe('SuggestNewPointButton', () => {
         });
     });
 
+    it('displays validation error when user position is not available', () => {
+        axios.post.mockResolvedValue({});
+
+        // Start with valid geolocation to open dialog
+        let positionCallback;
+        globalThis.navigator.geolocation = {
+            getCurrentPosition: jest.fn(callback => {
+                positionCallback = callback;
+                // Initially provide valid position to allow dialog to open
+                callback({ coords: { latitude: null, lng: null } });
+            }),
+        };
+
+        render(<SuggestNewPointButton />);
+
+        clickSuggestionsButton();
+
+        return waitFor(() => {
+            expect(screen.getByRole('dialog')).toBeInTheDocument();
+        }).then(() => {
+            // Try to submit with null position
+            fireEvent.click(screen.getByRole('button', { name: /submit/i }));
+
+            return waitFor(() => {
+                // Should show position validation error
+                expect(
+                    screen.getByText(/Location not available.*enable location services/i),
+                ).toBeInTheDocument();
+                // Dialog should still be open
+                expect(screen.getByRole('dialog')).toBeInTheDocument();
+                // Should NOT have called axios.post
+                expect(axios.post).not.toHaveBeenCalled();
+            });
+        });
+    });
+
     it('displays validation error when required fields are empty', () => {
         axios.post.mockResolvedValue({});
 
@@ -172,6 +209,98 @@ describe('SuggestNewPointButton', () => {
                 expect(screen.getByRole('dialog')).toBeInTheDocument();
                 // Should NOT have called axios.post
                 expect(axios.post).not.toHaveBeenCalled();
+            });
+        });
+    });
+
+    it('keeps dialog open on submission error', () => {
+        // Mock console.error to suppress expected error log
+        const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+
+        // Mock axios to reject
+        axios.post.mockRejectedValue(new Error('Network error'));
+
+        globalThis.navigator.geolocation = {
+            getCurrentPosition: jest.fn(success =>
+                success({ coords: { latitude: 0, longitude: 0 } }),
+            ),
+        };
+
+        // Create a simpler schema with just one text field
+        globalThis.LOCATION_SCHEMA = {
+            obligatory_fields: [['name', 'str']],
+            categories: {},
+        };
+
+        render(<SuggestNewPointButton />);
+
+        clickSuggestionsButton();
+
+        return waitFor(() => {
+            expect(screen.getByRole('dialog')).toBeInTheDocument();
+        }).then(() => {
+            // Fill the required name field
+            const nameInput = screen.getByLabelText(/name/i);
+            fireEvent.change(nameInput, { target: { value: 'Test Location' } });
+
+            // Submit the form
+            fireEvent.click(screen.getByRole('button', { name: /submit/i }));
+
+            return waitFor(() => {
+                // Should show error message
+                expect(screen.getByText(/Error suggesting location/i)).toBeInTheDocument();
+                // Dialog should still be open (important for retry)
+                expect(screen.getByRole('dialog')).toBeInTheDocument();
+                // axios.post should have been called once
+                expect(axios.post).toHaveBeenCalledTimes(1);
+                // Should have logged the error
+                expect(consoleErrorSpy).toHaveBeenCalledWith(
+                    'Error suggesting new point:',
+                    expect.any(Error),
+                );
+
+                consoleErrorSpy.mockRestore();
+            });
+        });
+    });
+
+    it('closes dialog and resets form on successful submission', () => {
+        // Mock successful response
+        axios.post.mockResolvedValue({ data: { message: 'Success' } });
+
+        globalThis.navigator.geolocation = {
+            getCurrentPosition: jest.fn(success =>
+                success({ coords: { latitude: 0, longitude: 0 } }),
+            ),
+        };
+
+        // Create a simpler schema with just one text field
+        globalThis.LOCATION_SCHEMA = {
+            obligatory_fields: [['name', 'str']],
+            categories: {},
+        };
+
+        render(<SuggestNewPointButton />);
+
+        clickSuggestionsButton();
+
+        return waitFor(() => {
+            expect(screen.getByRole('dialog')).toBeInTheDocument();
+        }).then(() => {
+            // Fill the required name field
+            const nameInput = screen.getByLabelText(/name/i);
+            fireEvent.change(nameInput, { target: { value: 'Test Location' } });
+
+            // Submit the form
+            fireEvent.click(screen.getByRole('button', { name: /submit/i }));
+
+            return waitFor(() => {
+                // Should show success message
+                expect(screen.getByText(/Location suggested successfully/i)).toBeInTheDocument();
+                // Dialog should be closed
+                expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+                // axios.post should have been called
+                expect(axios.post).toHaveBeenCalledTimes(1);
             });
         });
     });
