@@ -45,8 +45,12 @@
             {
                 "assets": [
                     {
-                        "path": "dist/**",
-                        "label": "Distribution"
+                        "path": "dist/index.min.js",
+                        "label": "Production Build"
+                    },
+                    {
+                        "path": "dist/index.min.js.map",
+                        "label": "Source Map"
                     }
                 ]
             }
