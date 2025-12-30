@@ -162,23 +162,10 @@ describe('SuggestNewPointButton', () => {
         return waitFor(() => {
             expect(screen.getByRole('dialog')).toBeInTheDocument();
         }).then(() => {
-            // Fill in the name field
-            const nameInput = screen.getByTestId('name-input');
-            fireEvent.change(nameInput, { target: { value: 'Test Bridge' } });
-
-            // Select type_of_place
-            const typeSelect = screen.getByTestId('type_of_place-select');
-            fireEvent.mouseDown(typeSelect);
-
-            return waitFor(() => {
-                const option = screen.getByText('big bridge');
-                fireEvent.click(option);
-            });
-        }).then(() => {
             // Upload a photo
             mockUploadingFileWithSizeInMB(4);
 
-            // Submit the form
+            // Submit the form (fields can be empty for this test)
             fireEvent.click(screen.getByRole('button', { name: /submit/i }));
 
             return waitFor(() => {
