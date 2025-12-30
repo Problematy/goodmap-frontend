@@ -49,4 +49,3 @@ jobs:
     with:
       goodmap-version: 'main'
       goodmap-frontend-version: ${{ github.sha }}
-      calling-repo: 'goodmap-frontend'
