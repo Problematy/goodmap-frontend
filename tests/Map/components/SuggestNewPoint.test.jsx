@@ -3,6 +3,19 @@ import '@testing-library/jest-dom';
 import React from 'react';
 import axios from 'axios';
 import { SuggestNewPointButton } from '../../../src/components/Map/components/SuggestNewPointButton';
+import {
+    mockGeolocationSuccess,
+    mockGeolocationError,
+    mockGeolocationUnsupported,
+    mockGeolocationWithNullPosition,
+} from '../../utils/geolocationMocks';
+import {
+    clickSuggestButton,
+    openDialog,
+    submitForm,
+    fillTextField,
+} from '../../utils/dialogHelpers';
+import { ERROR_MESSAGES, FILE_SIZES, SIMPLE_SCHEMA, FULL_SCHEMA } from '../../utils/testConstants';
 
 jest.mock('axios');
 
@@ -13,18 +26,7 @@ beforeEach(() => {
     metaTag.setAttribute('content', 'test-csrf-token');
     document.head.appendChild(metaTag);
 
-    // Mock location schema
-    globalThis.LOCATION_SCHEMA = {
-        obligatory_fields: [
-            ['name', 'str'],
-            ['accessible_by', 'list'],
-            ['type_of_place', 'str'],
-        ],
-        categories: {
-            accessible_by: ['bikes', 'cars', 'pedestrians'],
-            type_of_place: ['big bridge', 'small bridge'],
-        },
-    };
+    globalThis.LOCATION_SCHEMA = FULL_SCHEMA;
 });
 
 afterEach(() => {
@@ -36,272 +38,158 @@ afterEach(() => {
     jest.clearAllMocks();
 });
 
-const clickSuggestionsButton = () => {
-    fireEvent.click(screen.getByTestId('suggest-new-point'));
-};
-
 const mockUploadingFileWithSizeInMB = sizeInMB => {
-    const largeFile = {
+    const file = {
         name: 'large-file.txt',
         size: sizeInMB * 1024 * 1024,
         type: 'text/plain',
     };
 
     fireEvent.change(screen.getByTestId('photo-of-point'), {
-        target: { files: [largeFile] },
+        target: { files: [file] },
     });
 };
 
 describe('SuggestNewPointButton', () => {
-    it('displays error message when geolocation is not supported', () => {
-        globalThis.navigator.geolocation = undefined;
+    it('displays error message when geolocation is not supported', async () => {
+        mockGeolocationUnsupported();
 
         render(<SuggestNewPointButton />);
-        clickSuggestionsButton();
+        clickSuggestButton();
 
-        return waitFor(() => {
-            expect(
-                screen.getByText('Please enable location services to suggest a new point.'),
-            ).toBeInTheDocument();
+        await waitFor(() => {
+            expect(screen.getByText(ERROR_MESSAGES.LOCATION_SERVICES)).toBeInTheDocument();
         });
     });
 
-    it('displays error message when location services are not enabled', () => {
-        globalThis.navigator.geolocation = {
-            getCurrentPosition: jest.fn((success, error) => error()),
-        };
+    it('displays error message when location services are not enabled', async () => {
+        mockGeolocationError();
 
         render(<SuggestNewPointButton />);
+        clickSuggestButton();
 
-        clickSuggestionsButton();
-
-        return waitFor(() => {
-            expect(
-                screen.getByText('Please enable location services to suggest a new point.'),
-            ).toBeInTheDocument();
+        await waitFor(() => {
+            expect(screen.getByText(ERROR_MESSAGES.LOCATION_SERVICES)).toBeInTheDocument();
         });
     });
 
-    it('opens new point suggestion box when location services are enabled', () => {
-        globalThis.navigator.geolocation = {
-            getCurrentPosition: jest.fn(success =>
-                success({ coords: { latitude: 0, longitude: 0 } }),
-            ),
-        };
+    it('opens new point suggestion box when location services are enabled', async () => {
+        mockGeolocationSuccess();
 
         render(<SuggestNewPointButton />);
+        clickSuggestButton();
 
-        clickSuggestionsButton();
-
-        return waitFor(() => {
+        await waitFor(() => {
             expect(screen.getByRole('dialog')).toBeInTheDocument();
         });
     });
 
-    it('displays error message when selected file is too large', () => {
-        globalThis.navigator.geolocation = {
-            getCurrentPosition: jest.fn(success =>
-                success({ coords: { latitude: 0, longitude: 0 } }),
-            ),
-        };
+    it('displays error message when selected file is too large', async () => {
+        mockGeolocationSuccess();
 
         render(<SuggestNewPointButton />);
         URL.createObjectURL = jest.fn(() => 'blob:http://test-url/');
-        clickSuggestionsButton();
+        clickSuggestButton();
 
-        return waitFor(() => {
-            mockUploadingFileWithSizeInMB(6);
-        }).then(() =>
-            waitFor(() => {
-                expect(
-                    screen.getByText(
-                        'The selected file is too large. Please select a file smaller than 5MB.',
-                    ),
-                ).toBeInTheDocument();
-            }),
-        );
-    });
-
-    it('handles file dialog cancellation without crashing', () => {
-        globalThis.navigator.geolocation = {
-            getCurrentPosition: jest.fn(success =>
-                success({ coords: { latitude: 0, longitude: 0 } }),
-            ),
-        };
-
-        render(<SuggestNewPointButton />);
-        clickSuggestionsButton();
-
-        return waitFor(() => {
+        await waitFor(() => {
             expect(screen.getByRole('dialog')).toBeInTheDocument();
-        }).then(() => {
-            // Simulate user canceling file dialog (no file selected)
-            const fileInput = screen.getByTestId('photo-of-point');
-            fireEvent.change(fileInput, {
-                target: { files: [] },
-            });
+        });
 
-            // Should not crash and no error message should be displayed
-            expect(screen.queryByText(/too large/i)).not.toBeInTheDocument();
-            expect(screen.queryByText(/error/i)).not.toBeInTheDocument();
+        mockUploadingFileWithSizeInMB(FILE_SIZES.OVER_LIMIT_MB);
+
+        await waitFor(() => {
+            expect(screen.getByText(ERROR_MESSAGES.FILE_TOO_LARGE)).toBeInTheDocument();
         });
     });
 
-    it('displays validation error when user position is not available', () => {
+    it('handles file dialog cancellation without crashing', async () => {
+        mockGeolocationSuccess();
+
+        render(<SuggestNewPointButton />);
+        await openDialog();
+
+        const fileInput = screen.getByTestId('photo-of-point');
+        fireEvent.change(fileInput, {
+            target: { files: [] },
+        });
+
+        expect(screen.queryByText(/too large/i)).not.toBeInTheDocument();
+        expect(screen.queryByText(/error/i)).not.toBeInTheDocument();
+    });
+
+    it('displays validation error when user position is not available', async () => {
         axios.post.mockResolvedValue({});
-
-        // Start with valid geolocation to open dialog
-        let positionCallback;
-        globalThis.navigator.geolocation = {
-            getCurrentPosition: jest.fn(callback => {
-                positionCallback = callback;
-                // Initially provide valid position to allow dialog to open
-                callback({ coords: { latitude: null, lng: null } });
-            }),
-        };
+        mockGeolocationWithNullPosition();
 
         render(<SuggestNewPointButton />);
+        await openDialog();
 
-        clickSuggestionsButton();
+        submitForm();
 
-        return waitFor(() => {
+        await waitFor(() => {
+            expect(screen.getByText(ERROR_MESSAGES.LOCATION_NOT_AVAILABLE)).toBeInTheDocument();
             expect(screen.getByRole('dialog')).toBeInTheDocument();
-        }).then(() => {
-            // Try to submit with null position
-            fireEvent.click(screen.getByRole('button', { name: /submit/i }));
-
-            return waitFor(() => {
-                // Should show position validation error
-                expect(
-                    screen.getByText(/Location not available.*enable location services/i),
-                ).toBeInTheDocument();
-                // Dialog should still be open
-                expect(screen.getByRole('dialog')).toBeInTheDocument();
-                // Should NOT have called axios.post
-                expect(axios.post).not.toHaveBeenCalled();
-            });
+            expect(axios.post).not.toHaveBeenCalled();
         });
     });
 
-    it('displays validation error when required fields are empty', () => {
+    it('displays validation error when required fields are empty', async () => {
         axios.post.mockResolvedValue({});
-
-        globalThis.navigator.geolocation = {
-            getCurrentPosition: jest.fn(success =>
-                success({ coords: { latitude: 0, longitude: 0 } }),
-            ),
-        };
+        mockGeolocationSuccess();
 
         render(<SuggestNewPointButton />);
+        await openDialog();
 
-        clickSuggestionsButton();
+        submitForm();
 
-        return waitFor(() => {
+        await waitFor(() => {
+            expect(screen.getByText(ERROR_MESSAGES.REQUIRED_FIELDS)).toBeInTheDocument();
             expect(screen.getByRole('dialog')).toBeInTheDocument();
-        }).then(() => {
-            // Try to submit without filling required fields
-            fireEvent.click(screen.getByRole('button', { name: /submit/i }));
-
-            return waitFor(() => {
-                // Should show validation error
-                expect(screen.getByText(/Please fill in required fields/i)).toBeInTheDocument();
-                // Dialog should still be open
-                expect(screen.getByRole('dialog')).toBeInTheDocument();
-                // Should NOT have called axios.post
-                expect(axios.post).not.toHaveBeenCalled();
-            });
+            expect(axios.post).not.toHaveBeenCalled();
         });
     });
 
-    it('keeps dialog open on submission error', () => {
-        // Mock console.error to suppress expected error log
+    it('keeps dialog open on submission error', async () => {
         const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
 
-        // Mock axios to reject
         axios.post.mockRejectedValue(new Error('Network error'));
-
-        globalThis.navigator.geolocation = {
-            getCurrentPosition: jest.fn(success =>
-                success({ coords: { latitude: 0, longitude: 0 } }),
-            ),
-        };
-
-        // Create a simpler schema with just one text field
-        globalThis.LOCATION_SCHEMA = {
-            obligatory_fields: [['name', 'str']],
-            categories: {},
-        };
+        mockGeolocationSuccess();
+        globalThis.LOCATION_SCHEMA = SIMPLE_SCHEMA;
 
         render(<SuggestNewPointButton />);
+        await openDialog();
 
-        clickSuggestionsButton();
+        fillTextField(/name/i, 'Test Location');
+        submitForm();
 
-        return waitFor(() => {
+        await waitFor(() => {
+            expect(screen.getByText(ERROR_MESSAGES.SUBMISSION_ERROR)).toBeInTheDocument();
             expect(screen.getByRole('dialog')).toBeInTheDocument();
-        }).then(() => {
-            // Fill the required name field
-            const nameInput = screen.getByLabelText(/name/i);
-            fireEvent.change(nameInput, { target: { value: 'Test Location' } });
-
-            // Submit the form
-            fireEvent.click(screen.getByRole('button', { name: /submit/i }));
-
-            return waitFor(() => {
-                // Should show error message
-                expect(screen.getByText(/Error suggesting location/i)).toBeInTheDocument();
-                // Dialog should still be open (important for retry)
-                expect(screen.getByRole('dialog')).toBeInTheDocument();
-                // axios.post should have been called once
-                expect(axios.post).toHaveBeenCalledTimes(1);
-                // Should have logged the error
-                expect(consoleErrorSpy).toHaveBeenCalledWith(
-                    'Error suggesting new point:',
-                    expect.any(Error),
-                );
-
-                consoleErrorSpy.mockRestore();
-            });
+            expect(axios.post).toHaveBeenCalledTimes(1);
+            expect(consoleErrorSpy).toHaveBeenCalledWith(
+                'Error suggesting new point:',
+                expect.any(Error),
+            );
         });
+
+        consoleErrorSpy.mockRestore();
     });
 
-    it('closes dialog and resets form on successful submission', () => {
-        // Mock successful response
+    it('closes dialog and resets form on successful submission', async () => {
         axios.post.mockResolvedValue({ data: { message: 'Success' } });
-
-        globalThis.navigator.geolocation = {
-            getCurrentPosition: jest.fn(success =>
-                success({ coords: { latitude: 0, longitude: 0 } }),
-            ),
-        };
-
-        // Create a simpler schema with just one text field
-        globalThis.LOCATION_SCHEMA = {
-            obligatory_fields: [['name', 'str']],
-            categories: {},
-        };
+        mockGeolocationSuccess();
+        globalThis.LOCATION_SCHEMA = SIMPLE_SCHEMA;
 
         render(<SuggestNewPointButton />);
+        await openDialog();
 
-        clickSuggestionsButton();
+        fillTextField(/name/i, 'Test Location');
+        submitForm();
 
-        return waitFor(() => {
-            expect(screen.getByRole('dialog')).toBeInTheDocument();
-        }).then(() => {
-            // Fill the required name field
-            const nameInput = screen.getByLabelText(/name/i);
-            fireEvent.change(nameInput, { target: { value: 'Test Location' } });
-
-            // Submit the form
-            fireEvent.click(screen.getByRole('button', { name: /submit/i }));
-
-            return waitFor(() => {
-                // Should show success message
-                expect(screen.getByText(/Location suggested successfully/i)).toBeInTheDocument();
-                // Dialog should be closed
-                expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-                // axios.post should have been called
-                expect(axios.post).toHaveBeenCalledTimes(1);
-            });
+        await waitFor(() => {
+            expect(screen.getByText(ERROR_MESSAGES.SUBMISSION_SUCCESS)).toBeInTheDocument();
+            expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+            expect(axios.post).toHaveBeenCalledTimes(1);
         });
     });
 });
