@@ -133,6 +133,9 @@ export const SuggestNewPointButton = () => {
 
     const handlePhotoUpload = event => {
         const file = event.target.files[0];
+        if (!file) {
+            return;
+        }
         const fileSizeMB = file.size / 1024 / 1024;
         if (fileSizeMB > 5) {
             setSnackbarMessage(

@@ -121,6 +121,31 @@ describe('SuggestNewPointButton', () => {
         );
     });
 
+    it('handles file dialog cancellation without crashing', async () => {
+        globalThis.navigator.geolocation = {
+            getCurrentPosition: jest.fn(success =>
+                success({ coords: { latitude: 0, longitude: 0 } }),
+            ),
+        };
+
+        render(<SuggestNewPointButton />);
+        clickSuggestionsButton();
+
+        await waitFor(() => {
+            expect(screen.getByRole('dialog')).toBeInTheDocument();
+        });
+
+        // Simulate user canceling file dialog (no file selected)
+        const fileInput = screen.getByTestId('photo-of-point');
+        fireEvent.change(fileInput, {
+            target: { files: [] },
+        });
+
+        // Should not crash and no error message should be displayed
+        expect(screen.queryByText(/too large/i)).not.toBeInTheDocument();
+        expect(screen.queryByText(/error/i)).not.toBeInTheDocument();
+    });
+
     it('submits new point suggestion when form is filled correctly', async () => {
         axios.post.mockResolvedValue({});
 
