@@ -121,7 +121,7 @@ describe('SuggestNewPointButton', () => {
         );
     });
 
-    it('handles file dialog cancellation without crashing', async () => {
+    it('handles file dialog cancellation without crashing', () => {
         globalThis.navigator.geolocation = {
             getCurrentPosition: jest.fn(success =>
                 success({ coords: { latitude: 0, longitude: 0 } }),
@@ -131,22 +131,22 @@ describe('SuggestNewPointButton', () => {
         render(<SuggestNewPointButton />);
         clickSuggestionsButton();
 
-        await waitFor(() => {
+        return waitFor(() => {
             expect(screen.getByRole('dialog')).toBeInTheDocument();
-        });
+        }).then(() => {
+            // Simulate user canceling file dialog (no file selected)
+            const fileInput = screen.getByTestId('photo-of-point');
+            fireEvent.change(fileInput, {
+                target: { files: [] },
+            });
 
-        // Simulate user canceling file dialog (no file selected)
-        const fileInput = screen.getByTestId('photo-of-point');
-        fireEvent.change(fileInput, {
-            target: { files: [] },
+            // Should not crash and no error message should be displayed
+            expect(screen.queryByText(/too large/i)).not.toBeInTheDocument();
+            expect(screen.queryByText(/error/i)).not.toBeInTheDocument();
         });
-
-        // Should not crash and no error message should be displayed
-        expect(screen.queryByText(/too large/i)).not.toBeInTheDocument();
-        expect(screen.queryByText(/error/i)).not.toBeInTheDocument();
     });
 
-    it('submits new point suggestion when form is filled correctly', async () => {
+    it('submits new point suggestion when form is filled correctly', () => {
         axios.post.mockResolvedValue({});
 
         globalThis.navigator.geolocation = {
@@ -159,39 +159,40 @@ describe('SuggestNewPointButton', () => {
 
         clickSuggestionsButton();
 
-        await waitFor(() => {
+        return waitFor(() => {
             expect(screen.getByRole('dialog')).toBeInTheDocument();
-        });
+        }).then(() => {
+            // Fill in the name field
+            const nameInput = screen.getByTestId('name-input');
+            fireEvent.change(nameInput, { target: { value: 'Test Bridge' } });
 
-        // Fill in the name field
-        const nameInput = screen.getByTestId('name-input');
-        fireEvent.change(nameInput, { target: { value: 'Test Bridge' } });
+            // Select type_of_place
+            const typeSelect = screen.getByTestId('type_of_place-select');
+            fireEvent.mouseDown(typeSelect);
 
-        // Select type_of_place
-        const typeSelect = screen.getByTestId('type_of_place-select');
-        fireEvent.mouseDown(typeSelect);
-        await waitFor(() => {
-            const option = screen.getByText('big bridge');
-            fireEvent.click(option);
-        });
+            return waitFor(() => {
+                const option = screen.getByText('big bridge');
+                fireEvent.click(option);
+            });
+        }).then(() => {
+            // Upload a photo
+            mockUploadingFileWithSizeInMB(4);
 
-        // Upload a photo
-        mockUploadingFileWithSizeInMB(4);
+            // Submit the form
+            fireEvent.click(screen.getByRole('button', { name: /submit/i }));
 
-        // Submit the form
-        fireEvent.click(screen.getByRole('button', { name: /submit/i }));
-
-        await waitFor(() => {
-            expect(axios.post).toHaveBeenCalledWith(
-                '/api/suggest-new-point',
-                expect.any(FormData),
-                {
-                    headers: {
-                        'Content-Type': 'multipart/form-data',
-                        'X-CSRFToken': 'test-csrf-token',
+            return waitFor(() => {
+                expect(axios.post).toHaveBeenCalledWith(
+                    '/api/suggest-new-point',
+                    expect.any(FormData),
+                    {
+                        headers: {
+                            'Content-Type': 'multipart/form-data',
+                            'X-CSRFToken': 'test-csrf-token',
+                        },
                     },
-                },
-            );
+                );
+            });
         });
     });
 });
