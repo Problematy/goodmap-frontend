@@ -52,7 +52,7 @@ jobs:
               run: npm ci
 
             - name: Build package
-              run: npm run build
+              run: make build
 
             - name: Run semantic-release
               env:

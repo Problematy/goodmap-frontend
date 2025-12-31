@@ -9,3 +9,6 @@ coverage
 
 # Backup files
 *.orig
+
+# Webpack cache
+.webpack-cache
