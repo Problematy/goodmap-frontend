@@ -6,3 +6,6 @@ coverage
 # IDE-specific directories
 .vscode
 .idea
+
+# Backup files
+*.orig
