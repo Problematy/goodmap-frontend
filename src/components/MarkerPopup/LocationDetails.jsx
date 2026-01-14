@@ -196,6 +196,14 @@ const LocationDetails = ({ place }) => {
     );
 };
 
+LocationDetails.propTypes = {
+    place: PropTypes.shape({
+        title: PropTypes.string.isRequired,
+        subtitle: PropTypes.string,
+        data: PropTypes.arrayOf(PropTypes.array).isRequired,
+    }).isRequired,
+};
+
 /**
  * Main component that wraps location details with additional features.
  * Includes location details, optional navigation button (mobile only), and report problem form.
@@ -232,16 +240,9 @@ export const LocationDetailsBox = ({ place }) => {
                 {isMobile && <NavigateMeButton place={place} />}
             </div>
 
-            <div
-                role="button"
-                tabIndex={0}
+            <button
+                type="button"
                 onClick={toggleForm}
-                onKeyDown={e => {
-                    if (e.key === 'Enter' || e.key === ' ') {
-                        e.preventDefault();
-                        toggleForm();
-                    }
-                }}
                 style={{
                     cursor: 'pointer',
                     display: 'flex',
@@ -253,6 +254,10 @@ export const LocationDetailsBox = ({ place }) => {
                     marginTop: '8px',
                     marginBottom: '5px',
                     transition: 'color 0.2s',
+                    background: 'none',
+                    border: 'none',
+                    padding: 0,
+                    width: '100%',
                 }}
                 onMouseOver={e => (e.currentTarget.style.color = '#d32f2f')}
                 onFocus={e => (e.currentTarget.style.color = '#d32f2f')}
@@ -261,7 +266,7 @@ export const LocationDetailsBox = ({ place }) => {
             >
                 <ReportProblemOutlinedIcon style={{ fontSize: 14 }} />
                 <span>{t('ReportIssueButton')}</span>
-            </div>
+            </button>
             {showForm && <ReportProblemForm placeId={place.metadata.uuid} />}
         </React.Fragment>
     );
