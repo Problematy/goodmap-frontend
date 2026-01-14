@@ -233,7 +233,15 @@ export const LocationDetailsBox = ({ place }) => {
             </div>
 
             <div
+                role="button"
+                tabIndex={0}
                 onClick={toggleForm}
+                onKeyDown={e => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        toggleForm();
+                    }
+                }}
                 style={{
                     cursor: 'pointer',
                     display: 'flex',
@@ -247,7 +255,9 @@ export const LocationDetailsBox = ({ place }) => {
                     transition: 'color 0.2s',
                 }}
                 onMouseOver={e => (e.currentTarget.style.color = '#d32f2f')}
+                onFocus={e => (e.currentTarget.style.color = '#d32f2f')}
                 onMouseOut={e => (e.currentTarget.style.color = '#888')}
+                onBlur={e => (e.currentTarget.style.color = '#888')}
             >
                 <ReportProblemOutlinedIcon style={{ fontSize: 14 }} />
                 <span>{t('ReportIssueButton')}</span>
