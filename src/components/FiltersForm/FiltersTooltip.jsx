@@ -34,13 +34,18 @@ const FiltersTooltip = ({ text }) => {
 
 /**
  * Styled image component for the tooltip help icon.
- * Displays a 25x25px help icon with appropriate spacing.
+ * Displays a help icon with appropriate sizing and hover effect.
  */
 const TooltipImage = styled.img`
-    width: 25px;
-    height: 25px;
-    margin-bottom: 5px;
-    margin-left: 5px;
+    width: 18px;
+    height: 18px;
+    opacity: 0.7;
+    cursor: help;
+    transition: opacity 0.2s ease;
+
+    &:hover {
+        opacity: 1;
+    }
 `;
 
 FiltersTooltip.propTypes = {

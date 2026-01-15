@@ -1,10 +1,101 @@
 import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
+import styled from 'styled-components';
 import { useCategories } from '../Categories/CategoriesContext';
 import useDebounce from '../../utils/hooks/useDebounce';
 import { httpService } from '../../services/http/httpService';
 import { useMapStore } from '../Map/store/map.store';
 import FiltersTooltip from './FiltersTooltip';
+
+const FilterSection = styled.div`
+    margin-bottom: 20px;
+
+    &:last-child {
+        margin-bottom: 0;
+    }
+`;
+
+const FilterHeader = styled.div`
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+`;
+
+const FilterTitle = styled.span`
+    font-size: 13px;
+    font-weight: 600;
+    text-transform: capitalize;
+    letter-spacing: 0.3px;
+`;
+
+const FilterOption = styled.label`
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 8px 12px;
+    margin: 4px 0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+    font-size: 14px;
+
+    &:hover {
+        background-color: rgba(255, 255, 255, 0.1);
+    }
+`;
+
+const StyledCheckbox = styled.input`
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius: 4px;
+    background-color: transparent;
+    cursor: pointer;
+    position: relative;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+
+    &:checked {
+        background-color: #4fc3f7;
+        border-color: #4fc3f7;
+    }
+
+    &:checked::after {
+        content: '';
+        position: absolute;
+        left: 5px;
+        top: 2px;
+        width: 5px;
+        height: 9px;
+        border: solid white;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+    }
+
+    &:focus {
+        outline: none;
+        box-shadow: 0 0 0 2px rgba(79, 195, 247, 0.4);
+    }
+`;
+
+const OptionText = styled.span`
+    flex: 1;
+`;
+
+const TooltipWrapper = styled.span`
+    display: flex;
+    align-items: center;
+    margin-left: auto;
+`;
+
+const formatLabel = label => {
+    if (!label) return '';
+    return label.replace(/_/g, ' ');
+};
 
 /**
  * Filters form component that allows users to filter map locations by categories.
@@ -62,40 +153,43 @@ export const FiltersForm = () => {
                 ? filters[3].find(it => it[name])
                 : '';
             return (
-                <div className="form-check" key={`${category}-${name}`}>
-                    <label htmlFor={name}>
-                        {translation}
-                        <input
-                            onChange={handleCheckboxChange}
-                            className="form-check-input filter"
-                            data-category={category}
-                            type="checkbox"
-                            id={name}
-                            value={name}
-                        />
-                        {tooltipData && <FiltersTooltip text={tooltipData[name]} />}
-                    </label>
-                </div>
+                <FilterOption key={`${category}-${name}`} htmlFor={name}>
+                    <StyledCheckbox
+                        onChange={handleCheckboxChange}
+                        data-category={category}
+                        type="checkbox"
+                        id={name}
+                        value={name}
+                    />
+                    <OptionText>{formatLabel(translation)}</OptionText>
+                    {tooltipData && (
+                        <TooltipWrapper>
+                            <FiltersTooltip text={tooltipData[name]} />
+                        </TooltipWrapper>
+                    )}
+                </FilterOption>
             );
         });
     };
 
     const sections = categoriesData.map(filtersData => (
-        <div
+        <FilterSection
             key={`${filtersData[0][0]}-${filtersData[0][1]}`}
             aria-labelledby={`filter-label-${filtersData[0][0]}-${filtersData[0][1]}`}
         >
-            <span id={`filter-label-${filtersData[0][0]}-${filtersData[0][1]}`}>
-                {filtersData[0][1]}
-            </span>
-            {globalThis.FEATURE_FLAGS?.CATEGORIES_HELP &&
-                filtersData[2].find(it => it[filtersData[0][0]]) && (
-                    <FiltersTooltip
-                        text={filtersData[2].find(it => it[filtersData[0][0]])[filtersData[0][0]]}
-                    />
-                )}
+            <FilterHeader>
+                <FilterTitle id={`filter-label-${filtersData[0][0]}-${filtersData[0][1]}`}>
+                    {formatLabel(filtersData[0][1])}
+                </FilterTitle>
+                {globalThis.FEATURE_FLAGS?.CATEGORIES_HELP &&
+                    filtersData[2].find(it => it[filtersData[0][0]]) && (
+                        <FiltersTooltip
+                            text={filtersData[2].find(it => it[filtersData[0][0]])[filtersData[0][0]]}
+                        />
+                    )}
+            </FilterHeader>
             {renderFilterOptions(filtersData, filtersData[0][0])}
-        </div>
+        </FilterSection>
     ));
 
     return <form>{sections}</form>;
