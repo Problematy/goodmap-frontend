@@ -70,6 +70,8 @@ const LocationControl = () => {
                     title={!locationGranted ? t('locationServicesDisabled') : t('centerOnMyLocation')}
                     placement="left"
                     arrow
+                    enterTouchDelay={0}
+                    leaveTouchDelay={1500}
                 >
                     <Button
                         onClick={handleFlyToLocationClick}

@@ -261,6 +261,8 @@ export const SuggestNewPointButton = () => {
                 title={!locationGranted ? t('locationServicesDisabled') : t('suggestNewPoint')}
                 placement="left"
                 arrow
+                enterTouchDelay={0}
+                leaveTouchDelay={1500}
             >
                 <Button
                     onClick={handleNewPointButton}

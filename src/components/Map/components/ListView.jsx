@@ -29,6 +29,8 @@ const ListView = ({ onClick }) => {
                 title={!locationGranted ? t('locationServicesDisabled') : t('listView')}
                 placement="right"
                 arrow
+                enterTouchDelay={0}
+                leaveTouchDelay={1500}
             >
                 <Button
                     id="listViewButton"
@@ -38,6 +40,7 @@ const ListView = ({ onClick }) => {
                         borderRadius: '8px',
                         padding: '10px 16px',
                         whiteSpace: 'nowrap',
+                        fontSize: '14px',
                         backgroundColor: !locationGranted ? '#666' : (globalThis.SECONDARY_COLOR || 'black'),
                         opacity: !locationGranted ? 0.6 : 1,
                         filter: !locationGranted ? 'grayscale(100%)' : 'none',
