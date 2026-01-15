@@ -29,16 +29,7 @@ export const CustomZoomControl = () => {
                     onClick={handleZoomIn}
                     variant="contained"
                     aria-label="Zoom in"
-                    sx={{
-                        ...zoomInButtonStyle,
-                        '&:hover': {
-                            backgroundColor: '#1a3d4a',
-                            transform: 'scale(1.05)',
-                        },
-                        '&:active': {
-                            transform: 'scale(0.95)',
-                        },
-                    }}
+                    sx={zoomInButtonStyle}
                 >
                     +
                 </Button>
@@ -46,16 +37,7 @@ export const CustomZoomControl = () => {
                     onClick={handleZoomOut}
                     variant="contained"
                     aria-label="Zoom out"
-                    sx={{
-                        ...zoomOutButtonStyle,
-                        '&:hover': {
-                            backgroundColor: '#1a3d4a',
-                            transform: 'scale(1.05)',
-                        },
-                        '&:active': {
-                            transform: 'scale(0.95)',
-                        },
-                    }}
+                    sx={zoomOutButtonStyle}
                 >
                     −
                 </Button>

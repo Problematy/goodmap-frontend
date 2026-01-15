@@ -4,6 +4,7 @@ import { Button, Tooltip } from '@mui/material';
 import ViewListIcon from '@mui/icons-material/ViewList';
 import styled from 'styled-components';
 import { useLocation } from '../context/LocationContext';
+import { getLocationAwareStyles } from '../../../styles/buttonStyle';
 
 /**
  * Button component that toggles the accessibility table list view.
@@ -41,16 +42,7 @@ const ListView = ({ onClick }) => {
                         padding: '10px 16px',
                         whiteSpace: 'nowrap',
                         fontSize: '14px',
-                        backgroundColor: !locationGranted ? '#666' : (globalThis.SECONDARY_COLOR || 'black'),
-                        opacity: !locationGranted ? 0.6 : 1,
-                        filter: !locationGranted ? 'grayscale(100%)' : 'none',
-                        '&:hover': {
-                            backgroundColor: !locationGranted ? '#666' : '#1a3d4a',
-                            transform: !locationGranted ? 'none' : 'scale(1.05)',
-                        },
-                        '&:active': {
-                            transform: !locationGranted ? 'none' : 'scale(0.95)',
-                        },
+                        ...getLocationAwareStyles(locationGranted),
                     }}
                 >
                     <ViewListIcon style={{ marginRight: 8, fontSize: 20 }} />

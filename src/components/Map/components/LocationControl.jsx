@@ -6,7 +6,7 @@ import L from 'leaflet';
 import { Button, Tooltip } from '@mui/material';
 import Control from 'react-leaflet-custom-control';
 import { useTranslation } from 'react-i18next';
-import { buttonStyle } from '../../../styles/buttonStyle';
+import { buttonStyle, getLocationAwareStyles } from '../../../styles/buttonStyle';
 import { useLocation } from '../context/LocationContext';
 
 /**
@@ -79,16 +79,7 @@ const LocationControl = () => {
                         aria-label={t('centerButtonAriaLabel')}
                         sx={{
                             ...buttonStyle,
-                            backgroundColor: !locationGranted ? '#666' : (globalThis.SECONDARY_COLOR || 'black'),
-                            opacity: !locationGranted ? 0.6 : 1,
-                            filter: !locationGranted ? 'grayscale(100%)' : 'none',
-                            '&:hover': {
-                                backgroundColor: !locationGranted ? '#666' : '#1a3d4a',
-                                transform: !locationGranted ? 'none' : 'scale(1.05)',
-                            },
-                            '&:active': {
-                                transform: !locationGranted ? 'none' : 'scale(0.95)',
-                            },
+                            ...getLocationAwareStyles(locationGranted),
                         }}
                     >
                         <MyLocationIcon style={{ color: 'white', fontSize: 24 }} />

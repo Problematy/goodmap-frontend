@@ -1,10 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import PropTypes from 'prop-types';
 import styled from 'styled-components';
 import { useCategories } from '../Categories/CategoriesContext';
-import useDebounce from '../../utils/hooks/useDebounce';
 import { httpService } from '../../services/http/httpService';
-import { useMapStore } from '../Map/store/map.store';
 import FiltersTooltip from './FiltersTooltip';
 
 const FilterSection = styled.div`
@@ -95,21 +92,13 @@ const TooltipWrapper = styled.span`
 /**
  * Filters form component that allows users to filter map locations by categories.
  * Fetches category data from the API and renders checkboxes for each filter option.
- * Manages filter state through the Categories context and debounces map configuration updates.
+ * Manages filter state through the Categories context.
  *
  * @returns {React.ReactElement} Form element containing categorized filter checkboxes with optional tooltips
  */
 export const FiltersForm = () => {
     const { setCategories } = useCategories();
     const [categoriesData, setCategoriesData] = useState([]);
-    const mapConfiguration = useMapStore(state => state.mapConfiguration);
-    const mapConfigDebounced = useDebounce(mapConfiguration, 5000);
-
-    useEffect(() => {
-        if (mapConfigDebounced === null) {
-            return;
-        }
-    }, [mapConfigDebounced]);
 
     const handleCheckboxChange = event => {
         const { value, checked } = event.target;
@@ -167,25 +156,27 @@ export const FiltersForm = () => {
         });
     };
 
-    const sections = categoriesData.map(filtersData => (
-        <FilterSection
-            key={`${filtersData[0][0]}-${filtersData[0][1]}`}
-            aria-labelledby={`filter-label-${filtersData[0][0]}-${filtersData[0][1]}`}
-        >
-            <FilterHeader>
-                <FilterTitle id={`filter-label-${filtersData[0][0]}-${filtersData[0][1]}`}>
-                    {filtersData[0][1]}
-                </FilterTitle>
-                {globalThis.FEATURE_FLAGS?.CATEGORIES_HELP &&
-                    filtersData[2].find(it => it[filtersData[0][0]]) && (
-                        <FiltersTooltip
-                            text={filtersData[2].find(it => it[filtersData[0][0]])[filtersData[0][0]]}
-                        />
+    const sections = categoriesData.map(filtersData => {
+        const [categoryKey, categoryName] = filtersData[0];
+        const sectionKey = `${categoryKey}-${categoryName}`;
+        const categoryTooltip = globalThis.FEATURE_FLAGS?.CATEGORIES_HELP
+            ? filtersData[2].find(it => it[categoryKey])
+            : null;
+
+        return (
+            <FilterSection key={sectionKey} aria-labelledby={`filter-label-${sectionKey}`}>
+                <FilterHeader>
+                    <FilterTitle id={`filter-label-${sectionKey}`}>
+                        {categoryName}
+                    </FilterTitle>
+                    {categoryTooltip && (
+                        <FiltersTooltip text={categoryTooltip[categoryKey]} />
                     )}
-            </FilterHeader>
-            {renderFilterOptions(filtersData, filtersData[0][0])}
-        </FilterSection>
-    ));
+                </FilterHeader>
+                {renderFilterOptions(filtersData, categoryKey)}
+            </FilterSection>
+        );
+    });
 
     return <form>{sections}</form>;
 };
