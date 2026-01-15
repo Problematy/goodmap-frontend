@@ -26,8 +26,8 @@ import Control from 'react-leaflet-custom-control';
 import axios from 'axios';
 import { useTranslation } from 'react-i18next';
 import { buttonStyle } from '../../../styles/buttonStyle';
-import { useEffect } from 'react';
 import { getCsrfToken } from '../../../utils/csrf';
+import { useLocation } from '../context/LocationContext';
 
 /**
  * Button component that allows users to suggest new map points/locations.
@@ -40,7 +40,7 @@ import { getCsrfToken } from '../../../utils/csrf';
  */
 export const SuggestNewPointButton = () => {
     const { t } = useTranslation();
-    const [userPosition, setUserPosition] = useState({ lat: null, lng: null });
+    const { locationGranted, userPosition, requestGeolocation, setUserPosition } = useLocation();
     const [showNewPointBox, setShowNewPointSuggestionBox] = useState(false);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -69,52 +69,15 @@ export const SuggestNewPointButton = () => {
 
     const [formFields, setFormFields] = useState(initializeFormFields);
 
-    useEffect(() => {
-        if (navigator.geolocation) {
-            navigator.geolocation.getCurrentPosition(
-                position => {
-                    setUserPosition({
-                        lat: position.coords.latitude,
-                        lng: position.coords.longitude,
-                    });
-                },
-                () => {
-                    setSnackbarMessage('Please enable location services to suggest a new point.');
-                    setSnackbarOpen(true);
-                },
-            );
-        } else {
-            setSnackbarMessage('Geolocation is not supported by this browser.');
-            setSnackbarOpen(true);
-        }
-    }, []);
-
     const handleNewPointButton = () => {
-        if (!navigator.geolocation) {
-            setSnackbarMessage('Please enable location services to suggest a new point.');
-            setSnackbarOpen(true);
-            return;
-        }
-
-        navigator.geolocation.getCurrentPosition(
+        requestGeolocation(
             () => setShowNewPointSuggestionBox(true),
-            () => {
-                setSnackbarMessage('Please enable location services to suggest a new point.');
-                setSnackbarOpen(true);
-            },
         );
     };
 
     const handleLocateMe = () => {
-        if (!navigator.geolocation) {
-            setSnackbarMessage('Please enable location services to suggest a new point.');
-            setSnackbarOpen(true);
-            return;
-        }
-
-        navigator.geolocation.getCurrentPosition(
-            position =>
-                setUserPosition({ lat: position.coords.latitude, lng: position.coords.longitude }),
+        requestGeolocation(
+            null,
             () => {
                 setSnackbarMessage('Please enable location services to suggest a new point.');
                 setSnackbarOpen(true);
@@ -159,7 +122,7 @@ export const SuggestNewPointButton = () => {
         event.preventDefault();
 
         // Validate user position is available
-        if (userPosition.lat === null || userPosition.lng === null) {
+        if (!userPosition || userPosition.lat === null || userPosition.lng === null) {
             setSnackbarMessage(
                 'Location not available. Please enable location services and try again.',
             );
@@ -294,19 +257,26 @@ export const SuggestNewPointButton = () => {
 
     return (
         <>
-            <Tooltip title={t('suggestNewPoint')} placement="left" arrow>
+            <Tooltip
+                title={!locationGranted ? t('locationServicesDisabled') : t('suggestNewPoint')}
+                placement="left"
+                arrow
+            >
                 <Button
                     onClick={handleNewPointButton}
                     variant="contained"
                     data-testid="suggest-new-point"
                     sx={{
                         ...buttonStyle,
+                        backgroundColor: !locationGranted ? '#666' : (globalThis.SECONDARY_COLOR || 'black'),
+                        opacity: !locationGranted ? 0.6 : 1,
+                        filter: !locationGranted ? 'grayscale(100%)' : 'none',
                         '&:hover': {
-                            backgroundColor: '#1a3d4a',
-                            transform: 'scale(1.05)',
+                            backgroundColor: !locationGranted ? '#666' : '#1a3d4a',
+                            transform: !locationGranted ? 'none' : 'scale(1.05)',
                         },
                         '&:active': {
-                            transform: 'scale(0.95)',
+                            transform: !locationGranted ? 'none' : 'scale(0.95)',
                         },
                     }}
                 >
@@ -321,7 +291,7 @@ export const SuggestNewPointButton = () => {
                         <Box display="flex" alignItems="center" gap={2}>
                             <TextField
                                 label="Your Position"
-                                value={`${userPosition.lat}, ${userPosition.lng}`}
+                                value={userPosition ? `${userPosition.lat}, ${userPosition.lng}` : ''}
                                 disabled
                                 fullWidth
                                 margin="dense"

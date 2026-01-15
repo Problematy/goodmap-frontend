@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { MapContainer, TileLayer, ZoomControl } from 'react-leaflet';
-import PropTypes from 'prop-types';
+import React, { useState } from 'react';
+import { MapContainer, TileLayer } from 'react-leaflet';
 import Control from 'react-leaflet-custom-control';
 import { LocationControl } from './components/LocationControl';
 import { SuggestNewPointButton } from './components/SuggestNewPointButton';
@@ -10,31 +9,19 @@ import MapAutocomplete from './components/MapAutocomplete';
 import ListViewButton from './components/ListView';
 import AccessibilityTable from './components/AccessibilityTable';
 import SaveMapConfiguration from './components/SaveMapConfiguration';
-import { toast } from '../../utils/toast';
-import { useTranslation } from 'react-i18next';
 import { AppToaster } from '../common/AppToaster';
 import { Markers } from './components/Markers';
+import { LocationProvider, useLocation } from './context/LocationContext';
 
 /**
- * Main map component that renders an interactive Leaflet map with various controls and features.
- * Manages user position state and toggles between map view and accessibility table view.
- * Includes controls for location tracking, zoom, search, list view, and marker display.
- * Features are conditionally rendered based on FEATURE_FLAGS configuration.
- *
- * @returns {React.ReactElement} MapContainer with markers and controls, or AccessibilityTable when list view is active
+ * Inner map component that uses the shared location context.
  */
-export const MapComponent = () => {
-    const { t } = useTranslation();
-
-    const [userPosition, setUserPosition] = useState(null);
+const MapComponentInner = () => {
+    const { userPosition } = useLocation();
     const [isListViewOpen, setIsListViewOpen] = useState(false);
 
     const handleListViewButtonClick = () => {
-        if (!userPosition) {
-            toast.error(t('listViewButtonUserLocation'));
-            return;
-        }
-        setIsListViewOpen(!isListViewOpen);
+        setIsListViewOpen(true);
     };
 
     if (isListViewOpen) {
@@ -68,7 +55,7 @@ export const MapComponent = () => {
                     </Control>
                 )}
                 <Markers />
-                <LocationControl setUserPosition={setUserPosition} />
+                <LocationControl />
                 <CustomZoomControl position="topright" />
                 {globalThis.FEATURE_FLAGS?.SHOW_ACCESSIBILITY_TABLE && (
                     <ListViewButton onClick={handleListViewButtonClick} />
@@ -76,5 +63,19 @@ export const MapComponent = () => {
                 {globalThis.FEATURE_FLAGS?.SHOW_SEARCH_BAR && <MapAutocomplete />}
             </MapContainer>
         </>
+    );
+};
+
+/**
+ * Main map component that renders an interactive Leaflet map with various controls and features.
+ * Wraps the map with LocationProvider for shared geolocation state.
+ *
+ * @returns {React.ReactElement} MapContainer with markers and controls, or AccessibilityTable when list view is active
+ */
+export const MapComponent = () => {
+    return (
+        <LocationProvider>
+            <MapComponentInner />
+        </LocationProvider>
     );
 };
