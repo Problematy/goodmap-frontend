@@ -27,7 +27,6 @@ const FilterHeader = styled.div`
 const FilterTitle = styled.span`
     font-size: 13px;
     font-weight: 600;
-    text-transform: capitalize;
     letter-spacing: 0.3px;
     line-height: 16px;
 `;
@@ -93,11 +92,6 @@ const TooltipWrapper = styled.span`
     margin-left: auto;
 `;
 
-const formatLabel = label => {
-    if (!label) return '';
-    return label.replace(/_/g, ' ');
-};
-
 /**
  * Filters form component that allows users to filter map locations by categories.
  * Fetches category data from the API and renders checkboxes for each filter option.
@@ -162,7 +156,7 @@ export const FiltersForm = () => {
                         id={name}
                         value={name}
                     />
-                    <OptionText>{formatLabel(translation)}</OptionText>
+                    <OptionText>{translation}</OptionText>
                     {tooltipData && (
                         <TooltipWrapper>
                             <FiltersTooltip text={tooltipData[name]} />
@@ -180,7 +174,7 @@ export const FiltersForm = () => {
         >
             <FilterHeader>
                 <FilterTitle id={`filter-label-${filtersData[0][0]}-${filtersData[0][1]}`}>
-                    {formatLabel(filtersData[0][1])}
+                    {filtersData[0][1]}
                 </FilterTitle>
                 {globalThis.FEATURE_FLAGS?.CATEGORIES_HELP &&
                     filtersData[2].find(it => it[filtersData[0][0]]) && (
