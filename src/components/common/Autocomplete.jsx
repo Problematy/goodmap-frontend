@@ -24,13 +24,16 @@ const AutoComplete = ({ onClick }) => {
         setSearchTerm(term);
     };
 
-    const clickItem = useCallback(item => {
-        setSearchTerm(item.display_name);
-        onClick(item);
-        setTimeout(() => {
-            clear();
-        }, 400);
-    }, [onClick, clear]);
+    const clickItem = useCallback(
+        item => {
+            setSearchTerm(item.display_name);
+            onClick(item);
+            setTimeout(() => {
+                clear();
+            }, 400);
+        },
+        [onClick, clear],
+    );
 
     const primaryColor = globalThis.PRIMARY_COLOR || 'white';
     const secondaryColor = globalThis.SECONDARY_COLOR || 'black';

@@ -84,11 +84,7 @@ const LocationDetailsValue = ({ valueToDisplay }) => {
     const value = isCustomValue(valueToDisplay)
         ? mapCustomTypeToReactComponent(valueToDisplay)
         : valueToDisplay;
-    return (
-        <span>
-            {isCustomValue(valueToDisplay) ? value : getContentAsString(value)}
-        </span>
-    );
+    return <span>{isCustomValue(valueToDisplay) ? value : getContentAsString(value)}</span>;
 };
 
 LocationDetailsValue.propTypes = {

@@ -49,9 +49,7 @@ const LocationControl = () => {
         if (userPosition) {
             flyToLocation(userPosition, map);
         } else {
-            requestGeolocation(
-                position => flyToLocation(position, map),
-            );
+            requestGeolocation(position => flyToLocation(position, map));
         }
     };
 
@@ -67,7 +65,9 @@ const LocationControl = () => {
             )}
             <Control prepend position="bottomright">
                 <Tooltip
-                    title={!locationGranted ? t('locationServicesDisabled') : t('centerOnMyLocation')}
+                    title={
+                        !locationGranted ? t('locationServicesDisabled') : t('centerOnMyLocation')
+                    }
                     placement="left"
                     arrow
                     enterTouchDelay={0}

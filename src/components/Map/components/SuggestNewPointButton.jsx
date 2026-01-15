@@ -70,19 +70,14 @@ export const SuggestNewPointButton = () => {
     const [formFields, setFormFields] = useState(initializeFormFields);
 
     const handleNewPointButton = () => {
-        requestGeolocation(
-            () => setShowNewPointSuggestionBox(true),
-        );
+        requestGeolocation(() => setShowNewPointSuggestionBox(true));
     };
 
     const handleLocateMe = () => {
-        requestGeolocation(
-            null,
-            () => {
-                setSnackbarMessage('Please enable location services to suggest a new point.');
-                setSnackbarOpen(true);
-            },
-        );
+        requestGeolocation(null, () => {
+            setSnackbarMessage('Please enable location services to suggest a new point.');
+            setSnackbarOpen(true);
+        });
     };
 
     const handleCloseNewPointBox = () => {
@@ -284,7 +279,9 @@ export const SuggestNewPointButton = () => {
                         <Box display="flex" alignItems="center" gap={2}>
                             <TextField
                                 label="Your Position"
-                                value={userPosition ? `${userPosition.lat}, ${userPosition.lng}` : ''}
+                                value={
+                                    userPosition ? `${userPosition.lat}, ${userPosition.lng}` : ''
+                                }
                                 disabled
                                 fullWidth
                                 margin="dense"

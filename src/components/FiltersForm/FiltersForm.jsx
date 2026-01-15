@@ -166,12 +166,8 @@ export const FiltersForm = () => {
         return (
             <FilterSection key={sectionKey} aria-labelledby={`filter-label-${sectionKey}`}>
                 <FilterHeader>
-                    <FilterTitle id={`filter-label-${sectionKey}`}>
-                        {categoryName}
-                    </FilterTitle>
-                    {categoryTooltip && (
-                        <FiltersTooltip text={categoryTooltip[categoryKey]} />
-                    )}
+                    <FilterTitle id={`filter-label-${sectionKey}`}>{categoryName}</FilterTitle>
+                    {categoryTooltip && <FiltersTooltip text={categoryTooltip[categoryKey]} />}
                 </FilterHeader>
                 {renderFilterOptions(filtersData, categoryKey)}
             </FilterSection>
