@@ -32,8 +32,8 @@ const AutoComplete = ({ onClick }) => {
         }, 400);
     }, []);
 
-    const primaryColor = globalThis.PRIMARY_COLOR || '#1a3d4a';
-    const secondaryColor = globalThis.SECONDARY_COLOR || '#0066CC';
+    const primaryColor = globalThis.PRIMARY_COLOR || 'white';
+    const secondaryColor = globalThis.SECONDARY_COLOR || 'black';
 
     return (
         <Box style={{ backgroundColor: primaryColor }}>
@@ -97,7 +97,7 @@ const StyledInput = styled.input`
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 
     &::placeholder {
-        color: ${props => props.$secondaryColor || '#0066CC'};
+        color: ${props => props.$secondaryColor || 'black'};
         opacity: 0.7;
         font-weight: 500;
     }

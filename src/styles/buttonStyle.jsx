@@ -1,5 +1,5 @@
 const commonStyle = {
-    backgroundColor: globalThis.SECONDARY_COLOR || '#0066CC',
+    backgroundColor: globalThis.SECONDARY_COLOR || 'black',
     color: 'white',
     textAlign: 'center',
     cursor: 'pointer',

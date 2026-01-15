@@ -28,7 +28,7 @@ const ListView = ({ onClick }) => {
                 onClick={handleOnClick}
                 variant="contained"
                 sx={{
-                    backgroundColor: globalThis.SECONDARY_COLOR || '#0066CC',
+                    backgroundColor: globalThis.SECONDARY_COLOR || 'black',
                     borderRadius: '8px',
                     padding: '10px 16px',
                     whiteSpace: 'nowrap',
