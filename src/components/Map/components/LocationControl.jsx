@@ -4,7 +4,7 @@ import { Marker, Circle, useMap } from 'react-leaflet';
 import MyLocationIcon from '@mui/icons-material/MyLocation';
 import ReactDOMServer from 'react-dom/server';
 import L from 'leaflet';
-import { Snackbar, Button } from '@mui/material';
+import { Snackbar, Button, Tooltip } from '@mui/material';
 import Control from 'react-leaflet-custom-control';
 import { useTranslation } from 'react-i18next';
 import { buttonStyle } from '../../../styles/buttonStyle';
@@ -114,23 +114,25 @@ const LocationControl = ({ setUserPosition: setUserPositionProp }) => {
                 </>
             )}
             <Control prepend position="bottomright">
-                <Button
-                    onClick={handleFlyToLocationClick}
-                    variant="contained"
-                    aria-label={t('centerButtonAriaLabel')}
-                    sx={{
-                        ...buttonStyle,
-                        '&:hover': {
-                            backgroundColor: '#1a3d4a',
-                            transform: 'scale(1.05)',
-                        },
-                        '&:active': {
-                            transform: 'scale(0.95)',
-                        },
-                    }}
-                >
-                    <MyLocationIcon style={{ color: 'white', fontSize: 24 }} />
-                </Button>
+                <Tooltip title={t('centerOnMyLocation')} placement="left" arrow>
+                    <Button
+                        onClick={handleFlyToLocationClick}
+                        variant="contained"
+                        aria-label={t('centerButtonAriaLabel')}
+                        sx={{
+                            ...buttonStyle,
+                            '&:hover': {
+                                backgroundColor: '#1a3d4a',
+                                transform: 'scale(1.05)',
+                            },
+                            '&:active': {
+                                transform: 'scale(0.95)',
+                            },
+                        }}
+                    >
+                        <MyLocationIcon style={{ color: 'white', fontSize: 24 }} />
+                    </Button>
+                </Tooltip>
 
                 <Snackbar
                     open={snackbarOpen}

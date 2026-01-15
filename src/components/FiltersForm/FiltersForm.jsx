@@ -18,7 +18,7 @@ const FilterSection = styled.div`
 const FilterHeader = styled.div`
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: 4px;
     margin-bottom: 12px;
     padding-bottom: 8px;
     border-bottom: 1px solid rgba(255, 255, 255, 0.2);
@@ -29,6 +29,7 @@ const FilterTitle = styled.span`
     font-weight: 600;
     text-transform: capitalize;
     letter-spacing: 0.3px;
+    line-height: 16px;
 `;
 
 const FilterOption = styled.label`

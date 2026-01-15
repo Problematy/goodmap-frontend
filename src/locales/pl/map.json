@@ -2,6 +2,8 @@
     "search": "Szukaj",
     "title": "Nazwa",
     "centerButtonAriaLabel": "Ikona celu lokalizacji, używana do określenia lokalizacji na mapie.",
+    "centerOnMyLocation": "Wyśrodkuj na mojej lokalizacji",
+    "suggestNewPoint": "Zaproponuj nową lokalizację",
     "ReportIssueButton": "zgłoś problem",
     "reportProblemLabel": "Jaki jest problem?",
     "reportChooseOption": "Wybierz opcję",

@@ -26,12 +26,20 @@ const ListView = ({ onClick }) => {
             <Button
                 id="listViewButton"
                 onClick={handleOnClick}
-                style={{
+                variant="contained"
+                sx={{
                     backgroundColor: globalThis.SECONDARY_COLOR || '#0066CC',
                     borderRadius: '8px',
                     padding: '10px 16px',
+                    whiteSpace: 'nowrap',
+                    '&:hover': {
+                        backgroundColor: '#1a3d4a',
+                        transform: 'scale(1.05)',
+                    },
+                    '&:active': {
+                        transform: 'scale(0.95)',
+                    },
                 }}
-                variant="contained"
             >
                 <ViewListIcon style={{ marginRight: 8, fontSize: 20 }} />
                 {t('listView')}
@@ -47,13 +55,9 @@ const ListView = ({ onClick }) => {
  */
 const Wrapper = styled.div`
     position: absolute;
-    width: 100px;
     bottom: 20px;
     left: 10px;
     z-index: 9999999;
-    @media only screen and (max-width: 768px) {
-        width: 200px;
-    }
 `;
 
 export default ListView;

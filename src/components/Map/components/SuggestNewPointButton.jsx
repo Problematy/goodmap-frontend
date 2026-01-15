@@ -16,6 +16,7 @@ import {
     Checkbox,
     ListItemText,
     OutlinedInput,
+    Tooltip,
 } from '@mui/material';
 
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
@@ -23,6 +24,7 @@ import AddIcon from '@mui/icons-material/Add';
 import RefreshIcon from '@mui/icons-material/Refresh';
 import Control from 'react-leaflet-custom-control';
 import axios from 'axios';
+import { useTranslation } from 'react-i18next';
 import { buttonStyle } from '../../../styles/buttonStyle';
 import { useEffect } from 'react';
 import { getCsrfToken } from '../../../utils/csrf';
@@ -37,6 +39,7 @@ import { getCsrfToken } from '../../../utils/csrf';
  * @returns {React.ReactElement} Button with dialog form for suggesting new points
  */
 export const SuggestNewPointButton = () => {
+    const { t } = useTranslation();
     const [userPosition, setUserPosition] = useState({ lat: null, lng: null });
     const [showNewPointBox, setShowNewPointSuggestionBox] = useState(false);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
@@ -291,14 +294,25 @@ export const SuggestNewPointButton = () => {
 
     return (
         <>
-            <Button
-                onClick={handleNewPointButton}
-                style={buttonStyle}
-                variant="contained"
-                data-testid="suggest-new-point"
-            >
-                <AddIcon style={{ color: 'white', fontSize: 24 }} />
-            </Button>
+            <Tooltip title={t('suggestNewPoint')} placement="left" arrow>
+                <Button
+                    onClick={handleNewPointButton}
+                    variant="contained"
+                    data-testid="suggest-new-point"
+                    sx={{
+                        ...buttonStyle,
+                        '&:hover': {
+                            backgroundColor: '#1a3d4a',
+                            transform: 'scale(1.05)',
+                        },
+                        '&:active': {
+                            transform: 'scale(0.95)',
+                        },
+                    }}
+                >
+                    <AddIcon style={{ color: 'white', fontSize: 24 }} />
+                </Button>
+            </Tooltip>
 
             <Dialog open={showNewPointBox} onClose={handleCloseNewPointBox}>
                 <DialogTitle>Suggest a New Point</DialogTitle>
