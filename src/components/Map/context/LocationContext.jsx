@@ -81,9 +81,7 @@ export const LocationProvider = ({ children }) => {
         [locationGranted, userPosition, setUserPosition, requestGeolocation, permissionState],
     );
 
-    return (
-        <LocationContext.Provider value={contextValue}>{children}</LocationContext.Provider>
-    );
+    return <LocationContext.Provider value={contextValue}>{children}</LocationContext.Provider>;
 };
 
 LocationProvider.propTypes = {
