@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useCallback, useEffect } from 'react';
+import React, { createContext, useContext, useState, useCallback, useEffect, useMemo } from 'react';
 import PropTypes from 'prop-types';
 
 const LocationContext = createContext();
@@ -70,18 +70,19 @@ export const LocationProvider = ({ children }) => {
         checkExistingPermission();
     }, [requestGeolocation]);
 
+    const contextValue = useMemo(
+        () => ({
+            locationGranted,
+            userPosition,
+            setUserPosition,
+            requestGeolocation,
+            permissionState,
+        }),
+        [locationGranted, userPosition, setUserPosition, requestGeolocation, permissionState],
+    );
+
     return (
-        <LocationContext.Provider
-            value={{
-                locationGranted,
-                userPosition,
-                setUserPosition,
-                requestGeolocation,
-                permissionState,
-            }}
-        >
-            {children}
-        </LocationContext.Provider>
+        <LocationContext.Provider value={contextValue}>{children}</LocationContext.Provider>
     );
 };
 

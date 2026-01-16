@@ -27,7 +27,7 @@ const ListView = ({ onClick }) => {
     return (
         <Wrapper>
             <Tooltip
-                title={!locationGranted ? t('locationServicesDisabled') : t('listView')}
+                title={locationGranted ? t('listView') : t('locationServicesDisabled')}
                 placement="right"
                 arrow
                 enterTouchDelay={0}

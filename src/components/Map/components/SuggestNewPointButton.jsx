@@ -40,7 +40,7 @@ import { useLocation } from '../context/LocationContext';
  */
 export const SuggestNewPointButton = () => {
     const { t } = useTranslation();
-    const { locationGranted, userPosition, requestGeolocation, setUserPosition } = useLocation();
+    const { locationGranted, userPosition, requestGeolocation } = useLocation();
     const [showNewPointBox, setShowNewPointSuggestionBox] = useState(false);
     const [snackbarOpen, setSnackbarOpen] = useState(false);
     const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -253,7 +253,7 @@ export const SuggestNewPointButton = () => {
     return (
         <>
             <Tooltip
-                title={!locationGranted ? t('locationServicesDisabled') : t('suggestNewPoint')}
+                title={locationGranted ? t('suggestNewPoint') : t('locationServicesDisabled')}
                 placement="left"
                 arrow
                 enterTouchDelay={0}

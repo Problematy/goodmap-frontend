@@ -49,9 +49,7 @@ describe('should render marker popup correctly', () => {
     describe('should render data', () => {
         it('should render data keys', () => {
             correctMarkerData.data.forEach(key => {
-                // Category labels no longer have colons, and underscores are replaced with spaces
-                const expectedLabel = key[0].replace(/_/g, ' ');
-                expect(screen.getByText(expectedLabel)).toBeInTheDocument();
+                expect(screen.getByText(key[0])).toBeInTheDocument();
             });
         });
 

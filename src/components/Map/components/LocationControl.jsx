@@ -66,7 +66,7 @@ const LocationControl = () => {
             <Control prepend position="bottomright">
                 <Tooltip
                     title={
-                        !locationGranted ? t('locationServicesDisabled') : t('centerOnMyLocation')
+                        locationGranted ? t('centerOnMyLocation') : t('locationServicesDisabled')
                     }
                     placement="left"
                     arrow

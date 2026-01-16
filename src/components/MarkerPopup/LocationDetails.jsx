@@ -59,11 +59,6 @@ const CTAContainer = styled.div`
     margin: 8px;
 `;
 
-const formatCategoryLabel = label => {
-    if (!label) return '';
-    return label.replace(/_/g, ' ');
-};
-
 /**
  * Checks if a value is a custom object type (not an array or null).
  *
@@ -183,7 +178,7 @@ const LocationDetails = ({ place }) => {
             <DetailsGrid>
                 {categoriesWithSubcategories.map(([category, value]) => (
                     <React.Fragment key={category}>
-                        <DetailLabel>{formatCategoryLabel(category)}</DetailLabel>
+                        <DetailLabel>{category}</DetailLabel>
                         <DetailValue>
                             <LocationDetailsValue valueToDisplay={value} />
                         </DetailValue>
@@ -193,8 +188,8 @@ const LocationDetails = ({ place }) => {
 
             {CTACategories.length > 0 && (
                 <CTAContainer>
-                    {CTACategories.map(([_category, value], index) => (
-                        <LocationDetailsValue key={`cta-${index}`} valueToDisplay={value} />
+                    {CTACategories.map(([_category, value]) => (
+                        <LocationDetailsValue key={JSON.stringify(value)} valueToDisplay={value} />
                     ))}
                 </CTAContainer>
             )}
