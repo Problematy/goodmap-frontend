@@ -7,11 +7,14 @@ const LocationContext = createContext();
  * Provider component that manages shared geolocation state across the map.
  * All location-dependent buttons share this state - when one gets permission,
  * all buttons become active.
- * Automatically requests geolocation permission on page load.
+ * Only auto-fetches location if permission was previously granted.
+ * Otherwise, waits for explicit user action to request permission.
  */
 export const LocationProvider = ({ children }) => {
     const [locationGranted, setLocationGranted] = useState(false);
     const [userPosition, setUserPosition] = useState(null);
+    // 'unknown' | 'prompt' | 'granted' | 'denied'
+    const [permissionState, setPermissionState] = useState('unknown');
 
     const requestGeolocation = useCallback((onSuccess, onError) => {
         if (!navigator.geolocation) {
@@ -28,17 +31,43 @@ export const LocationProvider = ({ children }) => {
                 };
                 setUserPosition(newPosition);
                 setLocationGranted(true);
+                setPermissionState('granted');
                 onSuccess?.(newPosition);
             },
             error => {
+                setPermissionState('denied');
                 onError?.(error);
             },
         );
     }, []);
 
-    // Request geolocation permission on page load
+    // Check existing permission state without prompting the user.
+    // Only auto-fetch location if permission was previously granted.
     useEffect(() => {
-        requestGeolocation();
+        const checkExistingPermission = async () => {
+            if (!navigator.permissions || !navigator.geolocation) return;
+
+            try {
+                const status = await navigator.permissions.query({ name: 'geolocation' });
+                setPermissionState(status.state);
+
+                if (status.state === 'granted') {
+                    requestGeolocation();
+                }
+
+                // Listen for permission changes
+                status.addEventListener('change', () => {
+                    setPermissionState(status.state);
+                    if (status.state === 'granted') {
+                        requestGeolocation();
+                    }
+                });
+            } catch {
+                // Permissions API not supported - don't auto-request
+            }
+        };
+
+        checkExistingPermission();
     }, [requestGeolocation]);
 
     return (
@@ -48,6 +77,7 @@ export const LocationProvider = ({ children }) => {
                 userPosition,
                 setUserPosition,
                 requestGeolocation,
+                permissionState,
             }}
         >
             {children}
@@ -61,7 +91,7 @@ LocationProvider.propTypes = {
 
 /**
  * Hook to access the shared location context.
- * @returns {{locationGranted: boolean, userPosition: object|null, setUserPosition: function, requestGeolocation: function}}
+ * @returns {{locationGranted: boolean, userPosition: object|null, setUserPosition: function, requestGeolocation: function, permissionState: string}}
  */
 export const useLocation = () => {
     const context = useContext(LocationContext);

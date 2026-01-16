@@ -18,5 +18,8 @@
     "navigateMeButton": "Navigate me",
     "loading": "Loading...",
     "loadLocationError": "Failed to load location details",
-    "locationServicesDisabled": "Location services are disabled. Please enable them to use this feature."
+    "locationServicesDisabled": "Location services are disabled. Please enable them to use this feature.",
+    "locationBannerMessage": "Enable location to see nearby points and suggest new ones.",
+    "locationBannerEnable": "Enable",
+    "locationBannerDismiss": "Dismiss"
 }

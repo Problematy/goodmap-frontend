@@ -3,6 +3,7 @@ import { MapContainer, TileLayer } from 'react-leaflet';
 import Control from 'react-leaflet-custom-control';
 import { LocationControl } from './components/LocationControl';
 import { SuggestNewPointButton } from './components/SuggestNewPointButton';
+import { LocationPermissionBanner } from './components/LocationPermissionBanner';
 import { mapConfig } from './map.config';
 import { CustomZoomControl } from './components/ZoomControl';
 import MapAutocomplete from './components/MapAutocomplete';
@@ -34,8 +35,9 @@ const MapComponentInner = () => {
     }
 
     return (
-        <>
+        <div style={{ height: '100%', position: 'relative' }}>
             <AppToaster />
+            <LocationPermissionBanner />
             <MapContainer
                 center={mapConfig.initialMapCoordinates}
                 zoom={mapConfig.initialMapZoom}
@@ -62,7 +64,7 @@ const MapComponentInner = () => {
                 )}
                 {globalThis.FEATURE_FLAGS?.SHOW_SEARCH_BAR && <MapAutocomplete />}
             </MapContainer>
-        </>
+        </div>
     );
 };
 
