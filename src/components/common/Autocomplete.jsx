@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import styled from 'styled-components';
 import { useTranslation } from 'react-i18next';
 import PropTypes from 'prop-types';
@@ -18,6 +18,15 @@ const AutoComplete = ({ onClick }) => {
     const searchTermDebounced = useDebounce(searchTerm);
     const { data, clear } = useAutocomplete(searchTermDebounced);
     const { t } = useTranslation();
+    const timeoutRef = useRef(null);
+
+    useEffect(() => {
+        return () => {
+            if (timeoutRef.current) {
+                clearTimeout(timeoutRef.current);
+            }
+        };
+    }, []);
 
     const handleInputChange = e => {
         const term = e.target.value;
@@ -28,7 +37,7 @@ const AutoComplete = ({ onClick }) => {
         item => {
             setSearchTerm(item.display_name);
             onClick(item);
-            setTimeout(() => {
+            timeoutRef.current = setTimeout(() => {
                 clear();
             }, 400);
         },

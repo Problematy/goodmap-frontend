@@ -193,8 +193,8 @@ const LocationDetails = ({ place }) => {
 
             {CTACategories.length > 0 && (
                 <CTAContainer>
-                    {CTACategories.map(([_category, value]) => (
-                        <LocationDetailsValue key={value} valueToDisplay={value} />
+                    {CTACategories.map(([_category, value], index) => (
+                        <LocationDetailsValue key={`cta-${index}`} valueToDisplay={value} />
                     ))}
                 </CTAContainer>
             )}
