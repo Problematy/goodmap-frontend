@@ -18,7 +18,10 @@ export const LocationProvider = ({ children }) => {
 
     const requestGeolocation = useCallback((onSuccess, onError) => {
         if (!navigator.geolocation) {
-            onError?.();
+            setPermissionState('denied');
+            setLocationGranted(false);
+            setUserPosition(null);
+            onError?.(new Error('Geolocation not supported'));
             return;
         }
 
@@ -36,6 +39,8 @@ export const LocationProvider = ({ children }) => {
             },
             error => {
                 setPermissionState('denied');
+                setLocationGranted(false);
+                setUserPosition(null);
                 onError?.(error);
             },
         );
@@ -44,30 +49,40 @@ export const LocationProvider = ({ children }) => {
     // Check existing permission state without prompting the user.
     // Only auto-fetch location if permission was previously granted.
     useEffect(() => {
+        let permissionStatus;
+        let handleChange;
+
         const checkExistingPermission = async () => {
             if (!navigator.permissions || !navigator.geolocation) return;
 
             try {
-                const status = await navigator.permissions.query({ name: 'geolocation' });
-                setPermissionState(status.state);
+                permissionStatus = await navigator.permissions.query({ name: 'geolocation' });
+                setPermissionState(permissionStatus.state);
 
-                if (status.state === 'granted') {
+                if (permissionStatus.state === 'granted') {
                     requestGeolocation();
                 }
 
                 // Listen for permission changes
-                status.addEventListener('change', () => {
-                    setPermissionState(status.state);
-                    if (status.state === 'granted') {
+                handleChange = () => {
+                    setPermissionState(permissionStatus.state);
+                    if (permissionStatus.state === 'granted') {
                         requestGeolocation();
                     }
-                });
+                };
+                permissionStatus.addEventListener('change', handleChange);
             } catch {
                 // Permissions API not supported - don't auto-request
             }
         };
 
         checkExistingPermission();
+
+        return () => {
+            if (permissionStatus && handleChange) {
+                permissionStatus.removeEventListener('change', handleChange);
+            }
+        };
     }, [requestGeolocation]);
 
     const contextValue = useMemo(

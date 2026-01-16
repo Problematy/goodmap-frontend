@@ -75,7 +75,7 @@ export const SuggestNewPointButton = () => {
 
     const handleLocateMe = () => {
         requestGeolocation(null, () => {
-            setSnackbarMessage('Please enable location services to suggest a new point.');
+            setSnackbarMessage(t('locationServicesDisabled'));
             setSnackbarOpen(true);
         });
     };
