@@ -1,5 +1,6 @@
 import {
     CATEGORIES,
+    CATEGORIES_FULL,
     CATEGORY,
     LANGUAGES,
     LOCATION,
@@ -34,6 +35,9 @@ function filtersToQuery(filters) {
     return params.toString();
 }
 
+const CATEGORIES_CACHE_KEY = 'goodmap_categories_cache';
+const CATEGORIES_CACHE_TTL = 5 * 60 * 1000; // 5 minutes
+
 /**
  * HTTP service object containing all API interaction methods.
  * Provides methods for fetching categories, locations, languages, and address search.
@@ -56,37 +60,56 @@ export const httpService = {
         fetch(`${CATEGORY}/${category}`).then(response => response.json()),
 
     /**
-     * Fetches complete categories data including subcategories and optional help text.
-     * Combines categories with their respective subcategories and help information.
+     * Fetches complete categories data including subcategories in a single request.
+     * Uses the /api/categories-full endpoint to avoid waterfall requests.
+     * Uses sessionStorage caching to avoid repeated API calls.
      *
      * @returns {Promise<Array>} Promise resolving to array of category data tuples
      */
     getCategoriesData: async () => {
-        const categories = await httpService.getCategories();
-        const categories_ = globalThis.FEATURE_FLAGS?.CATEGORIES_HELP ? categories.categories : categories
-
-        const subcategoriesPromises = categories_.map(([categoryName, _translation]) =>
-            httpService.getSubcategories(categoryName),
-        );
-        const subcategoriesResponse = Promise.all(subcategoriesPromises);
-
-        const mainResponse = subcategoriesResponse.then(subcategories => {
-            if (globalThis.FEATURE_FLAGS?.CATEGORIES_HELP) {
-                return categories_.map((subcategory, index) => [
-                    subcategory,
-                    subcategories[index].categories_options ?? null,
-                    categories.categories_help,
-                    subcategories[index].categories_options_help ?? null,
-                ])
-                } else {
-                    return categories_.map((subcategory, index) => [
-                        subcategory,
-                        subcategories[index] ?? null,
-                ])
+        // Check cache first
+        try {
+            const cached = sessionStorage.getItem(CATEGORIES_CACHE_KEY);
+            if (cached) {
+                const { data, timestamp } = JSON.parse(cached);
+                if (Date.now() - timestamp < CATEGORIES_CACHE_TTL) {
+                    return data;
+                }
             }
+        } catch {
+            // Ignore cache errors
+        }
+
+        // Use single endpoint instead of waterfall
+        const response = await fetch(CATEGORIES_FULL).then(res => res.json());
+
+        // Transform to expected format: [[key, name], options, help?, optionsHelp?]
+        const result = response.categories.map(category => {
+            const categoryTuple = [category.key, category.name];
+            const options = category.options;
+
+            if (globalThis.FEATURE_FLAGS?.CATEGORIES_HELP) {
+                return [
+                    categoryTuple,
+                    category.options_with_help ?? options,
+                    response.categories_help ?? [],
+                    category.options_help ?? [],
+                ];
+            }
+            return [categoryTuple, options];
         });
 
-        return mainResponse;
+        // Cache the result
+        try {
+            sessionStorage.setItem(
+                CATEGORIES_CACHE_KEY,
+                JSON.stringify({ data: result, timestamp: Date.now() })
+            );
+        } catch {
+            // Ignore cache errors (e.g., storage full)
+        }
+
+        return result;
     },
 
     /**
