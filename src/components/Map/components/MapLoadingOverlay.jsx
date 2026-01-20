@@ -2,16 +2,6 @@ import React from 'react';
 import styled, { keyframes } from 'styled-components';
 import PropTypes from 'prop-types';
 
-const fadeIn = keyframes`
-    from { opacity: 0; }
-    to { opacity: 1; }
-`;
-
-const fadeOut = keyframes`
-    from { opacity: 1; }
-    to { opacity: 0; }
-`;
-
 const Overlay = styled.div`
     position: absolute;
     top: 0;
@@ -24,7 +14,7 @@ const Overlay = styled.div`
     align-items: center;
     justify-content: center;
     z-index: 1000;
-    animation: ${props => (props.$isVisible ? fadeIn : fadeOut)} 0.3s ease-in-out;
+    transition: opacity 0.3s ease-in-out;
     pointer-events: ${props => (props.$isVisible ? 'auto' : 'none')};
     opacity: ${props => (props.$isVisible ? 1 : 0)};
 `;
