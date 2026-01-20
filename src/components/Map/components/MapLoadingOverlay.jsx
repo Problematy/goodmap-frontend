@@ -71,11 +71,7 @@ export const MapLoadingOverlay = ({ isLoading, text = null }) => {
 
     return (
         <Overlay $isVisible={isLoading}>
-            {customGif ? (
-                <LoadingImage src={customGif} alt="Loading" />
-            ) : (
-                <DefaultSpinner />
-            )}
+            {customGif ? <LoadingImage src={customGif} alt="Loading" /> : <DefaultSpinner />}
             {text && <LoadingText>{text}</LoadingText>}
         </Overlay>
     );
