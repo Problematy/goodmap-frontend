@@ -116,7 +116,8 @@ export const LocationProvider = ({ children }) => {
     /**
      * Request geolocation with early return if position is already available.
      * If position is already available, calls onSuccess immediately.
-     * Otherwise requests geolocation. Tooltip provides user feedback for disabled state.
+     * If permission was explicitly denied, does nothing (tooltip provides feedback).
+     * Otherwise requests geolocation.
      *
      * @param {Function} onSuccess - Callback when position is available, receives position object
      */
@@ -127,9 +128,15 @@ export const LocationProvider = ({ children }) => {
                 return;
             }
 
+            // Don't request if permission was explicitly denied - tooltip explains the issue
+            // This avoids unnecessary state changes on mobile
+            if (permissionState === 'denied') {
+                return;
+            }
+
             requestGeolocation(onSuccess);
         },
-        [userPosition, requestGeolocation],
+        [userPosition, requestGeolocation, permissionState],
     );
 
     // Check existing permission state without prompting the user.

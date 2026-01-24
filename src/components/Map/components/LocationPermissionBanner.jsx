@@ -56,41 +56,36 @@ const BannerContainer = styled.div`
     position: absolute;
     /* Positioned above the zoom controls and other map buttons */
     bottom: 90px;
-    left: 50%;
-    transform: translateX(-50%);
+    left: 20px;
+    right: 20px;
     z-index: 1000;
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 10px;
     background-color: rgba(255, 255, 255, 0.95);
     color: #333;
-    padding: 10px 16px;
-    border-radius: 24px;
+    padding: 12px 16px;
+    border-radius: 16px;
     box-shadow: 0 2px 12px rgba(0, 0, 0, 0.15);
     font-size: 13px;
     backdrop-filter: blur(8px);
-    white-space: nowrap;
+    max-width: 500px;
+    margin: 0 auto;
 
-    @media (max-width: 480px) {
+    @media (max-width: 600px) {
         bottom: 80px;
-        left: 20px;
-        right: 20px;
-        transform: none;
         flex-direction: column;
         gap: 8px;
-        padding: 12px 16px;
-        white-space: normal;
         text-align: center;
-        border-radius: 16px;
     }
 `;
 
 const BannerText = styled.span`
     flex: 1;
-
-    @media (max-width: 480px) {
-        line-height: 1.4;
-    }
+    line-height: 1.4;
+    min-width: 0;
 `;
 
 const ButtonGroup = styled.div`
