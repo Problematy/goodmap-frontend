@@ -125,24 +125,24 @@ describe('SuggestNewPointButton', () => {
         consoleErrorSpy.mockRestore();
     });
 
-    it('shows snackbar error when clicking button and geolocation is denied', async () => {
+    it('shows disabled tooltip and does not open dialog when geolocation is denied', async () => {
         mockGeolocationError();
 
         renderWithProvider(<SuggestNewPointButton />);
 
+        // Button should show disabled state via tooltip (aria-label)
+        const button = screen.getByTestId('suggest-new-point');
+        expect(button).toHaveAttribute(
+            'aria-label',
+            'Location services are disabled. Please enable them to use this feature.',
+        );
+
         clickSuggestButton();
 
-        // Should show snackbar with user-friendly error message
+        // Dialog should not open when geolocation is denied
         await waitFor(() => {
-            expect(
-                screen.getByText(
-                    'Location services are disabled. Please enable them to use this feature.',
-                ),
-            ).toBeInTheDocument();
+            expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
         });
-
-        // Dialog should not open
-        expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
     });
 
     it('opens new point suggestion box when location services are enabled', async () => {
