@@ -93,12 +93,19 @@ export const LocationProvider = ({ children }) => {
                 onSuccess?.(newPosition);
             },
             error => {
+                const errorCode = error?.code ?? GEOLOCATION_ERROR_CODES.POSITION_UNAVAILABLE;
                 const errorObj = {
-                    code: error?.code ?? GEOLOCATION_ERROR_CODES.POSITION_UNAVAILABLE,
+                    code: errorCode,
                     message: error?.message ?? 'Unknown geolocation error',
                 };
-                setPermissionState('denied');
-                setLocationGranted(false);
+
+                // Only set permission state to 'denied' for actual permission denial
+                // Other errors (TIMEOUT, POSITION_UNAVAILABLE) are transient and allow retries
+                if (errorCode === GEOLOCATION_ERROR_CODES.PERMISSION_DENIED) {
+                    setPermissionState('denied');
+                    setLocationGranted(false);
+                }
+
                 setUserPosition(null);
                 isRequestingRef.current = false;
                 setIsRequestingLocation(false);
