@@ -113,7 +113,21 @@ export const SuggestNewPointButton = () => {
     const [formFields, setFormFields] = useState(initializeFormFields);
 
     const handleNewPointButton = () => {
-        requestGeolocation(() => setShowNewPointSuggestionBox(true));
+        // If we already have a position, open dialog immediately (no flickering)
+        if (userPosition) {
+            setShowNewPointSuggestionBox(true);
+            return;
+        }
+
+        requestGeolocation(
+            () => setShowNewPointSuggestionBox(true),
+            error => {
+                // Log error details for debugging, but only show user-friendly message
+                console.error('Geolocation error:', error?.code, error?.message);
+                setSnackbarMessage(t('locationServicesDisabled'));
+                setSnackbarOpen(true);
+            },
+        );
     };
 
     const handleLocateMe = () => {

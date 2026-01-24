@@ -82,6 +82,7 @@ const mockUploadingFileWithSizeInMB = sizeInMB => {
 
 describe('SuggestNewPointButton', () => {
     it('shows disabled state when geolocation is not supported', async () => {
+        const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
         mockGeolocationUnsupported();
 
         renderWithProvider(<SuggestNewPointButton />);
@@ -98,9 +99,12 @@ describe('SuggestNewPointButton', () => {
         // Clicking should not open dialog when geolocation is unsupported
         clickSuggestButton();
         expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+
+        consoleErrorSpy.mockRestore();
     });
 
     it('shows disabled state when location services are not enabled', async () => {
+        const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
         mockGeolocationError();
 
         renderWithProvider(<SuggestNewPointButton />);
@@ -117,6 +121,38 @@ describe('SuggestNewPointButton', () => {
         // Clicking should not open dialog when geolocation fails
         clickSuggestButton();
         expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+
+        consoleErrorSpy.mockRestore();
+    });
+
+    it('shows snackbar error when clicking button and geolocation is denied', async () => {
+        const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
+        mockGeolocationError();
+
+        renderWithProvider(<SuggestNewPointButton />);
+
+        clickSuggestButton();
+
+        // Should show snackbar with user-friendly error message (no internal details)
+        await waitFor(() => {
+            expect(
+                screen.getByText(
+                    'Location services are disabled. Please enable them to use this feature.',
+                ),
+            ).toBeInTheDocument();
+        });
+
+        // Error should be logged to console for debugging
+        expect(consoleErrorSpy).toHaveBeenCalledWith(
+            'Geolocation error:',
+            1,
+            'User denied geolocation',
+        );
+
+        // Dialog should not open
+        expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
+
+        consoleErrorSpy.mockRestore();
     });
 
     it('opens new point suggestion box when location services are enabled', async () => {

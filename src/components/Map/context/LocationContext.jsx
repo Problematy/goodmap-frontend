@@ -1,7 +1,28 @@
-import React, { createContext, useContext, useState, useCallback, useEffect, useMemo } from 'react';
+import React, {
+    createContext,
+    useContext,
+    useState,
+    useCallback,
+    useEffect,
+    useMemo,
+    useRef,
+} from 'react';
 import PropTypes from 'prop-types';
 
 const LocationContext = createContext();
+
+// Geolocation configuration constants
+const SPINNER_DELAY_MS = 300; // Delay before showing spinner to prevent flicker on fast responses
+const GEOLOCATION_TIMEOUT_MS = 15000; // 15 seconds timeout for geolocation requests
+const GEOLOCATION_MAX_AGE_MS = 300000; // 5 minutes cache for position data
+
+// Error codes for consistent error handling
+const GEOLOCATION_ERROR_CODES = {
+    NOT_SUPPORTED: 0,
+    PERMISSION_DENIED: 1,
+    POSITION_UNAVAILABLE: 2,
+    TIMEOUT: 3,
+};
 
 /**
  * Provider component that manages shared geolocation state across the map.
@@ -15,15 +36,47 @@ export const LocationProvider = ({ children }) => {
     const [userPosition, setUserPosition] = useState(null);
     // 'unknown' | 'prompt' | 'granted' | 'denied'
     const [permissionState, setPermissionState] = useState('unknown');
+    const [isRequestingLocation, setIsRequestingLocation] = useState(false);
+    const [locationError, setLocationError] = useState(null);
+    // Delayed loading indicator - only shows after 300ms to prevent flicker
+    const [showLocationSpinner, setShowLocationSpinner] = useState(false);
+
+    // Only show spinner after a delay to prevent flicker on fast responses
+    useEffect(() => {
+        let timer;
+        if (isRequestingLocation) {
+            timer = setTimeout(() => setShowLocationSpinner(true), SPINNER_DELAY_MS);
+        } else {
+            setShowLocationSpinner(false);
+        }
+        return () => clearTimeout(timer);
+    }, [isRequestingLocation]);
+
+    // Use ref to track request state without causing callback recreation
+    const isRequestingRef = useRef(false);
 
     const requestGeolocation = useCallback((onSuccess, onError) => {
         if (!navigator.geolocation) {
+            const errorObj = {
+                code: GEOLOCATION_ERROR_CODES.NOT_SUPPORTED,
+                message: 'Geolocation not supported',
+            };
             setPermissionState('denied');
             setLocationGranted(false);
             setUserPosition(null);
-            onError?.(new Error('Geolocation not supported'));
+            setLocationError(errorObj);
+            onError?.(errorObj);
             return;
         }
+
+        // Prevent multiple simultaneous requests
+        if (isRequestingRef.current) {
+            return;
+        }
+
+        isRequestingRef.current = true;
+        setIsRequestingLocation(true);
+        setLocationError(null);
 
         navigator.geolocation.getCurrentPosition(
             position => {
@@ -35,13 +88,27 @@ export const LocationProvider = ({ children }) => {
                 setUserPosition(newPosition);
                 setLocationGranted(true);
                 setPermissionState('granted');
+                isRequestingRef.current = false;
+                setIsRequestingLocation(false);
                 onSuccess?.(newPosition);
             },
             error => {
+                const errorObj = {
+                    code: error?.code ?? GEOLOCATION_ERROR_CODES.POSITION_UNAVAILABLE,
+                    message: error?.message ?? 'Unknown geolocation error',
+                };
                 setPermissionState('denied');
                 setLocationGranted(false);
                 setUserPosition(null);
-                onError?.(error);
+                isRequestingRef.current = false;
+                setIsRequestingLocation(false);
+                setLocationError(errorObj);
+                onError?.(errorObj);
+            },
+            {
+                enableHighAccuracy: false,
+                timeout: GEOLOCATION_TIMEOUT_MS,
+                maximumAge: GEOLOCATION_MAX_AGE_MS,
             },
         );
     }, []);
@@ -92,8 +159,20 @@ export const LocationProvider = ({ children }) => {
             setUserPosition,
             requestGeolocation,
             permissionState,
+            isRequestingLocation,
+            showLocationSpinner,
+            locationError,
         }),
-        [locationGranted, userPosition, setUserPosition, requestGeolocation, permissionState],
+        [
+            locationGranted,
+            userPosition,
+            setUserPosition,
+            requestGeolocation,
+            permissionState,
+            isRequestingLocation,
+            showLocationSpinner,
+            locationError,
+        ],
     );
 
     return <LocationContext.Provider value={contextValue}>{children}</LocationContext.Provider>;
@@ -105,7 +184,7 @@ LocationProvider.propTypes = {
 
 /**
  * Hook to access the shared location context.
- * @returns {{locationGranted: boolean, userPosition: object|null, setUserPosition: function, requestGeolocation: function, permissionState: string}}
+ * @returns {{locationGranted: boolean, userPosition: object|null, setUserPosition: function, requestGeolocation: function, permissionState: string, isRequestingLocation: boolean, showLocationSpinner: boolean, locationError: object|null}}
  */
 export const useLocation = () => {
     const context = useContext(LocationContext);
