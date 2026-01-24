@@ -8,6 +8,8 @@ import React, {
     useRef,
 } from 'react';
 import PropTypes from 'prop-types';
+import { Snackbar } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 
 const LocationContext = createContext();
 
@@ -32,6 +34,7 @@ const GEOLOCATION_ERROR_CODES = {
  * Otherwise, waits for explicit user action to request permission.
  */
 export const LocationProvider = ({ children }) => {
+    const { t } = useTranslation();
     const [locationGranted, setLocationGranted] = useState(false);
     const [userPosition, setUserPosition] = useState(null);
     // 'unknown' | 'prompt' | 'granted' | 'denied'
@@ -40,6 +43,9 @@ export const LocationProvider = ({ children }) => {
     const [locationError, setLocationError] = useState(null);
     // Delayed loading indicator - only shows after 300ms to prevent flicker
     const [showLocationSpinner, setShowLocationSpinner] = useState(false);
+    // Snackbar state for location error feedback
+    const [snackbarOpen, setSnackbarOpen] = useState(false);
+    const [snackbarMessage, setSnackbarMessage] = useState('');
 
     // Only show spinner after a delay to prevent flicker on fast responses
     useEffect(() => {
@@ -113,6 +119,35 @@ export const LocationProvider = ({ children }) => {
         );
     }, []);
 
+    const handleSnackbarClose = useCallback((event, reason) => {
+        if (reason === 'clickaway') {
+            return;
+        }
+        setSnackbarOpen(false);
+    }, []);
+
+    /**
+     * Request geolocation with automatic error feedback via snackbar.
+     * If position is already available, calls onSuccess immediately.
+     * Otherwise requests geolocation and shows snackbar on error.
+     *
+     * @param {Function} onSuccess - Callback when position is available, receives position object
+     */
+    const requestLocationWithFeedback = useCallback(
+        onSuccess => {
+            if (userPosition) {
+                onSuccess?.(userPosition);
+                return;
+            }
+
+            requestGeolocation(onSuccess, () => {
+                setSnackbarMessage(t('locationServicesDisabled'));
+                setSnackbarOpen(true);
+            });
+        },
+        [userPosition, requestGeolocation, t],
+    );
+
     // Check existing permission state without prompting the user.
     // Only auto-fetch location if permission was previously granted.
     useEffect(() => {
@@ -158,6 +193,7 @@ export const LocationProvider = ({ children }) => {
             userPosition,
             setUserPosition,
             requestGeolocation,
+            requestLocationWithFeedback,
             permissionState,
             isRequestingLocation,
             showLocationSpinner,
@@ -168,6 +204,7 @@ export const LocationProvider = ({ children }) => {
             userPosition,
             setUserPosition,
             requestGeolocation,
+            requestLocationWithFeedback,
             permissionState,
             isRequestingLocation,
             showLocationSpinner,
@@ -175,7 +212,17 @@ export const LocationProvider = ({ children }) => {
         ],
     );
 
-    return <LocationContext.Provider value={contextValue}>{children}</LocationContext.Provider>;
+    return (
+        <LocationContext.Provider value={contextValue}>
+            {children}
+            <Snackbar
+                open={snackbarOpen}
+                autoHideDuration={6000}
+                onClose={handleSnackbarClose}
+                message={snackbarMessage}
+            />
+        </LocationContext.Provider>
+    );
 };
 
 LocationProvider.propTypes = {
@@ -184,7 +231,7 @@ LocationProvider.propTypes = {
 
 /**
  * Hook to access the shared location context.
- * @returns {{locationGranted: boolean, userPosition: object|null, setUserPosition: function, requestGeolocation: function, permissionState: string, isRequestingLocation: boolean, showLocationSpinner: boolean, locationError: object|null}}
+ * @returns {{locationGranted: boolean, userPosition: object|null, setUserPosition: function, requestGeolocation: function, requestLocationWithFeedback: function, permissionState: string, isRequestingLocation: boolean, showLocationSpinner: boolean, locationError: object|null}}
  */
 export const useLocation = () => {
     const context = useContext(LocationContext);

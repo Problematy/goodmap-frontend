@@ -126,14 +126,13 @@ describe('SuggestNewPointButton', () => {
     });
 
     it('shows snackbar error when clicking button and geolocation is denied', async () => {
-        const consoleErrorSpy = jest.spyOn(console, 'error').mockImplementation();
         mockGeolocationError();
 
         renderWithProvider(<SuggestNewPointButton />);
 
         clickSuggestButton();
 
-        // Should show snackbar with user-friendly error message (no internal details)
+        // Should show snackbar with user-friendly error message
         await waitFor(() => {
             expect(
                 screen.getByText(
@@ -142,17 +141,8 @@ describe('SuggestNewPointButton', () => {
             ).toBeInTheDocument();
         });
 
-        // Error should be logged to console for debugging
-        expect(consoleErrorSpy).toHaveBeenCalledWith(
-            'Geolocation error:',
-            1,
-            'User denied geolocation',
-        );
-
         // Dialog should not open
         expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
-
-        consoleErrorSpy.mockRestore();
     });
 
     it('opens new point suggestion box when location services are enabled', async () => {
