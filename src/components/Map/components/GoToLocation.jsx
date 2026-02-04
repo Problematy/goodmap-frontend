@@ -20,7 +20,7 @@ export const GoToLocation = () => {
             return;
         }
 
-        const urlParams = new URLSearchParams(window.location.search);
+        const urlParams = new URLSearchParams(globalThis.location.search);
         const locationId = urlParams.get('locationId');
 
         if (!locationId) {
@@ -31,7 +31,7 @@ export const GoToLocation = () => {
             try {
                 const location = await httpService.getLocation(locationId);
 
-                if (!location || !location.position) {
+                if (!location?.position) {
                     console.warn('Location not found or has no position:', locationId);
                     return;
                 }
