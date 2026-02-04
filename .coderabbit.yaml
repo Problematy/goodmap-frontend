@@ -1,0 +1,5 @@
+reviews:
+  auto_review:
+    ignore_authors:
+      - dependabot[bot]
+    report_status_when_skipped: true
