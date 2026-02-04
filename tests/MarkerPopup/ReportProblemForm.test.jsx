@@ -11,6 +11,7 @@ const PLACE_ID = 'test-id';
 const CSRF_TOKEN = 'test-csrf-token';
 
 const CUSTOM_ISSUE_TYPES = {
+    // eslint-disable-next-line camelcase -- matches backend API schema property name
     reported_issue_types: [
         { value: 'under construction', label: 'Under Construction' },
         { value: 'has a hole', label: 'Has a Hole' },
@@ -90,7 +91,7 @@ describe('ReportProblemForm', () => {
         expect(optionTexts).toContain('Has a Hole');
         expect(getByText('other')).toBeTruthy();
         // Default hardcoded options should NOT be present
-        expect(queryByText("this point is not here")).toBeNull();
+        expect(queryByText('this point is not here')).toBeNull();
         expect(queryByText("it's overloaded")).toBeNull();
         expect(queryByText("it's broken")).toBeNull();
     });
@@ -108,17 +109,18 @@ describe('ReportProblemForm', () => {
         delete globalThis.LOCATION_SCHEMA;
         const { getByText } = renderForm();
 
-        expect(getByText("this point is not here")).toBeTruthy();
+        expect(getByText('this point is not here')).toBeTruthy();
         expect(getByText("it's overloaded")).toBeTruthy();
         expect(getByText("it's broken")).toBeTruthy();
-        expect(getByText("other")).toBeTruthy();
+        expect(getByText('other')).toBeTruthy();
     });
 
     it('falls back to default options when reported_issue_types is empty', () => {
+        // eslint-disable-next-line camelcase -- matches backend API schema property name
         globalThis.LOCATION_SCHEMA = { reported_issue_types: [] };
         const { getByText } = renderForm();
 
-        expect(getByText("this point is not here")).toBeTruthy();
+        expect(getByText('this point is not here')).toBeTruthy();
         expect(getByText("it's overloaded")).toBeTruthy();
         expect(getByText("it's broken")).toBeTruthy();
     });
