@@ -253,7 +253,7 @@ const ShareLocationButton = ({ place }) => {
     };
 
     const handleShare = async () => {
-        const shareUrl = `${window.location.origin}${window.location.pathname}?locationId=${place.metadata.uuid}`;
+        const shareUrl = `${globalThis.location.origin}${globalThis.location.pathname}?locationId=${place.metadata.uuid}`;
 
         if (navigator.share) {
             try {
