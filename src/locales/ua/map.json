@@ -32,5 +32,6 @@
     "locationBannerEnable": "Увімкнути",
     "locationBannerDismiss": "Закрити",
     "shareLocation": "поділитися",
-    "linkCopied": "Посилання скопійовано"
+    "linkCopied": "Посилання скопійовано",
+    "linkCopyFailed": "Не вдалося скопіювати посилання"
 }

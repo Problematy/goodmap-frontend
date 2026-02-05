@@ -61,6 +61,24 @@ const CTAContainer = styled.div`
     margin: 8px;
 `;
 
+const ActionButton = styled.button`
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: #888;
+    font-size: 11px;
+    transition: color 0.2s;
+    background: none;
+    border: none;
+    padding: 0;
+
+    &:hover,
+    &:focus {
+        color: ${props => props.$hoverColor};
+    }
+`;
+
 /**
  * Checks if a value is a custom object type (not an array or null).
  *
@@ -221,6 +239,19 @@ LocationDetails.propTypes = {
 const ShareLocationButton = ({ place }) => {
     const { t } = useTranslation();
 
+    const copyToClipboard = async (url) => {
+        if (!navigator.clipboard) {
+            toast.error(t('linkCopyFailed'));
+            return;
+        }
+        try {
+            await navigator.clipboard.writeText(url);
+            toast.success(t('linkCopied'));
+        } catch {
+            toast.error(t('linkCopyFailed'));
+        }
+    };
+
     const handleShare = async () => {
         const shareUrl = `${window.location.origin}${window.location.pathname}?locationId=${place.metadata.uuid}`;
 
@@ -229,40 +260,19 @@ const ShareLocationButton = ({ place }) => {
                 await navigator.share({ url: shareUrl });
             } catch (err) {
                 if (err.name !== 'AbortError') {
-                    await navigator.clipboard.writeText(shareUrl);
-                    toast.success(t('linkCopied'));
+                    await copyToClipboard(shareUrl);
                 }
             }
         } else {
-            await navigator.clipboard.writeText(shareUrl);
-            toast.success(t('linkCopied'));
+            await copyToClipboard(shareUrl);
         }
     };
 
     return (
-        <button
-            type="button"
-            onClick={handleShare}
-            style={{
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '4px',
-                color: '#888',
-                fontSize: '11px',
-                transition: 'color 0.2s',
-                background: 'none',
-                border: 'none',
-                padding: 0,
-            }}
-            onMouseOver={e => (e.currentTarget.style.color = '#1976d2')}
-            onFocus={e => (e.currentTarget.style.color = '#1976d2')}
-            onMouseOut={e => (e.currentTarget.style.color = '#888')}
-            onBlur={e => (e.currentTarget.style.color = '#888')}
-        >
+        <ActionButton type="button" onClick={handleShare} $hoverColor="#1976d2">
             <ShareIcon style={{ fontSize: 14 }} />
             <span>{t('shareLocation')}</span>
-        </button>
+        </ActionButton>
     );
 };
 
@@ -320,29 +330,10 @@ export const LocationDetailsBox = ({ place }) => {
                 }}
             >
                 <ShareLocationButton place={place} />
-                <button
-                    type="button"
-                    onClick={toggleForm}
-                    style={{
-                        cursor: 'pointer',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '4px',
-                        color: '#888',
-                        fontSize: '11px',
-                        transition: 'color 0.2s',
-                        background: 'none',
-                        border: 'none',
-                        padding: 0,
-                    }}
-                    onMouseOver={e => (e.currentTarget.style.color = '#d32f2f')}
-                    onFocus={e => (e.currentTarget.style.color = '#d32f2f')}
-                    onMouseOut={e => (e.currentTarget.style.color = '#888')}
-                    onBlur={e => (e.currentTarget.style.color = '#888')}
-                >
+                <ActionButton type="button" onClick={toggleForm} $hoverColor="#d32f2f">
                     <ReportProblemOutlinedIcon style={{ fontSize: 14 }} />
                     <span>{t('ReportIssueButton')}</span>
-                </button>
+                </ActionButton>
             </div>
             {showForm && <ReportProblemForm placeId={place.metadata.uuid} />}
         </React.Fragment>

@@ -33,5 +33,6 @@
     "locationBannerEnable": "Włącz",
     "locationBannerDismiss": "Zamknij",
     "shareLocation": "udostępnij",
-    "linkCopied": "Link skopiowany do schowka"
+    "linkCopied": "Link skopiowany do schowka",
+    "linkCopyFailed": "Nie udało się skopiować linku"
 }
