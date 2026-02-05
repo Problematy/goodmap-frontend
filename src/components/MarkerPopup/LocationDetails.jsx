@@ -239,7 +239,7 @@ LocationDetails.propTypes = {
 const ShareLocationButton = ({ place }) => {
     const { t } = useTranslation();
 
-    const copyToClipboard = async (url) => {
+    const copyToClipboard = async url => {
         if (!navigator.clipboard) {
             toast.error(t('linkCopyFailed'));
             return;
