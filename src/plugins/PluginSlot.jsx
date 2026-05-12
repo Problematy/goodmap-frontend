@@ -19,8 +19,4 @@ PluginSlot.propTypes = {
     props: PropTypes.object, // eslint-disable-line react/forbid-prop-types
 };
 
-PluginSlot.defaultProps = {
-    props: {},
-};
-
 export default PluginSlot;
