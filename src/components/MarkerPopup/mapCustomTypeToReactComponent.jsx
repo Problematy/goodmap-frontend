@@ -1,6 +1,6 @@
 import React from 'react';
 import { MarkerCTAButtonStyle } from '../../styles/buttonStyle';
-import { PluginSlot } from '../../plugins/PluginSlot';
+import PluginSlot from '../../plugins/PluginSlot';
 
 /**
  * Converts data to a string representation.
