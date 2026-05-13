@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { getPlugin, subscribe } from './pluginRegistry';
 
-const PluginSlot = ({ scope, props: componentProps = {} }) => {
+const PluginSlot = ({ scope, props: componentProps }) => {
     const [Component, setComponent] = useState(() => getPlugin(scope));
 
     useEffect(() => subscribe(() => setComponent(() => getPlugin(scope))), [scope]);
@@ -16,11 +16,7 @@ const PluginSlot = ({ scope, props: componentProps = {} }) => {
 
 PluginSlot.propTypes = {
     scope: PropTypes.string.isRequired,
-    props: PropTypes.object, // eslint-disable-line react/forbid-prop-types
-};
-
-PluginSlot.defaultProps = {
-    props: {},
+    props: PropTypes.object.isRequired, // eslint-disable-line react/forbid-prop-types
 };
 
 export default PluginSlot;
